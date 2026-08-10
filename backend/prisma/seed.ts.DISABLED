@@ -1,0 +1,559 @@
+// ⚠️  THIS FILE IS DISABLED — DO NOT ENABLE OR RUN
+// Running this seed will DELETE ALL EXISTING DATA in the database.
+// It uses deleteMany() on every table before inserting test data.
+// Rename to seed.ts ONLY if you intentionally want to wipe the DB.
+
+import 'dotenv/config';
+import { PrismaClient } from '../src/generated/client';
+import { PrismaPg } from '@prisma/adapter-pg';
+import bcrypt from 'bcryptjs';
+
+const connectionString = process.env.DATABASE_URL!;
+const adapter = new PrismaPg(connectionString);
+const prisma = new PrismaClient({ adapter });
+
+async function main() {
+  const password = await bcrypt.hash('arash1383@', 10);
+
+  await prisma.$transaction(async (tx) => {
+    // Clean existing data (reverse dependency order)
+    await tx.notification.deleteMany();
+    await tx.taskReport.deleteMany();
+    await tx.taskSubtask.deleteMany();
+    await tx.taskAssignee.deleteMany();
+    await tx.task.deleteMany();
+    await tx.projectMember.deleteMany();
+    await tx.project.deleteMany();
+    await tx.department.deleteMany();
+    await tx.user.deleteMany();
+
+    // ── Users ──
+    const ceo = await tx.user.create({
+      data: {
+        email: 'arashebrahimi9329@gmail.com',
+        password,
+        firstName: 'Arash',
+        lastName: 'Ebrahimi',
+        displayName: 'Arash Ebrahimi',
+        role: 'CEO',
+        phone: '09120000001',
+        nationalId: '0010000001',
+        position: 'مدیر عامل',
+        birthDate: new Date('1383-01-01'),
+        startDate: new Date('1403-01-01'),
+      },
+    });
+
+    const techManager = await tx.user.create({
+      data: {
+        email: 'tech@ontask.ir',
+        password,
+        firstName: 'رضا',
+        lastName: 'احمدی',
+        displayName: 'رضا احمدی',
+        role: 'TECHNICAL_MANAGER',
+        phone: '09120000002',
+        nationalId: '0010000002',
+        position: 'مدیر فنی',
+        birthDate: new Date('1365-06-15'),
+        startDate: new Date('1402-03-01'),
+      },
+    });
+
+    const strategyManager = await tx.user.create({
+      data: {
+        email: 'strategy@ontask.ir',
+        password,
+        firstName: 'سارا',
+        lastName: 'موسوی',
+        displayName: 'سارا موسوی',
+        role: 'STRATEGY_MANAGER',
+        phone: '09120000003',
+        nationalId: '0010000003',
+        position: 'مدیر استراتژی',
+        birthDate: new Date('1370-02-20'),
+        startDate: new Date('1402-06-01'),
+      },
+    });
+
+    // ── Departments ──
+    const deptFani = await tx.department.create({
+      data: {
+        name: 'فنی و مهندسی',
+        description: 'توسعه و نگهداری محصولات نرم‌افزاری',
+        managerId: techManager.id,
+      },
+    });
+
+    const deptBazar = await tx.department.create({
+      data: {
+        name: 'بازاریابی و فروش',
+        description: 'بازاریابی دیجیتال و جذب مشتری',
+      },
+    });
+
+    const deptSource = await tx.department.create({
+      data: {
+        name: 'منابع انسانی',
+        description: 'مدیریت نیروی انسانی و استخدام',
+      },
+    });
+
+    // Update user departments
+    await tx.user.update({ where: { id: techManager.id }, data: { departmentId: deptFani.id } });
+    await tx.user.update({ where: { id: strategyManager.id }, data: { departmentId: deptFani.id } });
+
+    // ── More Users ──
+    const emp1 = await tx.user.create({
+      data: {
+        email: 'ali@ontask.ir',
+        password,
+        firstName: 'علی',
+        lastName: 'رضایی',
+        displayName: 'علی رضایی',
+        role: 'EMPLOYEE',
+        departmentId: deptFani.id,
+        position: 'توسعه‌دهنده ارشد',
+        birthDate: new Date('1372-11-10'),
+        startDate: new Date('1402-09-01'),
+      },
+    });
+
+    const emp2 = await tx.user.create({
+      data: {
+        email: 'maryam@ontask.ir',
+        password,
+        firstName: 'مریم',
+        lastName: 'کریمی',
+        displayName: 'مریم کریمی',
+        role: 'EMPLOYEE',
+        departmentId: deptFani.id,
+        position: 'توسعه‌دهنده فرانت‌اند',
+        birthDate: new Date('1374-04-25'),
+        startDate: new Date('1403-01-15'),
+      },
+    });
+
+    const emp3 = await tx.user.create({
+      data: {
+        email: 'hassan@ontask.ir',
+        password,
+        firstName: 'حسن',
+        lastName: 'نوری',
+        displayName: 'حسن نوری',
+        role: 'EMPLOYEE',
+        departmentId: deptBazar.id,
+        position: 'کارشناس بازاریابی',
+        birthDate: new Date('1368-08-05'),
+        startDate: new Date('1402-11-01'),
+      },
+    });
+
+    const emp4 = await tx.user.create({
+      data: {
+        email: 'zahra@ontask.ir',
+        password,
+        firstName: 'زهرا',
+        lastName: 'حسینی',
+        displayName: 'زهرا حسینی',
+        role: 'EMPLOYEE',
+        departmentId: deptSource.id,
+        position: 'کارشناس منابع انسانی',
+        birthDate: new Date('1371-01-30'),
+        startDate: new Date('1402-05-01'),
+      },
+    });
+
+    const hrManager = await tx.user.create({
+      data: {
+        email: 'hr@ontask.ir',
+        password,
+        firstName: 'نرگس',
+        lastName: 'صادقی',
+        displayName: 'نرگس صادقی',
+        role: 'HR_MANAGER',
+        phone: '09120000004',
+        nationalId: '0010000004',
+        position: 'مدیر منابع انسانی',
+        departmentId: deptSource.id,
+        birthDate: new Date('1367-09-12'),
+        startDate: new Date('1401-06-01'),
+      },
+    });
+
+    // ── Projects ──
+    const proj1 = await tx.project.create({
+      data: {
+        name: 'سامانه مدیریت وظایف (OnTask)',
+        description: 'توسعه پلتفرم جامع مدیریت پروژه و وظایف سازمانی',
+        client: 'داخلی',
+        departmentId: deptFani.id,
+        createdById: ceo.id,
+      },
+    });
+
+    const proj2 = await tx.project.create({
+      data: {
+        name: 'اپلیکیشن موبایل فروشگاهی',
+        description: 'توسعه اپلیکیشن فروشگاهی برای iOS و Android',
+        client: 'شرکت تجارت الکترونیک پارس',
+        departmentId: deptFani.id,
+        createdById: techManager.id,
+      },
+    });
+
+    const proj3 = await tx.project.create({
+      data: {
+        name: 'کمپین تابستانه ۱۴۰۴',
+        description: 'طراحی و اجرای کمپین بازاریابی تابستانه',
+        departmentId: deptBazar.id,
+        createdById: strategyManager.id,
+      },
+    });
+
+    const proj4 = await tx.project.create({
+      data: {
+        name: 'داشبورد منابع انسانی',
+        description: 'توسعه داشبورد تحلیلی برای مدیریت نیروی انسانی',
+        departmentId: deptSource.id,
+        createdById: ceo.id,
+      },
+    });
+
+    // ── Project Members ──
+    const memberData = [
+      { projectId: proj1.id, userId: techManager.id },
+      { projectId: proj1.id, userId: emp1.id },
+      { projectId: proj1.id, userId: emp2.id },
+      { projectId: proj2.id, userId: techManager.id },
+      { projectId: proj2.id, userId: emp1.id },
+      { projectId: proj3.id, userId: strategyManager.id },
+      { projectId: proj3.id, userId: emp3.id },
+      { projectId: proj4.id, userId: emp4.id },
+      { projectId: proj4.id, userId: hrManager.id },
+    ];
+    for (const pm of memberData) {
+      await tx.projectMember.create({ data: pm });
+    }
+
+    // ── Tasks ──
+    const now = new Date();
+    const days = (n: number) => new Date(now.getTime() + n * 86400000);
+
+    const t1 = await tx.task.create({
+      data: {
+        title: 'طراحی و پیاده‌سازی سیستم احراز هویت',
+        description: 'پیاده‌سازی JWT-based authentication با قابلیت refresh token',
+        status: 'DONE',
+        deadline: days(-5),
+        estimatedHours: 24,
+        projectId: proj1.id,
+        createdById: techManager.id,
+      },
+    });
+
+    const t2 = await tx.task.create({
+      data: {
+        title: 'توسعه API گزارشات',
+        description: 'ایجاد REST API برای گزارشات مدیریتی و داشبورد',
+        status: 'IN_PROGRESS',
+        deadline: days(7),
+        estimatedHours: 32,
+        projectId: proj1.id,
+        createdById: techManager.id,
+      },
+    });
+
+    const t3 = await tx.task.create({
+      data: {
+        title: 'صفحه اصلی داشبورد کاربری',
+        description: 'طراحی و پیاده‌سازی صفحه اصلی داشبورد با ویجت‌های قابل تنظیم',
+        status: 'IN_PROGRESS',
+        deadline: days(14),
+        estimatedHours: 20,
+        projectId: proj1.id,
+        createdById: techManager.id,
+      },
+    });
+
+    const t4 = await tx.task.create({
+      data: {
+        title: 'تست و رفع باگ لاگین',
+        description: 'رفع باگ مربوط به یادآوری رمز عبور و احراز هویت دو مرحله‌ای',
+        status: 'TODO',
+        deadline: days(3),
+        estimatedHours: 8,
+        projectId: proj1.id,
+        createdById: techManager.id,
+      },
+    });
+
+    const t5 = await tx.task.create({
+      data: {
+        title: 'مستندسازی API',
+        description: 'نوشتن مستندات کامل API با Swagger/OpenAPI',
+        status: 'TODO',
+        deadline: days(21),
+        estimatedHours: 16,
+        projectId: proj1.id,
+        createdById: techManager.id,
+      },
+    });
+
+    const t6 = await tx.task.create({
+      data: {
+        title: 'طراحی UI اپلیکیشن فروشگاهی',
+        description: 'طراحی رابط کاربری صفحات اصلی شامل محصولات، سبد خرید و پرداخت',
+        status: 'DONE',
+        deadline: days(-2),
+        estimatedHours: 40,
+        projectId: proj2.id,
+        createdById: techManager.id,
+      },
+    });
+
+    const t7 = await tx.task.create({
+      data: {
+        title: 'پیاده‌سازی سرویس پرداخت',
+        description: 'اتصال به درگاه پرداخت زرین‌پال و پیاده‌سازی جریان پرداخت',
+        status: 'IN_PROGRESS',
+        deadline: days(10),
+        estimatedHours: 30,
+        projectId: proj2.id,
+        createdById: techManager.id,
+      },
+    });
+
+    const t8 = await tx.task.create({
+      data: {
+        title: 'صفحه دسته‌بندی محصولات',
+        description: 'فیلتر و جستجوی پیشرفته محصولات با قابلیت sort',
+        status: 'TODO',
+        deadline: days(5),
+        estimatedHours: 16,
+        projectId: proj2.id,
+        createdById: techManager.id,
+      },
+    });
+
+    const t9 = await tx.task.create({
+      data: {
+        title: 'طراحی بنرهای کمپین تابستانه',
+        description: 'طراحی مجموعه بنرهای تبلیغاتی برای شبکه‌های اجتماعی',
+        status: 'DONE',
+        deadline: days(-1),
+        estimatedHours: 12,
+        projectId: proj3.id,
+        createdById: strategyManager.id,
+      },
+    });
+
+    const t10 = await tx.task.create({
+      data: {
+        title: 'برنامه‌ریزی ایمیل مارکتینگ',
+        description: 'تنظیم sequence ایمیل‌های تبلیغاتی برای مشتریان هدف',
+        status: 'IN_PROGRESS',
+        deadline: days(4),
+        estimatedHours: 20,
+        projectId: proj3.id,
+        createdById: strategyManager.id,
+      },
+    });
+
+    const t11 = await tx.task.create({
+      data: {
+        title: 'تحلیل داده‌های کمپین قبلی',
+        description: 'تحلیل عملکرد کمپین بهاره و استخراج insights برای کمپین تابستانه',
+        status: 'TODO',
+        deadline: days(12),
+        estimatedHours: 10,
+        projectId: proj3.id,
+        createdById: strategyManager.id,
+      },
+    });
+
+    const t12 = await tx.task.create({
+      data: {
+        title: 'طراحی داشبورد حضور و غیاب',
+        description: 'نمودارها و گزارشات مرتبط با حضور کارکنان',
+        status: 'IN_PROGRESS',
+        deadline: days(8),
+        estimatedHours: 24,
+        projectId: proj4.id,
+        createdById: ceo.id,
+      },
+    });
+
+    const t13 = await tx.task.create({
+      data: {
+        title: 'ماژول ارزیابی عملکرد',
+        description: 'طراحی فرم‌های ارزیابی و گزارشات عملکرد کارکنان',
+        status: 'TODO',
+        deadline: days(17),
+        estimatedHours: 28,
+        projectId: proj4.id,
+        createdById: ceo.id,
+      },
+    });
+
+    const t14 = await tx.task.create({
+      data: {
+        title: 'تسک تست دیرکرد بحرانی',
+        description: 'این تسک دیرکرد شدید دارد برای تست هشدارها',
+        status: 'TODO',
+        deadline: days(-10),
+        estimatedHours: 6,
+        projectId: proj1.id,
+        createdById: techManager.id,
+      },
+    });
+
+    // ── Task Assignees ──
+    const assignData = [
+      { taskId: t1.id, userId: emp1.id },
+      { taskId: t2.id, userId: emp1.id },
+      { taskId: t3.id, userId: emp2.id },
+      { taskId: t4.id, userId: emp2.id },
+      { taskId: t5.id, userId: emp1.id },
+      { taskId: t6.id, userId: emp2.id },
+      { taskId: t7.id, userId: emp1.id },
+      { taskId: t8.id, userId: emp1.id },
+      { taskId: t9.id, userId: emp3.id },
+      { taskId: t10.id, userId: emp3.id },
+      { taskId: t11.id, userId: emp3.id },
+      { taskId: t12.id, userId: emp4.id },
+      { taskId: t13.id, userId: emp4.id },
+      { taskId: t14.id, userId: emp2.id },
+    ];
+    for (const a of assignData) {
+      await tx.taskAssignee.create({ data: a });
+    }
+
+    // ── Task Reports ──
+    await tx.taskReport.create({
+      data: {
+        content: 'توسعه سیستم احراز هویت به پایان رسید. تست‌ها با موفقیت انجام شد.',
+        taskId: t1.id,
+        userId: emp1.id,
+        createdAt: days(-6),
+      },
+    });
+
+    await tx.taskReport.create({
+      data: {
+        content: 'API گزارشات ۷۰٪ تکمیل شده. پیاده‌سازی فیلترهای پیشرفته باقی مانده.',
+        taskId: t2.id,
+        userId: emp1.id,
+        createdAt: days(-1),
+      },
+    });
+
+    await tx.taskReport.create({
+      data: {
+        content: 'طراحی ویجت‌ها انجام شد. در حال پیاده‌سازی قابلیت drag & drop برای چیدمان.',
+        taskId: t3.id,
+        userId: emp2.id,
+        createdAt: days(-1),
+      },
+    });
+
+    await tx.taskReport.create({
+      data: {
+        content: 'فرم‌های اولیه حضور و غیاب طراحی شد. نیاز به تکمیل ماژول گزارشات.',
+        taskId: t12.id,
+        userId: emp4.id,
+        createdAt: days(-2),
+      },
+    });
+
+    await tx.taskReport.create({
+      data: {
+        content: 'بازخورد اولیه از مشتری دریافت شد. طراحی UI تایید شده است.',
+        taskId: t6.id,
+        userId: emp2.id,
+        createdAt: days(-3),
+      },
+    });
+
+    await tx.taskReport.create({
+      data: {
+        content: 'مشکل در اتصال به درگاه پرداخت. در انتظار پاسخ تیم پشتیبانی زرین‌پال.',
+        taskId: t7.id,
+        userId: emp1.id,
+        createdAt: days(0),
+      },
+    });
+
+    await tx.taskReport.create({
+      data: {
+        content: 'بنرهای شبکه‌های اجتماعی آماده و تحویل داده شد. کمپین از هفته آینده شروع می‌شود.',
+        taskId: t9.id,
+        userId: emp3.id,
+        createdAt: days(-2),
+      },
+    });
+
+    await tx.taskReport.create({
+      data: {
+        content: 'لیست مشتریان هدف استخراج شد. در حال تنظیم sequence ایمیل‌ها.',
+        taskId: t10.id,
+        userId: emp3.id,
+        createdAt: days(0),
+      },
+    });
+
+    // ── Task Subtasks ──
+    await tx.taskSubtask.create({ data: { title: 'طراحی دیتابیس کاربران', taskId: t1.id, isDone: true } });
+    await tx.taskSubtask.create({ data: { title: 'پیاده‌سازی JWT', taskId: t1.id, isDone: true } });
+    await tx.taskSubtask.create({ data: { title: 'تست امنیتی', taskId: t1.id, isDone: true } });
+    await tx.taskSubtask.create({ data: { title: 'گزارشات تسک‌ها', taskId: t2.id, isDone: true } });
+    await tx.taskSubtask.create({ data: { title: 'گزارشات پروژه‌ها', taskId: t2.id, isDone: false } });
+    await tx.taskSubtask.create({ data: { title: 'گزارشات کاربران', taskId: t2.id, isDone: false } });
+    await tx.taskSubtask.create({ data: { title: 'اتصال به درگاه', taskId: t7.id, isDone: false } });
+    await tx.taskSubtask.create({ data: { title: 'تست تراکنش', taskId: t7.id, isDone: false } });
+
+    // ── Notifications ──
+    await tx.notification.create({
+      data: {
+        type: 'TASK_COMPLETED',
+        title: 'تسک "طراحی و پیاده‌سازی سیستم احراز هویت" تکمیل شد',
+        userId: ceo.id,
+        taskId: t1.id,
+      },
+    });
+    await tx.notification.create({
+      data: {
+        type: 'TASK_OVERDUE',
+        title: 'تسک "تست و رفع باگ لاگین" دیرکرد دارد',
+        userId: techManager.id,
+        taskId: t4.id,
+      },
+    });
+    await tx.notification.create({
+      data: {
+        type: 'REPORT_ADDED',
+        title: 'گزارش جدید برای "API گزارشات" ثبت شد',
+        userId: techManager.id,
+        taskId: t2.id,
+      },
+    });
+
+    console.log('Seed completed successfully');
+    console.log(`Created:
+- 14 tasks across 4 projects
+- 9 users with various roles
+- 3 departments
+- 8 reports
+- 8 subtasks
+- 3 notifications`);
+  });
+}
+
+main()
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });

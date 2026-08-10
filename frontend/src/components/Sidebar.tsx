@@ -12,8 +12,11 @@ const roleConfig: Record<string, { title: string; links: { label: string; href: 
       { label: 'داشبورد', href: '/dashboard/ceo', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
       { label: 'کاربران', href: '/dashboard/users', icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z' },
       { label: 'پروژه‌ها', href: '/dashboard/projects', icon: 'M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z' },
-      { label: 'گزارشات', href: '/dashboard/ceo/reports', icon: 'M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
-      { label: 'تحلیل جامع', href: '/dashboard/analytics', icon: analyticsIcon },
+      { label: 'دپارتمان‌ها', href: '/dashboard/departments', icon: 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4' },
+      { label: 'تسک‌های من', href: '/dashboard/my-tasks', icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4' },
+      { label: 'تسک‌های سازمان', href: '/dashboard/tech/tasks', icon: 'M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
+      { label: 'تایید تسک‌ها', href: '/dashboard/approvals', icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' },
+      { label: 'تحلیل', href: '/dashboard/analytics', icon: analyticsIcon },
     ],
   },
   HR_MANAGER: {
@@ -22,8 +25,10 @@ const roleConfig: Record<string, { title: string; links: { label: string; href: 
       { label: 'داشبورد', href: '/dashboard/hr', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
       { label: 'کاربران', href: '/dashboard/users', icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z' },
       { label: 'پروژه‌ها', href: '/dashboard/projects', icon: 'M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z' },
+      { label: 'تسک‌های من', href: '/dashboard/my-tasks', icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4' },
+      { label: 'تایید تسک‌ها', href: '/dashboard/approvals', icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' },
       { label: 'حضور و غیاب', href: '/dashboard/hr/attendance', icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4' },
-      { label: 'تحلیل جامع', href: '/dashboard/analytics', icon: analyticsIcon },
+      { label: 'تحلیل', href: '/dashboard/analytics', icon: analyticsIcon },
     ],
   },
   TECHNICAL_MANAGER: {
@@ -32,7 +37,22 @@ const roleConfig: Record<string, { title: string; links: { label: string; href: 
       { label: 'داشبورد', href: '/dashboard/tech', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
       { label: 'دپارتمان‌ها', href: '/dashboard/departments', icon: 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4' },
       { label: 'پروژه‌ها', href: '/dashboard/projects', icon: 'M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z' },
-      { label: 'تحلیل فنی', href: '/dashboard/analytics', icon: analyticsIcon },
+      { label: 'تسک‌های من', href: '/dashboard/my-tasks', icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4' },
+      { label: 'تسک‌های سازمان', href: '/dashboard/tech/tasks', icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4' },
+      { label: 'تایید تسک‌ها', href: '/dashboard/approvals', icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' },
+      { label: 'تحلیل', href: '/dashboard/analytics', icon: analyticsIcon },
+    ],
+  },
+  STRATEGY_MANAGER: {
+    title: 'مدیر استراتژی',
+    links: [
+      { label: 'داشبورد', href: '/dashboard/tech', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
+      { label: 'دپارتمان‌ها', href: '/dashboard/departments', icon: 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4' },
+      { label: 'پروژه‌ها', href: '/dashboard/projects', icon: 'M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z' },
+      { label: 'تسک‌های من', href: '/dashboard/my-tasks', icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4' },
+      { label: 'تسک‌های سازمان', href: '/dashboard/tech/tasks', icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4' },
+      { label: 'تایید تسک‌ها', href: '/dashboard/approvals', icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' },
+      { label: 'تحلیل', href: '/dashboard/analytics', icon: analyticsIcon },
     ],
   },
   DEPARTMENT_MANAGER: {
@@ -40,7 +60,9 @@ const roleConfig: Record<string, { title: string; links: { label: string; href: 
     links: [
       { label: 'داشبورد', href: '/dashboard/dept', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
       { label: 'پروژه‌ها', href: '/dashboard/projects', icon: 'M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z' },
-      { label: 'گزارشات', href: '/dashboard/dept/reports', icon: 'M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
+      { label: 'تسک‌های من', href: '/dashboard/my-tasks', icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4' },
+      { label: 'تسک‌های دپارتمان', href: '/dashboard/dept/tasks', icon: 'M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
+      { label: 'تایید تسک‌ها', href: '/dashboard/approvals', icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' },
       { label: 'تحلیل', href: '/dashboard/analytics', icon: analyticsIcon },
     ],
   },
@@ -48,7 +70,8 @@ const roleConfig: Record<string, { title: string; links: { label: string; href: 
     title: 'کارمند',
     links: [
       { label: 'داشبورد', href: '/dashboard/employee', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
-      { label: 'تسک‌های من', href: '/dashboard/projects', icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4' },
+      { label: 'پروژه‌ها و تسک‌های من', href: '/dashboard/projects', icon: 'M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z' },
+      { label: 'تسک‌های من', href: '/dashboard/my-tasks', icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4' },
       { label: 'تحلیل من', href: '/dashboard/analytics', icon: analyticsIcon },
     ],
   },
@@ -62,13 +85,20 @@ const roleConfig: Record<string, { title: string; links: { label: string; href: 
   },
 };
 
-export default function Sidebar({ role, onLogout, collapsed }: { role: string; onLogout: () => void; collapsed: boolean }) {
+export default function Sidebar({ role, onLogout, collapsed, isDeptManager }: { role: string; onLogout: () => void; collapsed: boolean; isDeptManager?: boolean }) {
   const pathname = usePathname();
   const config = roleConfig[role] || roleConfig.EMPLOYEE;
 
+  const links = config.links.filter((link) => {
+    if (role === 'CEO' && link.href === '/dashboard/approvals' && !isDeptManager) return false;
+    return true;
+  });
+
   const isActive = (href: string) => {
     if (href === '/dashboard') return pathname === '/dashboard';
-    return pathname.startsWith(href);
+    const hasChildren = links.some((l) => l.href !== href && l.href.startsWith(href + '/'));
+    if (hasChildren) return pathname === href;
+    return pathname === href || pathname.startsWith(href + '/');
   };
 
   return (
@@ -105,7 +135,7 @@ export default function Sidebar({ role, onLogout, collapsed }: { role: string; o
       </div>
 
       <nav className="flex-1 p-3 space-y-0.5 overflow-y-auto">
-        {config.links.map((link) => {
+        {links.map((link) => {
           const active = isActive(link.href);
           return (
             <Link

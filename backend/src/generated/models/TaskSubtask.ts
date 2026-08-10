@@ -40,6 +40,7 @@ export type TaskSubtaskMinAggregateOutputType = {
   id: number | null
   title: string | null
   isDone: boolean | null
+  completedAt: Date | null
   taskId: number | null
   createdAt: Date | null
 }
@@ -48,6 +49,7 @@ export type TaskSubtaskMaxAggregateOutputType = {
   id: number | null
   title: string | null
   isDone: boolean | null
+  completedAt: Date | null
   taskId: number | null
   createdAt: Date | null
 }
@@ -56,6 +58,7 @@ export type TaskSubtaskCountAggregateOutputType = {
   id: number
   title: number
   isDone: number
+  completedAt: number
   taskId: number
   createdAt: number
   _all: number
@@ -76,6 +79,7 @@ export type TaskSubtaskMinAggregateInputType = {
   id?: true
   title?: true
   isDone?: true
+  completedAt?: true
   taskId?: true
   createdAt?: true
 }
@@ -84,6 +88,7 @@ export type TaskSubtaskMaxAggregateInputType = {
   id?: true
   title?: true
   isDone?: true
+  completedAt?: true
   taskId?: true
   createdAt?: true
 }
@@ -92,6 +97,7 @@ export type TaskSubtaskCountAggregateInputType = {
   id?: true
   title?: true
   isDone?: true
+  completedAt?: true
   taskId?: true
   createdAt?: true
   _all?: true
@@ -187,6 +193,7 @@ export type TaskSubtaskGroupByOutputType = {
   id: number
   title: string
   isDone: boolean
+  completedAt: Date | null
   taskId: number
   createdAt: Date
   _count: TaskSubtaskCountAggregateOutputType | null
@@ -218,6 +225,7 @@ export type TaskSubtaskWhereInput = {
   id?: Prisma.IntFilter<"TaskSubtask"> | number
   title?: Prisma.StringFilter<"TaskSubtask"> | string
   isDone?: Prisma.BoolFilter<"TaskSubtask"> | boolean
+  completedAt?: Prisma.DateTimeNullableFilter<"TaskSubtask"> | Date | string | null
   taskId?: Prisma.IntFilter<"TaskSubtask"> | number
   createdAt?: Prisma.DateTimeFilter<"TaskSubtask"> | Date | string
   task?: Prisma.XOR<Prisma.TaskScalarRelationFilter, Prisma.TaskWhereInput>
@@ -227,6 +235,7 @@ export type TaskSubtaskOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   isDone?: Prisma.SortOrder
+  completedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   taskId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   task?: Prisma.TaskOrderByWithRelationInput
@@ -239,6 +248,7 @@ export type TaskSubtaskWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.TaskSubtaskWhereInput | Prisma.TaskSubtaskWhereInput[]
   title?: Prisma.StringFilter<"TaskSubtask"> | string
   isDone?: Prisma.BoolFilter<"TaskSubtask"> | boolean
+  completedAt?: Prisma.DateTimeNullableFilter<"TaskSubtask"> | Date | string | null
   taskId?: Prisma.IntFilter<"TaskSubtask"> | number
   createdAt?: Prisma.DateTimeFilter<"TaskSubtask"> | Date | string
   task?: Prisma.XOR<Prisma.TaskScalarRelationFilter, Prisma.TaskWhereInput>
@@ -248,6 +258,7 @@ export type TaskSubtaskOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   isDone?: Prisma.SortOrder
+  completedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   taskId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.TaskSubtaskCountOrderByAggregateInput
@@ -264,6 +275,7 @@ export type TaskSubtaskScalarWhereWithAggregatesInput = {
   id?: Prisma.IntWithAggregatesFilter<"TaskSubtask"> | number
   title?: Prisma.StringWithAggregatesFilter<"TaskSubtask"> | string
   isDone?: Prisma.BoolWithAggregatesFilter<"TaskSubtask"> | boolean
+  completedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"TaskSubtask"> | Date | string | null
   taskId?: Prisma.IntWithAggregatesFilter<"TaskSubtask"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"TaskSubtask"> | Date | string
 }
@@ -271,6 +283,7 @@ export type TaskSubtaskScalarWhereWithAggregatesInput = {
 export type TaskSubtaskCreateInput = {
   title: string
   isDone?: boolean
+  completedAt?: Date | string | null
   createdAt?: Date | string
   task: Prisma.TaskCreateNestedOneWithoutSubtasksInput
 }
@@ -279,6 +292,7 @@ export type TaskSubtaskUncheckedCreateInput = {
   id?: number
   title: string
   isDone?: boolean
+  completedAt?: Date | string | null
   taskId: number
   createdAt?: Date | string
 }
@@ -286,6 +300,7 @@ export type TaskSubtaskUncheckedCreateInput = {
 export type TaskSubtaskUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   isDone?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   task?: Prisma.TaskUpdateOneRequiredWithoutSubtasksNestedInput
 }
@@ -294,6 +309,7 @@ export type TaskSubtaskUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   isDone?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   taskId?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -302,6 +318,7 @@ export type TaskSubtaskCreateManyInput = {
   id?: number
   title: string
   isDone?: boolean
+  completedAt?: Date | string | null
   taskId: number
   createdAt?: Date | string
 }
@@ -309,6 +326,7 @@ export type TaskSubtaskCreateManyInput = {
 export type TaskSubtaskUpdateManyMutationInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   isDone?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -316,6 +334,7 @@ export type TaskSubtaskUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   isDone?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   taskId?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -334,6 +353,7 @@ export type TaskSubtaskCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   isDone?: Prisma.SortOrder
+  completedAt?: Prisma.SortOrder
   taskId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -347,6 +367,7 @@ export type TaskSubtaskMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   isDone?: Prisma.SortOrder
+  completedAt?: Prisma.SortOrder
   taskId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -355,6 +376,7 @@ export type TaskSubtaskMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   isDone?: Prisma.SortOrder
+  completedAt?: Prisma.SortOrder
   taskId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -413,6 +435,7 @@ export type BoolFieldUpdateOperationsInput = {
 export type TaskSubtaskCreateWithoutTaskInput = {
   title: string
   isDone?: boolean
+  completedAt?: Date | string | null
   createdAt?: Date | string
 }
 
@@ -420,6 +443,7 @@ export type TaskSubtaskUncheckedCreateWithoutTaskInput = {
   id?: number
   title: string
   isDone?: boolean
+  completedAt?: Date | string | null
   createdAt?: Date | string
 }
 
@@ -456,6 +480,7 @@ export type TaskSubtaskScalarWhereInput = {
   id?: Prisma.IntFilter<"TaskSubtask"> | number
   title?: Prisma.StringFilter<"TaskSubtask"> | string
   isDone?: Prisma.BoolFilter<"TaskSubtask"> | boolean
+  completedAt?: Prisma.DateTimeNullableFilter<"TaskSubtask"> | Date | string | null
   taskId?: Prisma.IntFilter<"TaskSubtask"> | number
   createdAt?: Prisma.DateTimeFilter<"TaskSubtask"> | Date | string
 }
@@ -464,12 +489,14 @@ export type TaskSubtaskCreateManyTaskInput = {
   id?: number
   title: string
   isDone?: boolean
+  completedAt?: Date | string | null
   createdAt?: Date | string
 }
 
 export type TaskSubtaskUpdateWithoutTaskInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   isDone?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -477,6 +504,7 @@ export type TaskSubtaskUncheckedUpdateWithoutTaskInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   isDone?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -484,6 +512,7 @@ export type TaskSubtaskUncheckedUpdateManyWithoutTaskInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   isDone?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -493,6 +522,7 @@ export type TaskSubtaskSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   id?: boolean
   title?: boolean
   isDone?: boolean
+  completedAt?: boolean
   taskId?: boolean
   createdAt?: boolean
   task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
@@ -502,6 +532,7 @@ export type TaskSubtaskSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   id?: boolean
   title?: boolean
   isDone?: boolean
+  completedAt?: boolean
   taskId?: boolean
   createdAt?: boolean
   task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
@@ -511,6 +542,7 @@ export type TaskSubtaskSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   id?: boolean
   title?: boolean
   isDone?: boolean
+  completedAt?: boolean
   taskId?: boolean
   createdAt?: boolean
   task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
@@ -520,11 +552,12 @@ export type TaskSubtaskSelectScalar = {
   id?: boolean
   title?: boolean
   isDone?: boolean
+  completedAt?: boolean
   taskId?: boolean
   createdAt?: boolean
 }
 
-export type TaskSubtaskOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "isDone" | "taskId" | "createdAt", ExtArgs["result"]["taskSubtask"]>
+export type TaskSubtaskOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "isDone" | "completedAt" | "taskId" | "createdAt", ExtArgs["result"]["taskSubtask"]>
 export type TaskSubtaskInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
 }
@@ -544,6 +577,7 @@ export type $TaskSubtaskPayload<ExtArgs extends runtime.Types.Extensions.Interna
     id: number
     title: string
     isDone: boolean
+    completedAt: Date | null
     taskId: number
     createdAt: Date
   }, ExtArgs["result"]["taskSubtask"]>
@@ -973,6 +1007,7 @@ export interface TaskSubtaskFieldRefs {
   readonly id: Prisma.FieldRef<"TaskSubtask", 'Int'>
   readonly title: Prisma.FieldRef<"TaskSubtask", 'String'>
   readonly isDone: Prisma.FieldRef<"TaskSubtask", 'Boolean'>
+  readonly completedAt: Prisma.FieldRef<"TaskSubtask", 'DateTime'>
   readonly taskId: Prisma.FieldRef<"TaskSubtask", 'Int'>
   readonly createdAt: Prisma.FieldRef<"TaskSubtask", 'DateTime'>
 }

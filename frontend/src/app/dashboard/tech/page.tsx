@@ -2,44 +2,51 @@
 
 import { useState, useEffect } from 'react';
 import ProtectedRoute from '@/components/ProtectedRoute';
+import PendingApprovalsPanel from '@/components/dashboard/PendingApprovalsPanel';
+import ProjectRiskList from '@/components/dashboard/ProjectRiskList';
+import WorkloadPanel from '@/components/dashboard/WorkloadPanel';
 import api from '@/lib/api';
 import Link from 'next/link';
 
-const statusConfig: Record<string, { label: string; color: string }> = {
-  TODO: { label: 'انجام نشده', color: 'text-yellow-400' },
-  IN_PROGRESS: { label: 'در حال انجام', color: 'text-blue-400' },
-  PENDING_APPROVAL: { label: 'منتظر تایید', color: 'text-purple-400' },
-  DONE: { label: 'تکمیل شده', color: 'text-green-400' },
-};
-
 export default function TechPage() {
   const [stats, setStats] = useState({ projects: 0, departments: 0, tasks: 0, pendingApprovals: 0 });
-  const [projects, setProjects] = useState<any[]>([]);
+  const [pendingTasks, setPendingTasks] = useState<any[]>([]);
+  const [reports, setReports] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchAll = async () => {
       try {
-        const [projectsRes, deptsRes, techRes] = await Promise.all([
+        const [projectsRes, deptsRes, reportsRes, tasksRes] = await Promise.all([
           api.get('/projects'),
           api.get('/departments'),
-          api.get('/analytics/technical'),
+          api.get('/analytics/reports'),
+          api.get('/tasks'),
         ]);
+        const counts = reportsRes.data.counts || {};
         setStats({
           projects: projectsRes.data.length,
           departments: deptsRes.data.length,
-          tasks: techRes.data.total || 0,
-          pendingApprovals: techRes.data.pendingApprovals || 0,
+          tasks: counts.total || 0,
+          pendingApprovals: counts.pending || 0,
         });
-        setProjects(projectsRes.data.slice(0, 5));
+        setReports(reportsRes.data);
+        setPendingTasks(tasksRes.data.filter((t: any) => t.status === 'PENDING_APPROVAL'));
       } catch {}
       setLoading(false);
     };
     fetchAll();
   }, []);
 
+  const handleApprove = async (taskId: number) => {
+    try {
+      await api.patch(`/tasks/${taskId}/status`, { status: 'DONE' });
+      window.location.reload();
+    } catch {}
+  };
+
   return (
-    <ProtectedRoute allowedRoles={['TECHNICAL_MANAGER']}>
+    <ProtectedRoute allowedRoles={['TECHNICAL_MANAGER', 'STRATEGY_MANAGER']}>
       <div className="animate-fade-in space-y-6">
         <div>
           <h1 className="text-2xl font-bold text-white">داشبورد فنی</h1>
@@ -85,7 +92,7 @@ export default function TechPage() {
             <div className="mt-1 text-xs text-text-muted">در کل سازمان</div>
           </div>
 
-          <Link href="/dashboard/analytics/technical"
+          <Link href="/dashboard/approvals"
             className="relative overflow-hidden rounded-2xl p-5 transition-all duration-300 hover:scale-[1.02] block"
             style={{ background: 'linear-gradient(135deg, rgba(168,85,247,0.15) 0%, rgba(168,85,247,0.05) 100%)', border: '1px solid rgba(168,85,247,0.2)' }}>
             <div className="flex items-center gap-2 text-xs font-medium text-text-muted mb-2">
@@ -99,50 +106,19 @@ export default function TechPage() {
           </Link>
         </div>
 
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+          <ProjectRiskList projects={reports?.projectAggregate?.projects || []} />
+          <WorkloadPanel health={reports?.workloadHealth} />
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(22,27,38,0.6)] p-5">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-semibold text-white flex items-center gap-2">
-                <svg className="w-4 h-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
-                </svg>
-                پروژه‌های فعال
-              </h3>
-              <Link href="/dashboard/projects" className="text-xs text-primary hover:text-primary-hover transition-colors">مشاهده همه</Link>
+          {loading ? (
+            <div className="space-y-2">
+              {[1, 2, 3].map(i => <div key={i} className="h-12 animate-pulse rounded-xl bg-[rgba(255,255,255,0.04)]" />)}
             </div>
-            {loading ? (
-              <div className="space-y-2">
-                {[1,2,3].map(i => <div key={i} className="h-14 animate-pulse rounded-xl bg-[rgba(255,255,255,0.04)]" />)}
-              </div>
-            ) : projects.length > 0 ? (
-              <div className="space-y-2">
-                {projects.map((p: any) => {
-                  const total = p._count?.tasks || 0;
-                  const done = 0;
-                  const progress = total > 0 ? Math.round((done / total) * 100) : 0;
-                  return (
-                    <Link key={p.id} href={`/dashboard/projects/${p.id}`}
-                      className="flex items-center gap-3 rounded-xl bg-[rgba(22,27,38,0.6)] px-4 py-3 transition-all duration-200 hover:bg-[rgba(30,37,52,0.6)] block">
-                      <div className="min-w-0 flex-1">
-                        <p className="text-sm text-white truncate">{p.name}</p>
-                        <p className="text-xs text-text-muted mt-0.5">{p.department?.name}</p>
-                      </div>
-                      <div className="flex items-center gap-3 shrink-0">
-                        <span className="text-xs text-text-muted">{total} تسک</span>
-                        <div className="w-20 h-1.5 rounded-full bg-[rgba(255,255,255,0.06)]">
-                          <div className="h-full rounded-full bg-gradient-to-r from-primary to-indigo-400 transition-all duration-500" style={{ width: `${progress}%` }} />
-                        </div>
-                      </div>
-                    </Link>
-                  );
-                })}
-              </div>
-            ) : (
-              <div className="flex flex-col items-center justify-center py-8 text-text-muted">
-                <p className="text-xs">هیچ پروژه‌ای وجود ندارد</p>
-              </div>
-            )}
-          </div>
+          ) : (
+            <PendingApprovalsPanel tasks={pendingTasks} onApprove={handleApprove} />
+          )}
 
           <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(22,27,38,0.6)] p-5">
             <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
@@ -151,7 +127,7 @@ export default function TechPage() {
               </svg>
               دسترسی سریع
             </h3>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
               <Link href="/dashboard/departments"
                 className="flex items-center gap-3 rounded-xl bg-[rgba(99,102,241,0.08)] border border-[rgba(99,102,241,0.15)] px-4 py-3.5 text-sm font-medium text-primary hover:bg-[rgba(99,102,241,0.15)] transition-all">
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -166,19 +142,33 @@ export default function TechPage() {
                 </svg>
                 پروژه‌ها
               </Link>
-              <Link href="/dashboard/analytics/technical"
+              <Link href="/dashboard/tech/tasks"
+                className="flex items-center gap-3 rounded-xl bg-[rgba(34,197,94,0.08)] border border-[rgba(34,197,94,0.15)] px-4 py-3.5 text-sm font-medium text-success hover:bg-[rgba(34,197,94,0.15)] transition-all">
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                </svg>
+                تسک‌های سازمان
+              </Link>
+              <Link href="/dashboard/analytics/reports"
                 className="flex items-center gap-3 rounded-xl bg-[rgba(245,158,11,0.08)] border border-[rgba(245,158,11,0.15)] px-4 py-3.5 text-sm font-medium text-warning hover:bg-[rgba(245,158,11,0.15)] transition-all">
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                 </svg>
-                تحلیل فنی
+                تحلیل عمومی
               </Link>
-              <Link href="/dashboard/users"
-                className="flex items-center gap-3 rounded-xl bg-[rgba(34,197,94,0.08)] border border-[rgba(34,197,94,0.15)] px-4 py-3.5 text-sm font-medium text-success hover:bg-[rgba(34,197,94,0.15)] transition-all">
+              <Link href="/dashboard/analytics/scrum"
+                className="flex items-center gap-3 rounded-xl bg-[rgba(168,85,247,0.08)] border border-[rgba(168,85,247,0.15)] px-4 py-3.5 text-sm font-medium text-purple-400 hover:bg-[rgba(168,85,247,0.15)] transition-all">
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
-                کاربران
+                اسکرام و ظرفیت
+              </Link>
+              <Link href="/dashboard/analytics/gantt"
+                className="flex items-center gap-3 rounded-xl bg-[rgba(236,72,153,0.08)] border border-[rgba(236,72,153,0.15)] px-4 py-3.5 text-sm font-medium text-pink-400 hover:bg-[rgba(236,72,153,0.15)] transition-all">
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                تایم‌لاین گانت
               </Link>
             </div>
           </div>

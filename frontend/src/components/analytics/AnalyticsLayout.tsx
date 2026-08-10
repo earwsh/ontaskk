@@ -4,9 +4,11 @@ import { useRouter, usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 const tabs = [
-  { key: 'overview', label: 'نمای کلی', roles: ['CEO', 'HR_MANAGER'] },
-  { key: 'technical', label: 'تحلیل فنی', roles: ['TECHNICAL_MANAGER', 'CEO', 'HR_MANAGER'] },
-  { key: 'department', label: 'دپارتمان', roles: ['DEPARTMENT_MANAGER', 'TECHNICAL_MANAGER', 'CEO', 'HR_MANAGER'] },
+  { key: 'reports', label: 'گزارشات عمومی', roles: ['CEO', 'HR_MANAGER', 'TECHNICAL_MANAGER', 'STRATEGY_MANAGER', 'DEPARTMENT_MANAGER'] },
+  { key: 'technical', label: 'تحلیل فنی', roles: ['CEO', 'HR_MANAGER', 'TECHNICAL_MANAGER', 'STRATEGY_MANAGER', 'DEPARTMENT_MANAGER'] },
+  { key: 'scrum', label: 'اسکرام و ظرفیت', roles: ['CEO', 'HR_MANAGER', 'TECHNICAL_MANAGER', 'STRATEGY_MANAGER', 'DEPARTMENT_MANAGER'] },
+  { key: 'gantt', label: 'نمودار گانت', roles: ['CEO', 'HR_MANAGER', 'TECHNICAL_MANAGER', 'STRATEGY_MANAGER', 'DEPARTMENT_MANAGER'] },
+  { key: 'smart', label: 'تحلیل هوشمند', roles: ['CEO', 'HR_MANAGER', 'TECHNICAL_MANAGER', 'STRATEGY_MANAGER', 'DEPARTMENT_MANAGER'] },
   { key: 'employee', label: 'تحلیل من', roles: ['EMPLOYEE'] },
 ];
 
@@ -31,7 +33,7 @@ export default function AnalyticsLayout({ children }: { children: React.ReactNod
       {visibleTabs.length > 1 && (
         <div className="mb-4 flex shrink-0 gap-1 overflow-x-auto rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(22,27,38,0.6)] p-1.5">
           {visibleTabs.map((tab) => {
-            const isActive = currentTab === tab.key || (currentTab === 'analytics' && tab.key === 'overview' && visibleTabs.some(t => t.key !== 'employee'));
+            const isActive = currentTab === tab.key;
             return (
               <button
                 key={tab.key}

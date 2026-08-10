@@ -5,7 +5,7 @@ import prisma from '../lib/prisma';
 const router = Router();
 
 const deptInclude = {
-  _count: { select: { users: true } },
+  _count: { select: { members: true } },
   manager: { select: { id: true, firstName: true, lastName: true, email: true } },
 };
 
@@ -17,21 +17,26 @@ router.get('/', authenticate, async (_req: AuthRequest, res: Response) => {
   res.json(departments);
 });
 
-router.get('/:id/users', authenticate, authorize('TECHNICAL_MANAGER'), async (req: AuthRequest, res: Response) => {
+router.get('/:id/users', authenticate, authorize('TECHNICAL_MANAGER', 'STRATEGY_MANAGER', 'CEO'), async (req: AuthRequest, res: Response) => {
   try {
     const id = parseInt(req.params.id as string);
-    const users = await prisma.user.findMany({
+    const memberEntries = await prisma.userDepartment.findMany({
       where: { departmentId: id },
-      select: { id: true, firstName: true, lastName: true, email: true, role: true },
-      orderBy: { firstName: 'asc' },
+      include: { user: { select: { id: true, firstName: true, lastName: true, email: true, role: true } } },
     });
-    res.json(users);
+    const memberUsers = memberEntries.map((m) => m.user);
+    const orgWideUsers = await prisma.user.findMany({
+      where: { role: { in: ['CEO', 'TECHNICAL_MANAGER', 'HR_MANAGER', 'STRATEGY_MANAGER'] }, id: { notIn: memberUsers.map((u) => u.id) } },
+      select: { id: true, firstName: true, lastName: true, email: true, role: true },
+    });
+    const allUsers = [...memberUsers, ...orgWideUsers].sort((a, b) => a.firstName.localeCompare(b.firstName));
+    res.json(allUsers);
   } catch {
     res.status(500).json({ error: 'Failed to fetch users' });
   }
 });
 
-router.post('/', authenticate, authorize('TECHNICAL_MANAGER'), async (req: AuthRequest, res: Response) => {
+router.post('/', authenticate, authorize('TECHNICAL_MANAGER', 'STRATEGY_MANAGER', 'CEO'), async (req: AuthRequest, res: Response) => {
   try {
     const { name, description } = req.body;
     if (!name) {
@@ -41,6 +46,16 @@ router.post('/', authenticate, authorize('TECHNICAL_MANAGER'), async (req: AuthR
       data: { name, description },
       include: deptInclude,
     });
+    const orgWideUsers = await prisma.user.findMany({
+      where: { role: { in: ['CEO', 'TECHNICAL_MANAGER', 'HR_MANAGER', 'STRATEGY_MANAGER'] } },
+      select: { id: true },
+    });
+    if (orgWideUsers.length) {
+      await prisma.userDepartment.createMany({
+        data: orgWideUsers.map((u) => ({ userId: u.id, departmentId: department.id })),
+        skipDuplicates: true,
+      });
+    }
     res.status(201).json(department);
   } catch (err: any) {
     if (err?.code === 'P2002') {
@@ -50,7 +65,7 @@ router.post('/', authenticate, authorize('TECHNICAL_MANAGER'), async (req: AuthR
   }
 });
 
-router.put('/:id', authenticate, authorize('TECHNICAL_MANAGER'), async (req: AuthRequest, res: Response) => {
+router.put('/:id', authenticate, authorize('TECHNICAL_MANAGER', 'STRATEGY_MANAGER', 'CEO'), async (req: AuthRequest, res: Response) => {
   try {
     const id = parseInt(req.params.id as string);
     const { name, description } = req.body;
@@ -75,7 +90,7 @@ router.put('/:id', authenticate, authorize('TECHNICAL_MANAGER'), async (req: Aut
   }
 });
 
-router.post('/:id/set-manager', authenticate, authorize('TECHNICAL_MANAGER'), async (req: AuthRequest, res: Response) => {
+router.post('/:id/set-manager', authenticate, authorize('TECHNICAL_MANAGER', 'STRATEGY_MANAGER', 'CEO'), async (req: AuthRequest, res: Response) => {
   try {
     const id = parseInt(req.params.id as string);
     const userId = parseInt(req.body.userId);
@@ -94,10 +109,6 @@ router.post('/:id/set-manager', authenticate, authorize('TECHNICAL_MANAGER'), as
       return res.status(404).json({ error: 'User not found' });
     }
 
-    if (user.departmentId !== id) {
-      return res.status(400).json({ error: 'User is not in this department' });
-    }
-
     const oldManagerId = department.managerId;
 
     const existingManagedDept = await prisma.department.findFirst({
@@ -105,9 +116,11 @@ router.post('/:id/set-manager', authenticate, authorize('TECHNICAL_MANAGER'), as
     });
 
     if (oldManagerId) {
+      const oldManager = await prisma.user.findUnique({ where: { id: oldManagerId } });
+      const newRole = oldManager && oldManager.role === 'DEPARTMENT_MANAGER' ? 'EMPLOYEE' : oldManager?.role;
       await prisma.user.update({
         where: { id: oldManagerId },
-        data: { role: 'EMPLOYEE' },
+        data: { role: newRole },
       });
     }
 
@@ -118,14 +131,21 @@ router.post('/:id/set-manager', authenticate, authorize('TECHNICAL_MANAGER'), as
       });
     }
 
+    const finalRole = user.role === 'EMPLOYEE' ? 'DEPARTMENT_MANAGER' : user.role;
     await prisma.user.update({
       where: { id: userId },
-      data: { role: 'DEPARTMENT_MANAGER' },
+      data: { role: finalRole },
     });
 
     await prisma.department.update({
       where: { id },
       data: { managerId: userId },
+    });
+
+    await prisma.userDepartment.upsert({
+      where: { userId_departmentId: { userId, departmentId: id } },
+      update: {},
+      create: { userId, departmentId: id },
     });
 
     const updated = await prisma.department.findUnique({
@@ -140,7 +160,7 @@ router.post('/:id/set-manager', authenticate, authorize('TECHNICAL_MANAGER'), as
   }
 });
 
-router.post('/:id/remove-manager', authenticate, authorize('TECHNICAL_MANAGER'), async (req: AuthRequest, res: Response) => {
+router.post('/:id/remove-manager', authenticate, authorize('TECHNICAL_MANAGER', 'STRATEGY_MANAGER', 'CEO'), async (req: AuthRequest, res: Response) => {
   try {
     const id = parseInt(req.params.id as string);
     const department = await prisma.department.findUnique({ where: { id } });
@@ -151,10 +171,13 @@ router.post('/:id/remove-manager', authenticate, authorize('TECHNICAL_MANAGER'),
       return res.status(400).json({ error: 'Department has no manager' });
     }
 
-    await prisma.user.update({
-      where: { id: department.managerId },
-      data: { role: 'EMPLOYEE' },
-    });
+    const oldManager = await prisma.user.findUnique({ where: { id: department.managerId } });
+    if (oldManager && oldManager.role === 'DEPARTMENT_MANAGER') {
+      await prisma.user.update({
+        where: { id: department.managerId },
+        data: { role: 'EMPLOYEE' },
+      });
+    }
 
     await prisma.department.update({
       where: { id },
@@ -173,16 +196,16 @@ router.post('/:id/remove-manager', authenticate, authorize('TECHNICAL_MANAGER'),
   }
 });
 
-router.delete('/:id', authenticate, authorize('TECHNICAL_MANAGER'), async (req: AuthRequest, res: Response) => {
+router.delete('/:id', authenticate, authorize('TECHNICAL_MANAGER', 'STRATEGY_MANAGER', 'CEO'), async (req: AuthRequest, res: Response) => {
   try {
     const id = parseInt(req.params.id as string);
     const existing = await prisma.department.findUnique({ where: { id } });
     if (!existing) {
       return res.status(404).json({ error: 'Department not found' });
     }
-    const userCount = await prisma.user.count({ where: { departmentId: id } });
-    if (userCount > 0) {
-      return res.status(400).json({ error: `Cannot delete department with ${userCount} active user(s)` });
+    const memberCount = await prisma.userDepartment.count({ where: { departmentId: id } });
+    if (memberCount > 0) {
+      return res.status(400).json({ error: `Cannot delete department with ${memberCount} active member(s)` });
     }
     await prisma.department.delete({ where: { id } });
     res.json({ message: 'Department deleted successfully' });

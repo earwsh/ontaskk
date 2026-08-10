@@ -17,12 +17,16 @@ export default function NewTaskPage() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [deadline, setDeadline] = useState('');
-  const [estimatedHours, setEstimatedHours] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const [estimatedMinutes, setEstimatedMinutes] = useState('');
+  const [weight, setWeight] = useState('');
   const [assigneeIds, setAssigneeIds] = useState<number[]>([]);
   const [subtasks, setSubtasks] = useState<string[]>(['']);
   const [projectUsers, setProjectUsers] = useState<{ id: number; firstName: string; lastName: string; email: string }[]>([]);
+  const [approverId, setApproverId] = useState<number | ''>('');
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
   useEffect(() => {
     if (!projectId) {
@@ -30,13 +34,16 @@ export default function NewTaskPage() {
       return;
     }
     const stored = localStorage.getItem('user');
+    let currentUserId: number | '' = '';
     if (stored) {
       const u = JSON.parse(stored);
-      if (!['TECHNICAL_MANAGER', 'DEPARTMENT_MANAGER'].includes(u.role)) {
+      currentUserId = u.id;
+      if (!['TECHNICAL_MANAGER', 'STRATEGY_MANAGER', 'DEPARTMENT_MANAGER', 'CEO'].includes(u.role)) {
         router.push('/dashboard/projects');
         return;
       }
     }
+    setApproverId(currentUserId);
     const id = parseInt(projectId);
     api.get(`/projects/${id}`).then(({ data }) => {
       setProjectName(data.name);
@@ -60,9 +67,31 @@ export default function NewTaskPage() {
   const selectAll = () => setAssigneeIds(projectUsers.map((u) => u.id));
   const deselectAll = () => setAssigneeIds([]);
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const filesArray = Array.from(e.target.files);
+      setSelectedFiles((prev) => [...prev, ...filesArray]);
+    }
+  };
+
+  const removeSelectedFile = (index: number) => {
+    setSelectedFiles((prev) => prev.filter((_, idx) => idx !== index));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title || !projectId || assigneeIds.length === 0) return;
+    if (!title.trim()) {
+      showToast('لطفاً عنوان تسک را وارد کنید', 'error');
+      return;
+    }
+    if (!projectId) {
+      showToast('پروژه مشخص نشده است', 'error');
+      return;
+    }
+    if (assigneeIds.length === 0) {
+      showToast('لطفاً حداقل یک انجام‌دهنده (عضو) انتخاب کنید', 'error');
+      return;
+    }
     setSaving(true);
     try {
       const { data } = await api.post('/tasks', {
@@ -70,10 +99,24 @@ export default function NewTaskPage() {
         description,
         projectId: parseInt(projectId),
         assigneeIds,
+        approverId: approverId || undefined,
+        startDate: startDate || undefined,
         deadline: deadline || undefined,
-        estimatedHours: estimatedHours ? parseFloat(estimatedHours) : undefined,
+        estimatedMinutes: estimatedMinutes ? parseInt(estimatedMinutes) : undefined,
+        weight: weight ? parseInt(weight) : undefined,
         subtasks: subtasks.filter((s) => s.trim()).map((s) => ({ title: s })),
       });
+
+      if (selectedFiles.length > 0) {
+        for (const file of selectedFiles) {
+          const formData = new FormData();
+          formData.append('file', file);
+          await api.post(`/tasks/${data.id}/attachments`, formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+          });
+        }
+      }
+
       router.push(`/dashboard/tasks/${data.id}`);
       showToast('تسک با موفقیت ایجاد شد');
     } catch (err: any) {
@@ -86,7 +129,7 @@ export default function NewTaskPage() {
   if (loading) return null;
 
   return (
-    <ProtectedRoute allowedRoles={['TECHNICAL_MANAGER', 'DEPARTMENT_MANAGER']}>
+    <ProtectedRoute allowedRoles={['TECHNICAL_MANAGER', 'STRATEGY_MANAGER', 'DEPARTMENT_MANAGER', 'CEO']}>
       <div className="h-full flex flex-col overflow-hidden animate-fade-in">
         <div className="flex items-center justify-between shrink-0 mb-6">
           <div className="flex items-center gap-4">
@@ -111,7 +154,7 @@ export default function NewTaskPage() {
           <div className="flex-1 grid grid-rows-[auto_1fr] gap-4 min-h-0">
             <div className="bg-card border border-[rgba(255,255,255,0.06)] rounded-[20px] p-5 shrink-0">
               <div className="grid grid-cols-12 gap-4">
-                <div className="col-span-6">
+                <div className="col-span-12 md:col-span-6">
                   <label className="flex items-center gap-1.5 text-xs font-medium text-text-secondary mb-1.5">
                     <svg className="w-3.5 h-3.5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -122,28 +165,61 @@ export default function NewTaskPage() {
                     className="w-full px-4 py-2.5 bg-[rgba(22,27,38,0.6)] border border-[rgba(255,255,255,0.08)] rounded-xl text-white placeholder-text-muted focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/30 transition-all duration-200"
                     placeholder="عنوان تسک را وارد کنید" />
                 </div>
-                <div className="col-span-3">
+                <div className="col-span-12 md:col-span-6">
                   <label className="flex items-center gap-1.5 text-xs font-medium text-text-secondary mb-1.5">
                     <svg className="w-3.5 h-3.5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                     </svg>
-                    زمان تخمینی
+                    تایید کننده *
                   </label>
-                  <div className="relative">
-                    <input type="number" min="0" step="0.5" value={estimatedHours} onChange={(e) => setEstimatedHours(e.target.value)}
-                      className="w-full px-4 py-2.5 bg-[rgba(22,27,38,0.6)] border border-[rgba(255,255,255,0.08)] rounded-xl text-white placeholder-text-muted focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/30 transition-all duration-200"
-                      placeholder="۰" />
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted text-xs">ساعت</span>
-                  </div>
+                  <select required value={approverId} onChange={(e) => setApproverId(Number(e.target.value))}
+                    className="w-full px-4 py-2.5 bg-[rgba(22,27,38,0.6)] border border-[rgba(255,255,255,0.08)] rounded-xl text-white outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/30 transition-all duration-200 cursor-pointer text-sm">
+                    {projectUsers.map((u) => (
+                      <option key={u.id} value={u.id}>{u.firstName} {u.lastName}</option>
+                    ))}
+                    {!projectUsers.some(u => u.id === approverId) && approverId && (
+                      <option value={approverId}>من (ایجاد کننده)</option>
+                    )}
+                  </select>
                 </div>
-                <div className="col-span-3">
+                <div className="col-span-12 md:col-span-3">
+                  <label className="flex items-center gap-1.5 text-xs font-medium text-text-secondary mb-1.5">
+                    <svg className="w-3.5 h-3.5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    تاریخ شروع
+                  </label>
+                  <ShamsiDatePicker value={startDate} onChange={setStartDate} placeholder="شروع (اختیاری)" />
+                </div>
+                <div className="col-span-12 md:col-span-3">
                   <label className="flex items-center gap-1.5 text-xs font-medium text-text-secondary mb-1.5">
                     <svg className="w-3.5 h-3.5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
                     ددلاین
                   </label>
-                  <ShamsiDatePicker value={deadline} onChange={setDeadline} placeholder="انتخاب تاریخ" />
+                  <ShamsiDatePicker value={deadline} onChange={setDeadline} placeholder="سررسید (اختیاری)" />
+                </div>
+                <div className="col-span-12 md:col-span-3">
+                  <label className="flex items-center gap-1.5 text-xs font-medium text-text-secondary mb-1.5 whitespace-nowrap">
+                    زمان (دقیقه)
+                  </label>
+                  <input type="number" min="0" value={estimatedMinutes}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setEstimatedMinutes(val);
+                      setWeight(val);
+                    }}
+                    className="w-full px-4 py-2.5 bg-[rgba(22,27,38,0.6)] border border-[rgba(255,255,255,0.08)] rounded-xl text-white placeholder-text-muted focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/30 transition-all duration-200 text-sm"
+                    placeholder="۰" />
+                </div>
+                <div className="col-span-12 md:col-span-3">
+                  <label className="flex items-center gap-1.5 text-xs font-medium text-text-secondary mb-1.5">
+                    وزن
+                  </label>
+                  <input type="number" min="0" value={weight} onChange={(e) => setWeight(e.target.value)}
+                    className="w-full px-4 py-2.5 bg-[rgba(22,27,38,0.6)] border border-[rgba(255,255,255,0.08)] rounded-xl text-white placeholder-text-muted focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/30 transition-all duration-200 text-sm"
+                    placeholder="۰" />
                 </div>
               </div>
             </div>
@@ -195,6 +271,45 @@ export default function NewTaskPage() {
                     ))}
                     {subtasks.length === 0 && (
                       <p className="text-text-muted text-xs text-center py-4">هنوز آیتمی اضافه نشده</p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="bg-card border border-[rgba(255,255,255,0.06)] rounded-[20px] p-5 flex flex-col flex-1 min-h-0">
+                  <div className="flex items-center justify-between mb-3 shrink-0">
+                    <label className="flex items-center gap-1.5 text-xs font-medium text-text-secondary">
+                      <svg className="w-3.5 h-3.5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.414a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                      </svg>
+                      ضمائم و فایل‌ها
+                    </label>
+                    <label className="text-xs text-primary hover:text-primary-hover flex items-center gap-1 transition-all cursor-pointer">
+                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                      </svg>
+                      انتخاب فایل
+                      <input type="file" multiple onChange={handleFileChange} className="hidden" />
+                    </label>
+                  </div>
+                  <div className="flex-1 min-h-0 overflow-y-auto space-y-1.5">
+                    {selectedFiles.map((file, i) => (
+                      <div key={i} className="flex items-center justify-between bg-[rgba(22,27,38,0.6)] rounded-lg px-3 py-2 border border-[rgba(255,255,255,0.04)]">
+                        <div className="flex items-center gap-2 min-w-0">
+                          <svg className="w-4 h-4 text-primary shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                          </svg>
+                          <span className="text-xs text-white truncate block">{file.name}</span>
+                          <span className="text-[10px] text-text-muted shrink-0">({(file.size / 1024 / 1024).toFixed(2)} MB)</span>
+                        </div>
+                        <button type="button" onClick={() => removeSelectedFile(i)} className="p-1 text-text-muted hover:text-danger transition-all shrink-0">
+                          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      </div>
+                    ))}
+                    {selectedFiles.length === 0 && (
+                      <p className="text-text-muted text-xs text-center py-4">فایلی انتخاب نشده است</p>
                     )}
                   </div>
                 </div>
@@ -257,7 +372,7 @@ export default function NewTaskPage() {
           </div>
 
           <div className="flex items-center gap-3 mt-4 shrink-0">
-            <button type="submit" disabled={saving || !title || assigneeIds.length === 0}
+            <button type="submit" disabled={saving}
               className="flex-1 h-11 bg-primary hover:bg-primary-hover disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-xl font-medium text-sm transition-all flex items-center justify-center gap-2">
               {saving ? (
                 <>

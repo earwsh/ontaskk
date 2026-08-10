@@ -1,12 +1,17 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import DatePicker from 'react-multi-date-picker';
+import persian from 'react-date-object/locales/persian_fa';
+import persianCalendar from 'react-date-object/calendars/persian';
+import 'react-multi-date-picker/styles/layouts/mobile.css';
 import api from '@/lib/api';
 
 const roles = [
   { value: 'CEO', label: 'مدیر عامل' },
   { value: 'HR_MANAGER', label: 'مدیر منابع انسانی' },
   { value: 'TECHNICAL_MANAGER', label: 'مدیر فنی' },
+  { value: 'STRATEGY_MANAGER', label: 'مدیر استراتژی' },
   { value: 'DEPARTMENT_MANAGER', label: 'مدیر دپارتمان' },
   { value: 'EMPLOYEE', label: 'کارمند' },
   { value: 'CUSTOMER', label: 'مشتری' },
@@ -26,7 +31,7 @@ interface UserFormData {
   role: string;
   position: string;
   nationalId: string;
-  departmentId: string;
+  departmentIds: number[];
   phone: string;
   birthDate: string;
   startDate: string;
@@ -42,7 +47,7 @@ interface UserFormModalProps {
 
 const emptyForm: UserFormData = {
   firstName: '', lastName: '', displayName: '', email: '', password: '',
-  role: 'EMPLOYEE', position: '', nationalId: '', departmentId: '', phone: '',
+  role: 'EMPLOYEE', position: '', nationalId: '', departmentIds: [], phone: '',
   birthDate: '', startDate: '',
 };
 
@@ -148,24 +153,68 @@ export default function UserFormModal({ open, onClose, onSubmit, initialData, mo
               <input type="text" value={form.nationalId} onChange={set('nationalId')} className={inputClass} dir="ltr" placeholder="کد ملی (اختیاری)" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-text-secondary mb-1.5">دپارتمان</label>
-              <select value={form.departmentId} onChange={set('departmentId')} className={inputClass}>
-                <option value="" className="bg-card">بدون دپارتمان</option>
+              <label className="block text-sm font-medium text-text-secondary mb-1.5">دپارتمان‌ها</label>
+              <div className="space-y-2 max-h-40 overflow-y-auto p-3 bg-[rgba(22,27,38,0.6)] border border-[rgba(255,255,255,0.08)] rounded-xl">
                 {departments.map((d) => (
-                  <option key={d.id} value={d.id} className="bg-card">{d.name}</option>
+                  <label key={d.id} className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={form.departmentIds.includes(d.id)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setForm({ ...form, departmentIds: [...form.departmentIds, d.id] });
+                        } else {
+                          setForm({ ...form, departmentIds: form.departmentIds.filter((id) => id !== d.id) });
+                        }
+                      }}
+                      className="rounded border-[rgba(255,255,255,0.08)] bg-[rgba(22,27,38,0.6)] text-primary focus:ring-primary/30"
+                    />
+                    <span className="text-sm text-white">{d.name}</span>
+                  </label>
                 ))}
-              </select>
+                {departments.length === 0 && <span className="text-xs text-text-muted">دپارتمانی وجود ندارد</span>}
+              </div>
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-text-secondary mb-1.5">تاریخ تولد</label>
-              <input type="date" value={form.birthDate} onChange={set('birthDate')} className={inputClass} />
+              <DatePicker
+                value={form.birthDate ? new Date(form.birthDate + 'T00:00:00') : undefined}
+                onChange={(date: any) => {
+                  if (date) {
+                    const d = date instanceof Date ? date : date.toDate();
+                    setForm({ ...form, birthDate: d.toISOString().split('T')[0] });
+                  }
+                }}
+                calendar={persianCalendar}
+                locale={persian}
+                calendarPosition="bottom-right"
+                inputClass={inputClass}
+                containerClassName="w-full"
+                format="YYYY/MM/DD"
+                placeholder="تاریخ تولد"
+              />
             </div>
             <div>
               <label className="block text-sm font-medium text-text-secondary mb-1.5">تاریخ شروع به کار</label>
-              <input type="date" value={form.startDate} onChange={set('startDate')} className={inputClass} />
+              <DatePicker
+                value={form.startDate ? new Date(form.startDate + 'T00:00:00') : undefined}
+                onChange={(date: any) => {
+                  if (date) {
+                    const d = date instanceof Date ? date : date.toDate();
+                    setForm({ ...form, startDate: d.toISOString().split('T')[0] });
+                  }
+                }}
+                calendar={persianCalendar}
+                locale={persian}
+                calendarPosition="bottom-right"
+                inputClass={inputClass}
+                containerClassName="w-full"
+                format="YYYY/MM/DD"
+                placeholder="تاریخ شروع به کار"
+              />
             </div>
           </div>
 

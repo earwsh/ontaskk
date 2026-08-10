@@ -14,8 +14,7 @@ interface User {
   role: string;
   position: string | null;
   nationalId: string | null;
-  departmentId: number | null;
-  department: { id: number; name: string } | null;
+  departmentMemberships: { department: { id: number; name: string } }[];
   phone: string | null;
   birthDate: string | null;
   startDate: string | null;
@@ -26,6 +25,7 @@ const roleBadge: Record<string, string> = {
   CEO: 'bg-purple-500/20 text-purple-400',
   HR_MANAGER: 'bg-blue-500/20 text-blue-400',
   TECHNICAL_MANAGER: 'bg-cyan-500/20 text-cyan-400',
+  STRATEGY_MANAGER: 'bg-violet-500/20 text-violet-400',
   DEPARTMENT_MANAGER: 'bg-amber-500/20 text-amber-400',
   EMPLOYEE: 'bg-green-500/20 text-green-400',
   CUSTOMER: 'bg-slate-500/20 text-slate-400',
@@ -35,6 +35,7 @@ const roleLabel: Record<string, string> = {
   CEO: 'مدیر عامل',
   HR_MANAGER: 'مدیر منابع انسانی',
   TECHNICAL_MANAGER: 'مدیر فنی',
+  STRATEGY_MANAGER: 'مدیر استراتژی',
   DEPARTMENT_MANAGER: 'مدیر دپارتمان',
   EMPLOYEE: 'کارمند',
   CUSTOMER: 'مشتری',
@@ -52,7 +53,7 @@ export default function UsersPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<'create' | 'edit'>('create');
   const [editingUserId, setEditingUserId] = useState<number | null>(null);
-  const [editingUser, setEditingUser] = useState<Record<string, string> | null>(null);
+  const [editingUser, setEditingUser] = useState<any>(null);
 
   const fetchUsers = async () => {
     try {
@@ -85,11 +86,11 @@ export default function UsersPage() {
       role: user.role,
       position: user.position || '',
       nationalId: user.nationalId || '',
-      departmentId: user.departmentId?.toString() || '',
+      departmentIds: user.departmentMemberships?.map((m) => m.department.id) || [],
       phone: user.phone || '',
       birthDate: user.birthDate ? user.birthDate.split('T')[0] : '',
       startDate: user.startDate ? user.startDate.split('T')[0] : '',
-    });
+    } as any);
     setModalMode('edit');
     setModalOpen(true);
   };
@@ -173,7 +174,9 @@ export default function UsersPage() {
                       <td className="px-4 py-3 text-text-secondary whitespace-nowrap">{user.position || '-'}</td>
                       <td className="px-4 py-3 text-text-secondary whitespace-nowrap">{toJalali(user.birthDate)}</td>
                       <td className="px-4 py-3 text-text-secondary whitespace-nowrap">{toJalali(user.startDate)}</td>
-                      <td className="px-4 py-3 text-text-secondary whitespace-nowrap">{user.department?.name || '-'}</td>
+                      <td className="px-4 py-3 text-text-secondary whitespace-nowrap">
+                        {user.departmentMemberships?.map((m) => m.department.name).join(', ') || '-'}
+                      </td>
                       <td className="px-4 py-3 text-text-secondary whitespace-nowrap">{user.phone || '-'}</td>
                       <td className="px-4 py-3 text-text-secondary whitespace-nowrap dir-ltr text-xs">{user.email}</td>
                       <td className="px-4 py-3 whitespace-nowrap">

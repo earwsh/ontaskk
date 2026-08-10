@@ -7,7 +7,7 @@ const router = Router();
 
 router.post('/register', async (req: Request, res: Response) => {
   try {
-    const { email, password, firstName, lastName, displayName, role, departmentId, phone, nationalId, position, birthDate, startDate } = req.body;
+    const { email, password, firstName, lastName, displayName, role, departmentIds, phone, nationalId, position, birthDate, startDate } = req.body;
     const existing = await prisma.user.findUnique({ where: { email } });
     if (existing) {
       return res.status(400).json({ error: 'Email already exists' });
@@ -16,13 +16,24 @@ router.post('/register', async (req: Request, res: Response) => {
     const user = await prisma.user.create({
       data: {
         email, password: hashedPassword, firstName, lastName, displayName, role,
-        departmentId: departmentId ? parseInt(departmentId) : null,
         phone, nationalId, position,
         birthDate: birthDate ? new Date(birthDate) : undefined,
         startDate: startDate ? new Date(startDate) : undefined,
+        departmentMemberships: departmentIds?.length
+          ? { create: departmentIds.map((id: number) => ({ departmentId: id })) }
+          : undefined,
       },
-      include: { department: true },
+      include: { departmentMemberships: { include: { department: true } } },
     });
+    const orgWideRoles = ['CEO', 'TECHNICAL_MANAGER', 'HR_MANAGER', 'STRATEGY_MANAGER'];
+    if (orgWideRoles.includes(role) && departmentIds?.length) {
+      const allDepts = await prisma.department.findMany({ select: { id: true } });
+      for (const dept of allDepts) {
+        if (!departmentIds.includes(dept.id)) {
+          await prisma.userDepartment.create({ data: { userId: user.id, departmentId: dept.id } });
+        }
+      }
+    }
     const token = jwt.sign(
       { id: user.id, email: user.email, role: user.role, firstName: user.firstName, lastName: user.lastName },
       process.env.JWT_SECRET!,
@@ -33,8 +44,7 @@ router.post('/register', async (req: Request, res: Response) => {
       user: {
         id: user.id, email: user.email, firstName: user.firstName, lastName: user.lastName,
         displayName: user.displayName, role: user.role,
-        department: user.department,
-        departmentId: user.departmentId,
+        departments: user.departmentMemberships.map((m: any) => m.department),
         phone: user.phone, nationalId: user.nationalId,
         position: user.position, birthDate: user.birthDate, startDate: user.startDate,
       },
@@ -49,14 +59,14 @@ router.post('/login', async (req: Request, res: Response) => {
     const { email, password } = req.body;
     const user = await prisma.user.findUnique({
       where: { email },
-      include: { department: true },
+      include: { departmentMemberships: { include: { department: true } } },
     });
     if (!user) {
-      return res.status(401).json({ error: 'Invalid credentials' });
+      return res.status(401).json({ error: 'User not found' });
     }
     const valid = await bcrypt.compare(password, user.password);
     if (!valid) {
-      return res.status(401).json({ error: 'Invalid credentials' });
+      return res.status(401).json({ error: 'Wrong password' });
     }
     const token = jwt.sign(
       { id: user.id, email: user.email, role: user.role, firstName: user.firstName, lastName: user.lastName },
@@ -68,8 +78,7 @@ router.post('/login', async (req: Request, res: Response) => {
       user: {
         id: user.id, email: user.email, firstName: user.firstName, lastName: user.lastName,
         displayName: user.displayName, role: user.role,
-        department: user.department,
-        departmentId: user.departmentId,
+        departments: user.departmentMemberships.map((m: any) => m.department),
         phone: user.phone, nationalId: user.nationalId,
         position: user.position, birthDate: user.birthDate, startDate: user.startDate,
       },

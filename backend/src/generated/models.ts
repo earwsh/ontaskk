@@ -8,6 +8,7 @@
  *
  * 🟢 You can import this file directly.
  */
+export type * from './models/UserDepartment'
 export type * from './models/Department'
 export type * from './models/Project'
 export type * from './models/ProjectMember'
@@ -17,4 +18,5 @@ export type * from './models/TaskSubtask'
 export type * from './models/TaskReport'
 export type * from './models/Notification'
 export type * from './models/User'
+export type * from './models/TaskAttachment'
 export type * from './commonInputTypes'

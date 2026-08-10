@@ -1,0 +1,120 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import ProtectedRoute from '@/components/ProtectedRoute';
+import api from '@/lib/api';
+import Link from 'next/link';
+
+const statusConfig: Record<string, { label: string; color: string; bg: string }> = {
+  TODO: { label: 'انجام نشده', color: 'text-yellow-400', bg: 'bg-yellow-500/10' },
+  IN_PROGRESS: { label: 'در حال انجام', color: 'text-blue-400', bg: 'bg-blue-500/10' },
+  PENDING_APPROVAL: { label: 'منتظر تایید', color: 'text-purple-400', bg: 'bg-purple-500/10' },
+  DONE: { label: 'تکمیل شده', color: 'text-green-400', bg: 'bg-green-500/10' },
+};
+
+export default function DeptTasksPage() {
+  const router = useRouter();
+  const [tasks, setTasks] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    api.get('/tasks').then(({ data }) => {
+      setTasks(data);
+    }).catch(() => {}).finally(() => setLoading(false));
+  }, []);
+
+  const grouped = tasks.reduce<Record<string, any[]>>((acc, t) => {
+    const key = t.project?.name || 'بدون پروژه';
+    if (!acc[key]) acc[key] = [];
+    acc[key].push(t);
+    return acc;
+  }, {});
+
+  return (
+    <ProtectedRoute allowedRoles={['CEO', 'TECHNICAL_MANAGER', 'STRATEGY_MANAGER', 'HR_MANAGER', 'DEPARTMENT_MANAGER']}>
+      <div className="animate-fade-in space-y-6">
+        <div>
+          <h1 className="text-2xl font-bold text-white">تسک‌های دپارتمان</h1>
+          <p className="text-text-muted text-sm mt-1">تمام تسک‌های پروژه‌های دپارتمان</p>
+        </div>
+
+        {loading ? (
+          <div className="flex items-center justify-center py-20 text-text-muted">در حال بارگذاری...</div>
+        ) : tasks.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-20 text-text-muted">
+            <svg className="w-12 h-12 mb-3 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+            <p className="text-sm">هیچ تسکی در دپارتمان وجود ندارد</p>
+          </div>
+        ) : (
+          <div className="space-y-6">
+            {Object.entries(grouped).map(([projectName, projectTasks]) => (
+              <div key={projectName} className="bg-card border border-[rgba(255,255,255,0.06)] rounded-[20px] overflow-hidden">
+                <div className="px-4 py-3 border-b border-[rgba(255,255,255,0.06)] flex items-center gap-2">
+                  <svg className="w-4 h-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                  </svg>
+                  <span className="text-white font-medium text-sm">{projectName}</span>
+                  <span className="text-text-muted text-xs mr-auto">{projectTasks.length} تسک</span>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b border-[rgba(255,255,255,0.03)]">
+                        <th className="text-right px-4 py-2.5 text-text-muted font-medium whitespace-nowrap text-xs">عنوان</th>
+                        <th className="text-right px-4 py-2.5 text-text-muted font-medium whitespace-nowrap text-xs">وضعیت</th>
+                        <th className="text-right px-4 py-2.5 text-text-muted font-medium whitespace-nowrap text-xs">سررسید</th>
+                        <th className="text-right px-4 py-2.5 text-text-muted font-medium whitespace-nowrap text-xs">محول به</th>
+                        <th className="text-right px-4 py-2.5 text-text-muted font-medium whitespace-nowrap text-xs">زیر تسک</th>
+                        <th className="text-right px-4 py-2.5 text-text-muted font-medium whitespace-nowrap text-xs">ایجاد کننده</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {projectTasks.map((task: any) => {
+                        const doneSubtasks = task.subtasks?.filter((s: any) => s.isDone).length || 0;
+                        const totalSubtasks = task.subtasks?.length || 0;
+                        const conf = statusConfig[task.status] || statusConfig.TODO;
+
+                        return (
+                          <tr key={task.id} className="border-b border-[rgba(255,255,255,0.03)] hover:bg-card-hover transition-colors">
+                            <td className="px-4 py-2.5">
+                              <Link href={`/dashboard/tasks/${task.id}`} className="text-white hover:text-primary transition-colors font-medium">
+                                {task.title}
+                              </Link>
+                            </td>
+                            <td className="px-4 py-2.5 whitespace-nowrap">
+                              <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium ${conf.bg} ${conf.color}`}>
+                                <div className={`w-1.5 h-1.5 rounded-full ${conf.color.replace('text', 'bg')}`} />
+                                {conf.label}
+                              </span>
+                            </td>
+                            <td className="px-4 py-2.5 text-text-secondary whitespace-nowrap font-mono text-xs">
+                              {task.deadline ? new Date(task.deadline).toLocaleDateString('fa-IR') : '-'}
+                            </td>
+                            <td className="px-4 py-2.5 text-text-secondary whitespace-nowrap text-xs">
+                              {task.assignees?.length
+                                ? task.assignees.map((a: any) => `${a.user.firstName} ${a.user.lastName}`).join('، ')
+                                : '-'}
+                            </td>
+                            <td className="px-4 py-2.5 text-text-secondary whitespace-nowrap text-xs">
+                              {totalSubtasks > 0 ? `${doneSubtasks}/${totalSubtasks}` : '-'}
+                            </td>
+                            <td className="px-4 py-2.5 text-text-secondary whitespace-nowrap text-xs">
+                              {task.createdBy ? `${task.createdBy.firstName} ${task.createdBy.lastName}` : '-'}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </ProtectedRoute>
+  );
+}

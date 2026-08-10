@@ -28,12 +28,10 @@ export type AggregateUser = {
 
 export type UserAvgAggregateOutputType = {
   id: number | null
-  departmentId: number | null
 }
 
 export type UserSumAggregateOutputType = {
   id: number | null
-  departmentId: number | null
 }
 
 export type UserMinAggregateOutputType = {
@@ -48,7 +46,6 @@ export type UserMinAggregateOutputType = {
   nationalId: string | null
   position: string | null
   role: $Enums.Role | null
-  departmentId: number | null
   phone: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -66,7 +63,6 @@ export type UserMaxAggregateOutputType = {
   nationalId: string | null
   position: string | null
   role: $Enums.Role | null
-  departmentId: number | null
   phone: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -84,7 +80,6 @@ export type UserCountAggregateOutputType = {
   nationalId: number
   position: number
   role: number
-  departmentId: number
   phone: number
   createdAt: number
   updatedAt: number
@@ -94,12 +89,10 @@ export type UserCountAggregateOutputType = {
 
 export type UserAvgAggregateInputType = {
   id?: true
-  departmentId?: true
 }
 
 export type UserSumAggregateInputType = {
   id?: true
-  departmentId?: true
 }
 
 export type UserMinAggregateInputType = {
@@ -114,7 +107,6 @@ export type UserMinAggregateInputType = {
   nationalId?: true
   position?: true
   role?: true
-  departmentId?: true
   phone?: true
   createdAt?: true
   updatedAt?: true
@@ -132,7 +124,6 @@ export type UserMaxAggregateInputType = {
   nationalId?: true
   position?: true
   role?: true
-  departmentId?: true
   phone?: true
   createdAt?: true
   updatedAt?: true
@@ -150,7 +141,6 @@ export type UserCountAggregateInputType = {
   nationalId?: true
   position?: true
   role?: true
-  departmentId?: true
   phone?: true
   createdAt?: true
   updatedAt?: true
@@ -255,7 +245,6 @@ export type UserGroupByOutputType = {
   nationalId: string | null
   position: string | null
   role: $Enums.Role
-  departmentId: number | null
   phone: string | null
   createdAt: Date
   updatedAt: Date
@@ -296,11 +285,9 @@ export type UserWhereInput = {
   nationalId?: Prisma.StringNullableFilter<"User"> | string | null
   position?: Prisma.StringNullableFilter<"User"> | string | null
   role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
-  departmentId?: Prisma.IntNullableFilter<"User"> | number | null
   phone?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
-  department?: Prisma.XOR<Prisma.DepartmentNullableScalarRelationFilter, Prisma.DepartmentWhereInput> | null
   managedDept?: Prisma.XOR<Prisma.DepartmentNullableScalarRelationFilter, Prisma.DepartmentWhereInput> | null
   projects?: Prisma.ProjectListRelationFilter
   taskAssignments?: Prisma.TaskAssigneeListRelationFilter
@@ -308,7 +295,10 @@ export type UserWhereInput = {
   projectMemberships?: Prisma.ProjectMemberListRelationFilter
   taskReports?: Prisma.TaskReportListRelationFilter
   approvedTasks?: Prisma.TaskListRelationFilter
+  approverTasks?: Prisma.TaskListRelationFilter
   notifications?: Prisma.NotificationListRelationFilter
+  departmentMemberships?: Prisma.UserDepartmentListRelationFilter
+  attachments?: Prisma.TaskAttachmentListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -323,11 +313,9 @@ export type UserOrderByWithRelationInput = {
   nationalId?: Prisma.SortOrderInput | Prisma.SortOrder
   position?: Prisma.SortOrderInput | Prisma.SortOrder
   role?: Prisma.SortOrder
-  departmentId?: Prisma.SortOrderInput | Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  department?: Prisma.DepartmentOrderByWithRelationInput
   managedDept?: Prisma.DepartmentOrderByWithRelationInput
   projects?: Prisma.ProjectOrderByRelationAggregateInput
   taskAssignments?: Prisma.TaskAssigneeOrderByRelationAggregateInput
@@ -335,7 +323,10 @@ export type UserOrderByWithRelationInput = {
   projectMemberships?: Prisma.ProjectMemberOrderByRelationAggregateInput
   taskReports?: Prisma.TaskReportOrderByRelationAggregateInput
   approvedTasks?: Prisma.TaskOrderByRelationAggregateInput
+  approverTasks?: Prisma.TaskOrderByRelationAggregateInput
   notifications?: Prisma.NotificationOrderByRelationAggregateInput
+  departmentMemberships?: Prisma.UserDepartmentOrderByRelationAggregateInput
+  attachments?: Prisma.TaskAttachmentOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -353,11 +344,9 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   startDate?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   position?: Prisma.StringNullableFilter<"User"> | string | null
   role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
-  departmentId?: Prisma.IntNullableFilter<"User"> | number | null
   phone?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
-  department?: Prisma.XOR<Prisma.DepartmentNullableScalarRelationFilter, Prisma.DepartmentWhereInput> | null
   managedDept?: Prisma.XOR<Prisma.DepartmentNullableScalarRelationFilter, Prisma.DepartmentWhereInput> | null
   projects?: Prisma.ProjectListRelationFilter
   taskAssignments?: Prisma.TaskAssigneeListRelationFilter
@@ -365,7 +354,10 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   projectMemberships?: Prisma.ProjectMemberListRelationFilter
   taskReports?: Prisma.TaskReportListRelationFilter
   approvedTasks?: Prisma.TaskListRelationFilter
+  approverTasks?: Prisma.TaskListRelationFilter
   notifications?: Prisma.NotificationListRelationFilter
+  departmentMemberships?: Prisma.UserDepartmentListRelationFilter
+  attachments?: Prisma.TaskAttachmentListRelationFilter
 }, "id" | "email" | "nationalId">
 
 export type UserOrderByWithAggregationInput = {
@@ -380,7 +372,6 @@ export type UserOrderByWithAggregationInput = {
   nationalId?: Prisma.SortOrderInput | Prisma.SortOrder
   position?: Prisma.SortOrderInput | Prisma.SortOrder
   role?: Prisma.SortOrder
-  departmentId?: Prisma.SortOrderInput | Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -406,7 +397,6 @@ export type UserScalarWhereWithAggregatesInput = {
   nationalId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   position?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   role?: Prisma.EnumRoleWithAggregatesFilter<"User"> | $Enums.Role
-  departmentId?: Prisma.IntNullableWithAggregatesFilter<"User"> | number | null
   phone?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
@@ -426,7 +416,6 @@ export type UserCreateInput = {
   phone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  department?: Prisma.DepartmentCreateNestedOneWithoutUsersInput
   managedDept?: Prisma.DepartmentCreateNestedOneWithoutManagerInput
   projects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
   taskAssignments?: Prisma.TaskAssigneeCreateNestedManyWithoutUserInput
@@ -434,7 +423,10 @@ export type UserCreateInput = {
   projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
   taskReports?: Prisma.TaskReportCreateNestedManyWithoutUserInput
   approvedTasks?: Prisma.TaskCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskCreateNestedManyWithoutApproverInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -449,7 +441,6 @@ export type UserUncheckedCreateInput = {
   nationalId?: string | null
   position?: string | null
   role?: $Enums.Role
-  departmentId?: number | null
   phone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -460,7 +451,10 @@ export type UserUncheckedCreateInput = {
   projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
   taskReports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutUserInput
   approvedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApproverInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -477,7 +471,6 @@ export type UserUpdateInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  department?: Prisma.DepartmentUpdateOneWithoutUsersNestedInput
   managedDept?: Prisma.DepartmentUpdateOneWithoutManagerNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
   taskAssignments?: Prisma.TaskAssigneeUpdateManyWithoutUserNestedInput
@@ -485,7 +478,10 @@ export type UserUpdateInput = {
   projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
   taskReports?: Prisma.TaskReportUpdateManyWithoutUserNestedInput
   approvedTasks?: Prisma.TaskUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUpdateManyWithoutApproverNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -500,7 +496,6 @@ export type UserUncheckedUpdateInput = {
   nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -511,7 +506,10 @@ export type UserUncheckedUpdateInput = {
   projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
   taskReports?: Prisma.TaskReportUncheckedUpdateManyWithoutUserNestedInput
   approvedTasks?: Prisma.TaskUncheckedUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUncheckedUpdateManyWithoutApproverNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -526,7 +524,6 @@ export type UserCreateManyInput = {
   nationalId?: string | null
   position?: string | null
   role?: $Enums.Role
-  departmentId?: number | null
   phone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -560,30 +557,19 @@ export type UserUncheckedUpdateManyInput = {
   nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type UserNullableScalarRelationFilter = {
-  is?: Prisma.UserWhereInput | null
-  isNot?: Prisma.UserWhereInput | null
-}
-
-export type UserListRelationFilter = {
-  every?: Prisma.UserWhereInput
-  some?: Prisma.UserWhereInput
-  none?: Prisma.UserWhereInput
-}
-
-export type UserOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
-}
-
 export type UserScalarRelationFilter = {
   is?: Prisma.UserWhereInput
   isNot?: Prisma.UserWhereInput
+}
+
+export type UserNullableScalarRelationFilter = {
+  is?: Prisma.UserWhereInput | null
+  isNot?: Prisma.UserWhereInput | null
 }
 
 export type UserCountOrderByAggregateInput = {
@@ -598,7 +584,6 @@ export type UserCountOrderByAggregateInput = {
   nationalId?: Prisma.SortOrder
   position?: Prisma.SortOrder
   role?: Prisma.SortOrder
-  departmentId?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -606,7 +591,6 @@ export type UserCountOrderByAggregateInput = {
 
 export type UserAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  departmentId?: Prisma.SortOrder
 }
 
 export type UserMaxOrderByAggregateInput = {
@@ -621,7 +605,6 @@ export type UserMaxOrderByAggregateInput = {
   nationalId?: Prisma.SortOrder
   position?: Prisma.SortOrder
   role?: Prisma.SortOrder
-  departmentId?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -639,7 +622,6 @@ export type UserMinOrderByAggregateInput = {
   nationalId?: Prisma.SortOrder
   position?: Prisma.SortOrder
   role?: Prisma.SortOrder
-  departmentId?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -647,27 +629,26 @@ export type UserMinOrderByAggregateInput = {
 
 export type UserSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  departmentId?: Prisma.SortOrder
+}
+
+export type UserCreateNestedOneWithoutDepartmentMembershipsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutDepartmentMembershipsInput, Prisma.UserUncheckedCreateWithoutDepartmentMembershipsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutDepartmentMembershipsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutDepartmentMembershipsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutDepartmentMembershipsInput, Prisma.UserUncheckedCreateWithoutDepartmentMembershipsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutDepartmentMembershipsInput
+  upsert?: Prisma.UserUpsertWithoutDepartmentMembershipsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutDepartmentMembershipsInput, Prisma.UserUpdateWithoutDepartmentMembershipsInput>, Prisma.UserUncheckedUpdateWithoutDepartmentMembershipsInput>
 }
 
 export type UserCreateNestedOneWithoutManagedDeptInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutManagedDeptInput, Prisma.UserUncheckedCreateWithoutManagedDeptInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutManagedDeptInput
   connect?: Prisma.UserWhereUniqueInput
-}
-
-export type UserCreateNestedManyWithoutDepartmentInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutDepartmentInput, Prisma.UserUncheckedCreateWithoutDepartmentInput> | Prisma.UserCreateWithoutDepartmentInput[] | Prisma.UserUncheckedCreateWithoutDepartmentInput[]
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutDepartmentInput | Prisma.UserCreateOrConnectWithoutDepartmentInput[]
-  createMany?: Prisma.UserCreateManyDepartmentInputEnvelope
-  connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-}
-
-export type UserUncheckedCreateNestedManyWithoutDepartmentInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutDepartmentInput, Prisma.UserUncheckedCreateWithoutDepartmentInput> | Prisma.UserCreateWithoutDepartmentInput[] | Prisma.UserUncheckedCreateWithoutDepartmentInput[]
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutDepartmentInput | Prisma.UserCreateOrConnectWithoutDepartmentInput[]
-  createMany?: Prisma.UserCreateManyDepartmentInputEnvelope
-  connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
 }
 
 export type UserUpdateOneWithoutManagedDeptNestedInput = {
@@ -678,34 +659,6 @@ export type UserUpdateOneWithoutManagedDeptNestedInput = {
   delete?: Prisma.UserWhereInput | boolean
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutManagedDeptInput, Prisma.UserUpdateWithoutManagedDeptInput>, Prisma.UserUncheckedUpdateWithoutManagedDeptInput>
-}
-
-export type UserUpdateManyWithoutDepartmentNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutDepartmentInput, Prisma.UserUncheckedCreateWithoutDepartmentInput> | Prisma.UserCreateWithoutDepartmentInput[] | Prisma.UserUncheckedCreateWithoutDepartmentInput[]
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutDepartmentInput | Prisma.UserCreateOrConnectWithoutDepartmentInput[]
-  upsert?: Prisma.UserUpsertWithWhereUniqueWithoutDepartmentInput | Prisma.UserUpsertWithWhereUniqueWithoutDepartmentInput[]
-  createMany?: Prisma.UserCreateManyDepartmentInputEnvelope
-  set?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-  disconnect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-  delete?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-  connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-  update?: Prisma.UserUpdateWithWhereUniqueWithoutDepartmentInput | Prisma.UserUpdateWithWhereUniqueWithoutDepartmentInput[]
-  updateMany?: Prisma.UserUpdateManyWithWhereWithoutDepartmentInput | Prisma.UserUpdateManyWithWhereWithoutDepartmentInput[]
-  deleteMany?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
-}
-
-export type UserUncheckedUpdateManyWithoutDepartmentNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutDepartmentInput, Prisma.UserUncheckedCreateWithoutDepartmentInput> | Prisma.UserCreateWithoutDepartmentInput[] | Prisma.UserUncheckedCreateWithoutDepartmentInput[]
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutDepartmentInput | Prisma.UserCreateOrConnectWithoutDepartmentInput[]
-  upsert?: Prisma.UserUpsertWithWhereUniqueWithoutDepartmentInput | Prisma.UserUpsertWithWhereUniqueWithoutDepartmentInput[]
-  createMany?: Prisma.UserCreateManyDepartmentInputEnvelope
-  set?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-  disconnect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-  delete?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-  connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-  update?: Prisma.UserUpdateWithWhereUniqueWithoutDepartmentInput | Prisma.UserUpdateWithWhereUniqueWithoutDepartmentInput[]
-  updateMany?: Prisma.UserUpdateManyWithWhereWithoutDepartmentInput | Prisma.UserUpdateManyWithWhereWithoutDepartmentInput[]
-  deleteMany?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
 }
 
 export type UserCreateNestedOneWithoutProjectsInput = {
@@ -742,6 +695,12 @@ export type UserCreateNestedOneWithoutApprovedTasksInput = {
   connect?: Prisma.UserWhereUniqueInput
 }
 
+export type UserCreateNestedOneWithoutApproverTasksInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutApproverTasksInput, Prisma.UserUncheckedCreateWithoutApproverTasksInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutApproverTasksInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
 export type UserCreateNestedOneWithoutCreatedTasksInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutCreatedTasksInput, Prisma.UserUncheckedCreateWithoutCreatedTasksInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutCreatedTasksInput
@@ -756,6 +715,16 @@ export type UserUpdateOneWithoutApprovedTasksNestedInput = {
   delete?: Prisma.UserWhereInput | boolean
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutApprovedTasksInput, Prisma.UserUpdateWithoutApprovedTasksInput>, Prisma.UserUncheckedUpdateWithoutApprovedTasksInput>
+}
+
+export type UserUpdateOneWithoutApproverTasksNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutApproverTasksInput, Prisma.UserUncheckedCreateWithoutApproverTasksInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutApproverTasksInput
+  upsert?: Prisma.UserUpsertWithoutApproverTasksInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutApproverTasksInput, Prisma.UserUpdateWithoutApproverTasksInput>, Prisma.UserUncheckedUpdateWithoutApproverTasksInput>
 }
 
 export type UserUpdateOneRequiredWithoutCreatedTasksNestedInput = {
@@ -812,61 +781,21 @@ export type EnumRoleFieldUpdateOperationsInput = {
   set?: $Enums.Role
 }
 
-export type UserCreateWithoutManagedDeptInput = {
-  email: string
-  password: string
-  firstName: string
-  lastName: string
-  displayName?: string | null
-  birthDate?: Date | string | null
-  startDate?: Date | string | null
-  nationalId?: string | null
-  position?: string | null
-  role?: $Enums.Role
-  phone?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  department?: Prisma.DepartmentCreateNestedOneWithoutUsersInput
-  projects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
-  taskAssignments?: Prisma.TaskAssigneeCreateNestedManyWithoutUserInput
-  createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
-  projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
-  taskReports?: Prisma.TaskReportCreateNestedManyWithoutUserInput
-  approvedTasks?: Prisma.TaskCreateNestedManyWithoutApprovedByInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+export type UserCreateNestedOneWithoutAttachmentsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAttachmentsInput, Prisma.UserUncheckedCreateWithoutAttachmentsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAttachmentsInput
+  connect?: Prisma.UserWhereUniqueInput
 }
 
-export type UserUncheckedCreateWithoutManagedDeptInput = {
-  id?: number
-  email: string
-  password: string
-  firstName: string
-  lastName: string
-  displayName?: string | null
-  birthDate?: Date | string | null
-  startDate?: Date | string | null
-  nationalId?: string | null
-  position?: string | null
-  role?: $Enums.Role
-  departmentId?: number | null
-  phone?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
-  taskAssignments?: Prisma.TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
-  createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
-  projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
-  taskReports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutUserInput
-  approvedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApprovedByInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+export type UserUpdateOneRequiredWithoutAttachmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAttachmentsInput, Prisma.UserUncheckedCreateWithoutAttachmentsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAttachmentsInput
+  upsert?: Prisma.UserUpsertWithoutAttachmentsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAttachmentsInput, Prisma.UserUpdateWithoutAttachmentsInput>, Prisma.UserUncheckedUpdateWithoutAttachmentsInput>
 }
 
-export type UserCreateOrConnectWithoutManagedDeptInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutManagedDeptInput, Prisma.UserUncheckedCreateWithoutManagedDeptInput>
-}
-
-export type UserCreateWithoutDepartmentInput = {
+export type UserCreateWithoutDepartmentMembershipsInput = {
   email: string
   password: string
   firstName: string
@@ -887,10 +816,12 @@ export type UserCreateWithoutDepartmentInput = {
   projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
   taskReports?: Prisma.TaskReportCreateNestedManyWithoutUserInput
   approvedTasks?: Prisma.TaskCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskCreateNestedManyWithoutApproverInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
 }
 
-export type UserUncheckedCreateWithoutDepartmentInput = {
+export type UserUncheckedCreateWithoutDepartmentMembershipsInput = {
   id?: number
   email: string
   password: string
@@ -912,17 +843,136 @@ export type UserUncheckedCreateWithoutDepartmentInput = {
   projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
   taskReports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutUserInput
   approvedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApproverInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
 }
 
-export type UserCreateOrConnectWithoutDepartmentInput = {
+export type UserCreateOrConnectWithoutDepartmentMembershipsInput = {
   where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutDepartmentInput, Prisma.UserUncheckedCreateWithoutDepartmentInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutDepartmentMembershipsInput, Prisma.UserUncheckedCreateWithoutDepartmentMembershipsInput>
 }
 
-export type UserCreateManyDepartmentInputEnvelope = {
-  data: Prisma.UserCreateManyDepartmentInput | Prisma.UserCreateManyDepartmentInput[]
-  skipDuplicates?: boolean
+export type UserUpsertWithoutDepartmentMembershipsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutDepartmentMembershipsInput, Prisma.UserUncheckedUpdateWithoutDepartmentMembershipsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutDepartmentMembershipsInput, Prisma.UserUncheckedCreateWithoutDepartmentMembershipsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutDepartmentMembershipsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutDepartmentMembershipsInput, Prisma.UserUncheckedUpdateWithoutDepartmentMembershipsInput>
+}
+
+export type UserUpdateWithoutDepartmentMembershipsInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  managedDept?: Prisma.DepartmentUpdateOneWithoutManagerNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
+  taskAssignments?: Prisma.TaskAssigneeUpdateManyWithoutUserNestedInput
+  createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
+  taskReports?: Prisma.TaskReportUpdateManyWithoutUserNestedInput
+  approvedTasks?: Prisma.TaskUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUpdateManyWithoutApproverNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutDepartmentMembershipsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  managedDept?: Prisma.DepartmentUncheckedUpdateOneWithoutManagerNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  taskAssignments?: Prisma.TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
+  createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
+  taskReports?: Prisma.TaskReportUncheckedUpdateManyWithoutUserNestedInput
+  approvedTasks?: Prisma.TaskUncheckedUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUncheckedUpdateManyWithoutApproverNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutManagedDeptInput = {
+  email: string
+  password: string
+  firstName: string
+  lastName: string
+  displayName?: string | null
+  birthDate?: Date | string | null
+  startDate?: Date | string | null
+  nationalId?: string | null
+  position?: string | null
+  role?: $Enums.Role
+  phone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  projects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
+  taskAssignments?: Prisma.TaskAssigneeCreateNestedManyWithoutUserInput
+  createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
+  taskReports?: Prisma.TaskReportCreateNestedManyWithoutUserInput
+  approvedTasks?: Prisma.TaskCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskCreateNestedManyWithoutApproverInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutManagedDeptInput = {
+  id?: number
+  email: string
+  password: string
+  firstName: string
+  lastName: string
+  displayName?: string | null
+  birthDate?: Date | string | null
+  startDate?: Date | string | null
+  nationalId?: string | null
+  position?: string | null
+  role?: $Enums.Role
+  phone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  taskAssignments?: Prisma.TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
+  createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
+  taskReports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutUserInput
+  approvedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApproverInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutManagedDeptInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutManagedDeptInput, Prisma.UserUncheckedCreateWithoutManagedDeptInput>
 }
 
 export type UserUpsertWithoutManagedDeptInput = {
@@ -950,14 +1000,16 @@ export type UserUpdateWithoutManagedDeptInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  department?: Prisma.DepartmentUpdateOneWithoutUsersNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
   taskAssignments?: Prisma.TaskAssigneeUpdateManyWithoutUserNestedInput
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
   projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
   taskReports?: Prisma.TaskReportUpdateManyWithoutUserNestedInput
   approvedTasks?: Prisma.TaskUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUpdateManyWithoutApproverNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutManagedDeptInput = {
@@ -972,7 +1024,6 @@ export type UserUncheckedUpdateWithoutManagedDeptInput = {
   nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -982,44 +1033,10 @@ export type UserUncheckedUpdateWithoutManagedDeptInput = {
   projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
   taskReports?: Prisma.TaskReportUncheckedUpdateManyWithoutUserNestedInput
   approvedTasks?: Prisma.TaskUncheckedUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUncheckedUpdateManyWithoutApproverNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-}
-
-export type UserUpsertWithWhereUniqueWithoutDepartmentInput = {
-  where: Prisma.UserWhereUniqueInput
-  update: Prisma.XOR<Prisma.UserUpdateWithoutDepartmentInput, Prisma.UserUncheckedUpdateWithoutDepartmentInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutDepartmentInput, Prisma.UserUncheckedCreateWithoutDepartmentInput>
-}
-
-export type UserUpdateWithWhereUniqueWithoutDepartmentInput = {
-  where: Prisma.UserWhereUniqueInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutDepartmentInput, Prisma.UserUncheckedUpdateWithoutDepartmentInput>
-}
-
-export type UserUpdateManyWithWhereWithoutDepartmentInput = {
-  where: Prisma.UserScalarWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateManyMutationInput, Prisma.UserUncheckedUpdateManyWithoutDepartmentInput>
-}
-
-export type UserScalarWhereInput = {
-  AND?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
-  OR?: Prisma.UserScalarWhereInput[]
-  NOT?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
-  id?: Prisma.IntFilter<"User"> | number
-  email?: Prisma.StringFilter<"User"> | string
-  password?: Prisma.StringFilter<"User"> | string
-  firstName?: Prisma.StringFilter<"User"> | string
-  lastName?: Prisma.StringFilter<"User"> | string
-  displayName?: Prisma.StringNullableFilter<"User"> | string | null
-  birthDate?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
-  startDate?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
-  nationalId?: Prisma.StringNullableFilter<"User"> | string | null
-  position?: Prisma.StringNullableFilter<"User"> | string | null
-  role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
-  departmentId?: Prisma.IntNullableFilter<"User"> | number | null
-  phone?: Prisma.StringNullableFilter<"User"> | string | null
-  createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutProjectsInput = {
@@ -1036,14 +1053,16 @@ export type UserCreateWithoutProjectsInput = {
   phone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  department?: Prisma.DepartmentCreateNestedOneWithoutUsersInput
   managedDept?: Prisma.DepartmentCreateNestedOneWithoutManagerInput
   taskAssignments?: Prisma.TaskAssigneeCreateNestedManyWithoutUserInput
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
   projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
   taskReports?: Prisma.TaskReportCreateNestedManyWithoutUserInput
   approvedTasks?: Prisma.TaskCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskCreateNestedManyWithoutApproverInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutProjectsInput = {
@@ -1058,7 +1077,6 @@ export type UserUncheckedCreateWithoutProjectsInput = {
   nationalId?: string | null
   position?: string | null
   role?: $Enums.Role
-  departmentId?: number | null
   phone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1068,7 +1086,10 @@ export type UserUncheckedCreateWithoutProjectsInput = {
   projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
   taskReports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutUserInput
   approvedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApproverInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutProjectsInput = {
@@ -1101,14 +1122,16 @@ export type UserUpdateWithoutProjectsInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  department?: Prisma.DepartmentUpdateOneWithoutUsersNestedInput
   managedDept?: Prisma.DepartmentUpdateOneWithoutManagerNestedInput
   taskAssignments?: Prisma.TaskAssigneeUpdateManyWithoutUserNestedInput
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
   projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
   taskReports?: Prisma.TaskReportUpdateManyWithoutUserNestedInput
   approvedTasks?: Prisma.TaskUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUpdateManyWithoutApproverNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProjectsInput = {
@@ -1123,7 +1146,6 @@ export type UserUncheckedUpdateWithoutProjectsInput = {
   nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1133,7 +1155,10 @@ export type UserUncheckedUpdateWithoutProjectsInput = {
   projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
   taskReports?: Prisma.TaskReportUncheckedUpdateManyWithoutUserNestedInput
   approvedTasks?: Prisma.TaskUncheckedUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUncheckedUpdateManyWithoutApproverNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutProjectMembershipsInput = {
@@ -1150,14 +1175,16 @@ export type UserCreateWithoutProjectMembershipsInput = {
   phone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  department?: Prisma.DepartmentCreateNestedOneWithoutUsersInput
   managedDept?: Prisma.DepartmentCreateNestedOneWithoutManagerInput
   projects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
   taskAssignments?: Prisma.TaskAssigneeCreateNestedManyWithoutUserInput
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
   taskReports?: Prisma.TaskReportCreateNestedManyWithoutUserInput
   approvedTasks?: Prisma.TaskCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskCreateNestedManyWithoutApproverInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutProjectMembershipsInput = {
@@ -1172,7 +1199,6 @@ export type UserUncheckedCreateWithoutProjectMembershipsInput = {
   nationalId?: string | null
   position?: string | null
   role?: $Enums.Role
-  departmentId?: number | null
   phone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1182,7 +1208,10 @@ export type UserUncheckedCreateWithoutProjectMembershipsInput = {
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
   taskReports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutUserInput
   approvedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApproverInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutProjectMembershipsInput = {
@@ -1215,14 +1244,16 @@ export type UserUpdateWithoutProjectMembershipsInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  department?: Prisma.DepartmentUpdateOneWithoutUsersNestedInput
   managedDept?: Prisma.DepartmentUpdateOneWithoutManagerNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
   taskAssignments?: Prisma.TaskAssigneeUpdateManyWithoutUserNestedInput
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
   taskReports?: Prisma.TaskReportUpdateManyWithoutUserNestedInput
   approvedTasks?: Prisma.TaskUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUpdateManyWithoutApproverNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProjectMembershipsInput = {
@@ -1237,7 +1268,6 @@ export type UserUncheckedUpdateWithoutProjectMembershipsInput = {
   nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1247,7 +1277,10 @@ export type UserUncheckedUpdateWithoutProjectMembershipsInput = {
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
   taskReports?: Prisma.TaskReportUncheckedUpdateManyWithoutUserNestedInput
   approvedTasks?: Prisma.TaskUncheckedUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUncheckedUpdateManyWithoutApproverNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutApprovedTasksInput = {
@@ -1264,14 +1297,16 @@ export type UserCreateWithoutApprovedTasksInput = {
   phone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  department?: Prisma.DepartmentCreateNestedOneWithoutUsersInput
   managedDept?: Prisma.DepartmentCreateNestedOneWithoutManagerInput
   projects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
   taskAssignments?: Prisma.TaskAssigneeCreateNestedManyWithoutUserInput
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
   projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
   taskReports?: Prisma.TaskReportCreateNestedManyWithoutUserInput
+  approverTasks?: Prisma.TaskCreateNestedManyWithoutApproverInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutApprovedTasksInput = {
@@ -1286,7 +1321,6 @@ export type UserUncheckedCreateWithoutApprovedTasksInput = {
   nationalId?: string | null
   position?: string | null
   role?: $Enums.Role
-  departmentId?: number | null
   phone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1296,12 +1330,73 @@ export type UserUncheckedCreateWithoutApprovedTasksInput = {
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
   projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
   taskReports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutUserInput
+  approverTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApproverInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutApprovedTasksInput = {
   where: Prisma.UserWhereUniqueInput
   create: Prisma.XOR<Prisma.UserCreateWithoutApprovedTasksInput, Prisma.UserUncheckedCreateWithoutApprovedTasksInput>
+}
+
+export type UserCreateWithoutApproverTasksInput = {
+  email: string
+  password: string
+  firstName: string
+  lastName: string
+  displayName?: string | null
+  birthDate?: Date | string | null
+  startDate?: Date | string | null
+  nationalId?: string | null
+  position?: string | null
+  role?: $Enums.Role
+  phone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  managedDept?: Prisma.DepartmentCreateNestedOneWithoutManagerInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
+  taskAssignments?: Prisma.TaskAssigneeCreateNestedManyWithoutUserInput
+  createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
+  taskReports?: Prisma.TaskReportCreateNestedManyWithoutUserInput
+  approvedTasks?: Prisma.TaskCreateNestedManyWithoutApprovedByInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutApproverTasksInput = {
+  id?: number
+  email: string
+  password: string
+  firstName: string
+  lastName: string
+  displayName?: string | null
+  birthDate?: Date | string | null
+  startDate?: Date | string | null
+  nationalId?: string | null
+  position?: string | null
+  role?: $Enums.Role
+  phone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  managedDept?: Prisma.DepartmentUncheckedCreateNestedOneWithoutManagerInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  taskAssignments?: Prisma.TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
+  createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
+  taskReports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutUserInput
+  approvedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApprovedByInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutApproverTasksInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutApproverTasksInput, Prisma.UserUncheckedCreateWithoutApproverTasksInput>
 }
 
 export type UserCreateWithoutCreatedTasksInput = {
@@ -1318,14 +1413,16 @@ export type UserCreateWithoutCreatedTasksInput = {
   phone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  department?: Prisma.DepartmentCreateNestedOneWithoutUsersInput
   managedDept?: Prisma.DepartmentCreateNestedOneWithoutManagerInput
   projects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
   taskAssignments?: Prisma.TaskAssigneeCreateNestedManyWithoutUserInput
   projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
   taskReports?: Prisma.TaskReportCreateNestedManyWithoutUserInput
   approvedTasks?: Prisma.TaskCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskCreateNestedManyWithoutApproverInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCreatedTasksInput = {
@@ -1340,7 +1437,6 @@ export type UserUncheckedCreateWithoutCreatedTasksInput = {
   nationalId?: string | null
   position?: string | null
   role?: $Enums.Role
-  departmentId?: number | null
   phone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1350,7 +1446,10 @@ export type UserUncheckedCreateWithoutCreatedTasksInput = {
   projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
   taskReports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutUserInput
   approvedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApproverInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCreatedTasksInput = {
@@ -1383,14 +1482,16 @@ export type UserUpdateWithoutApprovedTasksInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  department?: Prisma.DepartmentUpdateOneWithoutUsersNestedInput
   managedDept?: Prisma.DepartmentUpdateOneWithoutManagerNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
   taskAssignments?: Prisma.TaskAssigneeUpdateManyWithoutUserNestedInput
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
   projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
   taskReports?: Prisma.TaskReportUpdateManyWithoutUserNestedInput
+  approverTasks?: Prisma.TaskUpdateManyWithoutApproverNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutApprovedTasksInput = {
@@ -1405,7 +1506,6 @@ export type UserUncheckedUpdateWithoutApprovedTasksInput = {
   nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1415,7 +1515,74 @@ export type UserUncheckedUpdateWithoutApprovedTasksInput = {
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
   projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
   taskReports?: Prisma.TaskReportUncheckedUpdateManyWithoutUserNestedInput
+  approverTasks?: Prisma.TaskUncheckedUpdateManyWithoutApproverNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserUpsertWithoutApproverTasksInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutApproverTasksInput, Prisma.UserUncheckedUpdateWithoutApproverTasksInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutApproverTasksInput, Prisma.UserUncheckedCreateWithoutApproverTasksInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutApproverTasksInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutApproverTasksInput, Prisma.UserUncheckedUpdateWithoutApproverTasksInput>
+}
+
+export type UserUpdateWithoutApproverTasksInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  managedDept?: Prisma.DepartmentUpdateOneWithoutManagerNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
+  taskAssignments?: Prisma.TaskAssigneeUpdateManyWithoutUserNestedInput
+  createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
+  taskReports?: Prisma.TaskReportUpdateManyWithoutUserNestedInput
+  approvedTasks?: Prisma.TaskUpdateManyWithoutApprovedByNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutApproverTasksInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  managedDept?: Prisma.DepartmentUncheckedUpdateOneWithoutManagerNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  taskAssignments?: Prisma.TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
+  createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
+  taskReports?: Prisma.TaskReportUncheckedUpdateManyWithoutUserNestedInput
+  approvedTasks?: Prisma.TaskUncheckedUpdateManyWithoutApprovedByNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutCreatedTasksInput = {
@@ -1443,14 +1610,16 @@ export type UserUpdateWithoutCreatedTasksInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  department?: Prisma.DepartmentUpdateOneWithoutUsersNestedInput
   managedDept?: Prisma.DepartmentUpdateOneWithoutManagerNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
   taskAssignments?: Prisma.TaskAssigneeUpdateManyWithoutUserNestedInput
   projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
   taskReports?: Prisma.TaskReportUpdateManyWithoutUserNestedInput
   approvedTasks?: Prisma.TaskUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUpdateManyWithoutApproverNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCreatedTasksInput = {
@@ -1465,7 +1634,6 @@ export type UserUncheckedUpdateWithoutCreatedTasksInput = {
   nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1475,7 +1643,10 @@ export type UserUncheckedUpdateWithoutCreatedTasksInput = {
   projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
   taskReports?: Prisma.TaskReportUncheckedUpdateManyWithoutUserNestedInput
   approvedTasks?: Prisma.TaskUncheckedUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUncheckedUpdateManyWithoutApproverNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutTaskAssignmentsInput = {
@@ -1492,14 +1663,16 @@ export type UserCreateWithoutTaskAssignmentsInput = {
   phone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  department?: Prisma.DepartmentCreateNestedOneWithoutUsersInput
   managedDept?: Prisma.DepartmentCreateNestedOneWithoutManagerInput
   projects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
   projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
   taskReports?: Prisma.TaskReportCreateNestedManyWithoutUserInput
   approvedTasks?: Prisma.TaskCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskCreateNestedManyWithoutApproverInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTaskAssignmentsInput = {
@@ -1514,7 +1687,6 @@ export type UserUncheckedCreateWithoutTaskAssignmentsInput = {
   nationalId?: string | null
   position?: string | null
   role?: $Enums.Role
-  departmentId?: number | null
   phone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1524,7 +1696,10 @@ export type UserUncheckedCreateWithoutTaskAssignmentsInput = {
   projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
   taskReports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutUserInput
   approvedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApproverInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTaskAssignmentsInput = {
@@ -1557,14 +1732,16 @@ export type UserUpdateWithoutTaskAssignmentsInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  department?: Prisma.DepartmentUpdateOneWithoutUsersNestedInput
   managedDept?: Prisma.DepartmentUpdateOneWithoutManagerNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
   projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
   taskReports?: Prisma.TaskReportUpdateManyWithoutUserNestedInput
   approvedTasks?: Prisma.TaskUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUpdateManyWithoutApproverNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTaskAssignmentsInput = {
@@ -1579,7 +1756,6 @@ export type UserUncheckedUpdateWithoutTaskAssignmentsInput = {
   nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1589,7 +1765,10 @@ export type UserUncheckedUpdateWithoutTaskAssignmentsInput = {
   projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
   taskReports?: Prisma.TaskReportUncheckedUpdateManyWithoutUserNestedInput
   approvedTasks?: Prisma.TaskUncheckedUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUncheckedUpdateManyWithoutApproverNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutTaskReportsInput = {
@@ -1606,14 +1785,16 @@ export type UserCreateWithoutTaskReportsInput = {
   phone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  department?: Prisma.DepartmentCreateNestedOneWithoutUsersInput
   managedDept?: Prisma.DepartmentCreateNestedOneWithoutManagerInput
   projects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
   taskAssignments?: Prisma.TaskAssigneeCreateNestedManyWithoutUserInput
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
   projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
   approvedTasks?: Prisma.TaskCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskCreateNestedManyWithoutApproverInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTaskReportsInput = {
@@ -1628,7 +1809,6 @@ export type UserUncheckedCreateWithoutTaskReportsInput = {
   nationalId?: string | null
   position?: string | null
   role?: $Enums.Role
-  departmentId?: number | null
   phone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1638,7 +1818,10 @@ export type UserUncheckedCreateWithoutTaskReportsInput = {
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
   projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
   approvedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApproverInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTaskReportsInput = {
@@ -1671,14 +1854,16 @@ export type UserUpdateWithoutTaskReportsInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  department?: Prisma.DepartmentUpdateOneWithoutUsersNestedInput
   managedDept?: Prisma.DepartmentUpdateOneWithoutManagerNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
   taskAssignments?: Prisma.TaskAssigneeUpdateManyWithoutUserNestedInput
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
   projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
   approvedTasks?: Prisma.TaskUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUpdateManyWithoutApproverNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTaskReportsInput = {
@@ -1693,7 +1878,6 @@ export type UserUncheckedUpdateWithoutTaskReportsInput = {
   nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1703,7 +1887,10 @@ export type UserUncheckedUpdateWithoutTaskReportsInput = {
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
   projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
   approvedTasks?: Prisma.TaskUncheckedUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUncheckedUpdateManyWithoutApproverNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutNotificationsInput = {
@@ -1720,7 +1907,6 @@ export type UserCreateWithoutNotificationsInput = {
   phone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  department?: Prisma.DepartmentCreateNestedOneWithoutUsersInput
   managedDept?: Prisma.DepartmentCreateNestedOneWithoutManagerInput
   projects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
   taskAssignments?: Prisma.TaskAssigneeCreateNestedManyWithoutUserInput
@@ -1728,6 +1914,9 @@ export type UserCreateWithoutNotificationsInput = {
   projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
   taskReports?: Prisma.TaskReportCreateNestedManyWithoutUserInput
   approvedTasks?: Prisma.TaskCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskCreateNestedManyWithoutApproverInput
+  departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -1742,7 +1931,6 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   nationalId?: string | null
   position?: string | null
   role?: $Enums.Role
-  departmentId?: number | null
   phone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1753,6 +1941,9 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
   taskReports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutUserInput
   approvedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApproverInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -1785,7 +1976,6 @@ export type UserUpdateWithoutNotificationsInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  department?: Prisma.DepartmentUpdateOneWithoutUsersNestedInput
   managedDept?: Prisma.DepartmentUpdateOneWithoutManagerNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
   taskAssignments?: Prisma.TaskAssigneeUpdateManyWithoutUserNestedInput
@@ -1793,6 +1983,9 @@ export type UserUpdateWithoutNotificationsInput = {
   projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
   taskReports?: Prisma.TaskReportUpdateManyWithoutUserNestedInput
   approvedTasks?: Prisma.TaskUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUpdateManyWithoutApproverNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -1807,7 +2000,6 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1818,9 +2010,38 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
   taskReports?: Prisma.TaskReportUncheckedUpdateManyWithoutUserNestedInput
   approvedTasks?: Prisma.TaskUncheckedUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUncheckedUpdateManyWithoutApproverNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
 }
 
-export type UserCreateManyDepartmentInput = {
+export type UserCreateWithoutAttachmentsInput = {
+  email: string
+  password: string
+  firstName: string
+  lastName: string
+  displayName?: string | null
+  birthDate?: Date | string | null
+  startDate?: Date | string | null
+  nationalId?: string | null
+  position?: string | null
+  role?: $Enums.Role
+  phone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  managedDept?: Prisma.DepartmentCreateNestedOneWithoutManagerInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
+  taskAssignments?: Prisma.TaskAssigneeCreateNestedManyWithoutUserInput
+  createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
+  taskReports?: Prisma.TaskReportCreateNestedManyWithoutUserInput
+  approvedTasks?: Prisma.TaskCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskCreateNestedManyWithoutApproverInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutAttachmentsInput = {
   id?: number
   email: string
   password: string
@@ -1835,9 +2056,35 @@ export type UserCreateManyDepartmentInput = {
   phone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  managedDept?: Prisma.DepartmentUncheckedCreateNestedOneWithoutManagerInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  taskAssignments?: Prisma.TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
+  createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
+  taskReports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutUserInput
+  approvedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApproverInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
 }
 
-export type UserUpdateWithoutDepartmentInput = {
+export type UserCreateOrConnectWithoutAttachmentsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutAttachmentsInput, Prisma.UserUncheckedCreateWithoutAttachmentsInput>
+}
+
+export type UserUpsertWithoutAttachmentsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutAttachmentsInput, Prisma.UserUncheckedUpdateWithoutAttachmentsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutAttachmentsInput, Prisma.UserUncheckedCreateWithoutAttachmentsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutAttachmentsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutAttachmentsInput, Prisma.UserUncheckedUpdateWithoutAttachmentsInput>
+}
+
+export type UserUpdateWithoutAttachmentsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1858,10 +2105,12 @@ export type UserUpdateWithoutDepartmentInput = {
   projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
   taskReports?: Prisma.TaskReportUpdateManyWithoutUserNestedInput
   approvedTasks?: Prisma.TaskUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUpdateManyWithoutApproverNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
 }
 
-export type UserUncheckedUpdateWithoutDepartmentInput = {
+export type UserUncheckedUpdateWithoutAttachmentsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1883,24 +2132,9 @@ export type UserUncheckedUpdateWithoutDepartmentInput = {
   projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
   taskReports?: Prisma.TaskReportUncheckedUpdateManyWithoutUserNestedInput
   approvedTasks?: Prisma.TaskUncheckedUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUncheckedUpdateManyWithoutApproverNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-}
-
-export type UserUncheckedUpdateManyWithoutDepartmentInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
-  firstName?: Prisma.StringFieldUpdateOperationsInput | string
-  lastName?: Prisma.StringFieldUpdateOperationsInput | string
-  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -1915,7 +2149,10 @@ export type UserCountOutputType = {
   projectMemberships: number
   taskReports: number
   approvedTasks: number
+  approverTasks: number
   notifications: number
+  departmentMemberships: number
+  attachments: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1925,7 +2162,10 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   projectMemberships?: boolean | UserCountOutputTypeCountProjectMembershipsArgs
   taskReports?: boolean | UserCountOutputTypeCountTaskReportsArgs
   approvedTasks?: boolean | UserCountOutputTypeCountApprovedTasksArgs
+  approverTasks?: boolean | UserCountOutputTypeCountApproverTasksArgs
   notifications?: boolean | UserCountOutputTypeCountNotificationsArgs
+  departmentMemberships?: boolean | UserCountOutputTypeCountDepartmentMembershipsArgs
+  attachments?: boolean | UserCountOutputTypeCountAttachmentsArgs
 }
 
 /**
@@ -1983,8 +2223,29 @@ export type UserCountOutputTypeCountApprovedTasksArgs<ExtArgs extends runtime.Ty
 /**
  * UserCountOutputType without action
  */
+export type UserCountOutputTypeCountApproverTasksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TaskWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
 export type UserCountOutputTypeCountNotificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.NotificationWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountDepartmentMembershipsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.UserDepartmentWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountAttachmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TaskAttachmentWhereInput
 }
 
 
@@ -2000,11 +2261,9 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   nationalId?: boolean
   position?: boolean
   role?: boolean
-  departmentId?: boolean
   phone?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  department?: boolean | Prisma.User$departmentArgs<ExtArgs>
   managedDept?: boolean | Prisma.User$managedDeptArgs<ExtArgs>
   projects?: boolean | Prisma.User$projectsArgs<ExtArgs>
   taskAssignments?: boolean | Prisma.User$taskAssignmentsArgs<ExtArgs>
@@ -2012,7 +2271,10 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   projectMemberships?: boolean | Prisma.User$projectMembershipsArgs<ExtArgs>
   taskReports?: boolean | Prisma.User$taskReportsArgs<ExtArgs>
   approvedTasks?: boolean | Prisma.User$approvedTasksArgs<ExtArgs>
+  approverTasks?: boolean | Prisma.User$approverTasksArgs<ExtArgs>
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
+  departmentMemberships?: boolean | Prisma.User$departmentMembershipsArgs<ExtArgs>
+  attachments?: boolean | Prisma.User$attachmentsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -2028,11 +2290,9 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   nationalId?: boolean
   position?: boolean
   role?: boolean
-  departmentId?: boolean
   phone?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  department?: boolean | Prisma.User$departmentArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -2047,11 +2307,9 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   nationalId?: boolean
   position?: boolean
   role?: boolean
-  departmentId?: boolean
   phone?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  department?: boolean | Prisma.User$departmentArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectScalar = {
@@ -2066,15 +2324,13 @@ export type UserSelectScalar = {
   nationalId?: boolean
   position?: boolean
   role?: boolean
-  departmentId?: boolean
   phone?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "password" | "firstName" | "lastName" | "displayName" | "birthDate" | "startDate" | "nationalId" | "position" | "role" | "departmentId" | "phone" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "password" | "firstName" | "lastName" | "displayName" | "birthDate" | "startDate" | "nationalId" | "position" | "role" | "phone" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  department?: boolean | Prisma.User$departmentArgs<ExtArgs>
   managedDept?: boolean | Prisma.User$managedDeptArgs<ExtArgs>
   projects?: boolean | Prisma.User$projectsArgs<ExtArgs>
   taskAssignments?: boolean | Prisma.User$taskAssignmentsArgs<ExtArgs>
@@ -2082,20 +2338,18 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   projectMemberships?: boolean | Prisma.User$projectMembershipsArgs<ExtArgs>
   taskReports?: boolean | Prisma.User$taskReportsArgs<ExtArgs>
   approvedTasks?: boolean | Prisma.User$approvedTasksArgs<ExtArgs>
+  approverTasks?: boolean | Prisma.User$approverTasksArgs<ExtArgs>
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
+  departmentMemberships?: boolean | Prisma.User$departmentMembershipsArgs<ExtArgs>
+  attachments?: boolean | Prisma.User$attachmentsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
-export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  department?: boolean | Prisma.User$departmentArgs<ExtArgs>
-}
-export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  department?: boolean | Prisma.User$departmentArgs<ExtArgs>
-}
+export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "User"
   objects: {
-    department: Prisma.$DepartmentPayload<ExtArgs> | null
     managedDept: Prisma.$DepartmentPayload<ExtArgs> | null
     projects: Prisma.$ProjectPayload<ExtArgs>[]
     taskAssignments: Prisma.$TaskAssigneePayload<ExtArgs>[]
@@ -2103,7 +2357,10 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     projectMemberships: Prisma.$ProjectMemberPayload<ExtArgs>[]
     taskReports: Prisma.$TaskReportPayload<ExtArgs>[]
     approvedTasks: Prisma.$TaskPayload<ExtArgs>[]
+    approverTasks: Prisma.$TaskPayload<ExtArgs>[]
     notifications: Prisma.$NotificationPayload<ExtArgs>[]
+    departmentMemberships: Prisma.$UserDepartmentPayload<ExtArgs>[]
+    attachments: Prisma.$TaskAttachmentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -2117,7 +2374,6 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     nationalId: string | null
     position: string | null
     role: $Enums.Role
-    departmentId: number | null
     phone: string | null
     createdAt: Date
     updatedAt: Date
@@ -2515,7 +2771,6 @@ readonly fields: UserFieldRefs;
  */
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  department<T extends Prisma.User$departmentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$departmentArgs<ExtArgs>>): Prisma.Prisma__DepartmentClient<runtime.Types.Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   managedDept<T extends Prisma.User$managedDeptArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$managedDeptArgs<ExtArgs>>): Prisma.Prisma__DepartmentClient<runtime.Types.Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   projects<T extends Prisma.User$projectsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$projectsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   taskAssignments<T extends Prisma.User$taskAssignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$taskAssignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskAssigneePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -2523,7 +2778,10 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   projectMemberships<T extends Prisma.User$projectMembershipsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$projectMembershipsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   taskReports<T extends Prisma.User$taskReportsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$taskReportsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   approvedTasks<T extends Prisma.User$approvedTasksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$approvedTasksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  approverTasks<T extends Prisma.User$approverTasksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$approverTasksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   notifications<T extends Prisma.User$notificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  departmentMemberships<T extends Prisma.User$departmentMembershipsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$departmentMembershipsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserDepartmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  attachments<T extends Prisma.User$attachmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$attachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskAttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2564,7 +2822,6 @@ export interface UserFieldRefs {
   readonly nationalId: Prisma.FieldRef<"User", 'String'>
   readonly position: Prisma.FieldRef<"User", 'String'>
   readonly role: Prisma.FieldRef<"User", 'Role'>
-  readonly departmentId: Prisma.FieldRef<"User", 'Int'>
   readonly phone: Prisma.FieldRef<"User", 'String'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
@@ -2822,10 +3079,6 @@ export type UserCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions
    */
   data: Prisma.UserCreateManyInput | Prisma.UserCreateManyInput[]
   skipDuplicates?: boolean
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.UserIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -2896,10 +3149,6 @@ export type UserUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions
    * Limit how many Users to update.
    */
   limit?: number
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.UserIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -2966,25 +3215,6 @@ export type UserDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * Limit how many Users to delete.
    */
   limit?: number
-}
-
-/**
- * User.department
- */
-export type User$departmentArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Department
-   */
-  select?: Prisma.DepartmentSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Department
-   */
-  omit?: Prisma.DepartmentOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.DepartmentInclude<ExtArgs> | null
-  where?: Prisma.DepartmentWhereInput
 }
 
 /**
@@ -3151,6 +3381,30 @@ export type User$approvedTasksArgs<ExtArgs extends runtime.Types.Extensions.Inte
 }
 
 /**
+ * User.approverTasks
+ */
+export type User$approverTasksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Task
+   */
+  select?: Prisma.TaskSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Task
+   */
+  omit?: Prisma.TaskOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TaskInclude<ExtArgs> | null
+  where?: Prisma.TaskWhereInput
+  orderBy?: Prisma.TaskOrderByWithRelationInput | Prisma.TaskOrderByWithRelationInput[]
+  cursor?: Prisma.TaskWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TaskScalarFieldEnum | Prisma.TaskScalarFieldEnum[]
+}
+
+/**
  * User.notifications
  */
 export type User$notificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3172,6 +3426,54 @@ export type User$notificationsArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.NotificationScalarFieldEnum | Prisma.NotificationScalarFieldEnum[]
+}
+
+/**
+ * User.departmentMemberships
+ */
+export type User$departmentMembershipsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the UserDepartment
+   */
+  select?: Prisma.UserDepartmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the UserDepartment
+   */
+  omit?: Prisma.UserDepartmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserDepartmentInclude<ExtArgs> | null
+  where?: Prisma.UserDepartmentWhereInput
+  orderBy?: Prisma.UserDepartmentOrderByWithRelationInput | Prisma.UserDepartmentOrderByWithRelationInput[]
+  cursor?: Prisma.UserDepartmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.UserDepartmentScalarFieldEnum | Prisma.UserDepartmentScalarFieldEnum[]
+}
+
+/**
+ * User.attachments
+ */
+export type User$attachmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TaskAttachment
+   */
+  select?: Prisma.TaskAttachmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TaskAttachment
+   */
+  omit?: Prisma.TaskAttachmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TaskAttachmentInclude<ExtArgs> | null
+  where?: Prisma.TaskAttachmentWhereInput
+  orderBy?: Prisma.TaskAttachmentOrderByWithRelationInput | Prisma.TaskAttachmentOrderByWithRelationInput[]
+  cursor?: Prisma.TaskAttachmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TaskAttachmentScalarFieldEnum | Prisma.TaskAttachmentScalarFieldEnum[]
 }
 
 /**

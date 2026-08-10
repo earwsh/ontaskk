@@ -2,14 +2,24 @@ import { Router, Response } from 'express';
 import { authenticate, authorize, AuthRequest } from '../middleware/auth';
 import prisma from '../lib/prisma';
 import { notifyTaskAssignees, notifyPendingApproval, notifyTaskApproved, notifyReportAdded } from '../lib/notifications';
+import path from 'path';
+import fs from 'fs';
 
 const router = Router();
 
 const taskInclude = {
-  project: { select: { id: true, name: true, departmentId: true } },
+  project: {
+    select: {
+      id: true,
+      name: true,
+      departmentId: true,
+      department: { select: { id: true, name: true } },
+    },
+  },
   assignees: {
     include: { user: { select: { id: true, firstName: true, lastName: true, email: true } } },
   },
+  approver: { select: { id: true, firstName: true, lastName: true } },
   subtasks: { orderBy: { createdAt: 'asc' as const } },
   createdBy: { select: { id: true, firstName: true, lastName: true } },
   approvedBy: { select: { id: true, firstName: true, lastName: true } },
@@ -17,7 +27,7 @@ const taskInclude = {
 };
 
 function canManageTask(userRole: string) {
-  return ['TECHNICAL_MANAGER', 'DEPARTMENT_MANAGER', 'CEO', 'HR_MANAGER'].includes(userRole);
+  return ['TECHNICAL_MANAGER', 'STRATEGY_MANAGER', 'DEPARTMENT_MANAGER', 'CEO', 'HR_MANAGER'].includes(userRole);
 }
 
 async function isAssignee(taskId: number, userId: number): Promise<boolean> {
@@ -63,6 +73,25 @@ router.get('/', authenticate, async (req: AuthRequest, res: Response) => {
   }
 });
 
+router.get('/my', authenticate, async (req: AuthRequest, res: Response) => {
+  try {
+    const userId = req.user!.id;
+    const assignedTaskIds = await prisma.taskAssignee.findMany({
+      where: { userId },
+      select: { taskId: true },
+    });
+    const tasks = await prisma.task.findMany({
+      where: { id: { in: assignedTaskIds.map((a) => a.taskId) } },
+      include: taskInclude,
+      orderBy: { createdAt: 'desc' },
+    });
+    res.json(tasks);
+  } catch (err) {
+    console.error('get my tasks error:', err);
+    res.status(500).json({ error: 'Failed to fetch tasks' });
+  }
+});
+
 router.get('/:id', authenticate, async (req: AuthRequest, res: Response) => {
   try {
     const id = parseInt(req.params.id as string);
@@ -73,6 +102,10 @@ router.get('/:id', authenticate, async (req: AuthRequest, res: Response) => {
       include: {
         ...taskInclude,
         reports: {
+          include: { user: { select: { id: true, firstName: true, lastName: true } } },
+          orderBy: { createdAt: 'asc' },
+        },
+        attachments: {
           include: { user: { select: { id: true, firstName: true, lastName: true } } },
           orderBy: { createdAt: 'asc' },
         },
@@ -98,7 +131,7 @@ router.get('/:id', authenticate, async (req: AuthRequest, res: Response) => {
 router.post('/', authenticate, async (req: AuthRequest, res: Response) => {
   try {
     const user = req.user!;
-    const { title, description, projectId, assigneeIds, deadline, estimatedHours, subtasks, status } = req.body;
+    const { title, description, projectId, assigneeIds, approverId, startDate, deadline, estimatedHours, estimatedMinutes, weight, subtasks, status } = req.body;
 
     if (!title || !projectId || !assigneeIds?.length) {
       return res.status(400).json({ error: 'Title, project, and at least one assignee are required' });
@@ -121,9 +154,6 @@ router.post('/', authenticate, async (req: AuthRequest, res: Response) => {
     for (const aid of assigneeIds) {
       const assignee = await prisma.user.findUnique({ where: { id: aid } });
       if (!assignee) return res.status(404).json({ error: `Assignee ${aid} not found` });
-      if (assignee.departmentId !== project.departmentId) {
-        return res.status(400).json({ error: `User ${assignee.firstName} ${assignee.lastName} is not in the same department` });
-      }
     }
 
     const task = await prisma.task.create({
@@ -132,9 +162,13 @@ router.post('/', authenticate, async (req: AuthRequest, res: Response) => {
         description,
         projectId,
         createdById: user.id,
+        approverId: approverId ? parseInt(approverId as any) : user.id,
         status: status || 'TODO',
+        startDate: startDate ? new Date(startDate) : undefined,
         deadline: deadline ? new Date(deadline) : undefined,
         estimatedHours: estimatedHours || undefined,
+        estimatedMinutes: estimatedMinutes ? parseInt(estimatedMinutes as any) : undefined,
+        weight: weight ? parseInt(weight as any) : (estimatedMinutes ? parseInt(estimatedMinutes as any) : undefined),
         assignees: {
           create: assigneeIds.map((aid: number) => ({ userId: aid })),
         },
@@ -158,7 +192,7 @@ router.put('/:id', authenticate, async (req: AuthRequest, res: Response) => {
   try {
     const id = parseInt(req.params.id as string);
     const user = req.user!;
-    const { title, description, assigneeIds, status, deadline, estimatedHours } = req.body;
+    const { title, description, assigneeIds, approverId, status, startDate, deadline, estimatedHours, estimatedMinutes, weight } = req.body;
 
     const task = await prisma.task.findUnique({
       where: { id },
@@ -179,8 +213,12 @@ router.put('/:id', authenticate, async (req: AuthRequest, res: Response) => {
     if (title) data.title = title;
     if (description !== undefined) data.description = description;
     if (status) data.status = status;
+    if (startDate !== undefined) data.startDate = startDate ? new Date(startDate) : null;
     if (deadline !== undefined) data.deadline = deadline ? new Date(deadline) : null;
     if (estimatedHours !== undefined) data.estimatedHours = estimatedHours;
+    if (estimatedMinutes !== undefined) data.estimatedMinutes = estimatedMinutes ? parseInt(estimatedMinutes as any) : null;
+    if (weight !== undefined) data.weight = weight ? parseInt(weight as any) : (estimatedMinutes ? parseInt(estimatedMinutes as any) : null);
+    if (approverId !== undefined) data.approverId = approverId ? parseInt(approverId as any) : null;
 
     if (assigneeIds) {
       await prisma.taskAssignee.deleteMany({ where: { taskId: id } });
@@ -213,25 +251,63 @@ router.patch('/:id/status', authenticate, async (req: AuthRequest, res: Response
     const validStatuses = ['TODO', 'IN_PROGRESS', 'PENDING_APPROVAL', 'DONE'];
     if (!validStatuses.includes(status)) return res.status(400).json({ error: 'Invalid status' });
 
-    const task = await prisma.task.findUnique({ where: { id } });
+    const task = await prisma.task.findUnique({
+      where: { id },
+      include: { subtasks: true },
+    });
     if (!task) return res.status(404).json({ error: 'Task not found' });
 
-    if (user.role === 'EMPLOYEE') {
-      const assigned = await isAssignee(id, user.id);
-      if (!assigned) return res.status(403).json({ error: 'You can only change your own tasks' });
-      if (task.status !== 'TODO' && task.status !== 'IN_PROGRESS') {
-        return res.status(403).json({ error: 'You can only submit a task that is TODO or IN_PROGRESS' });
+    // Validate that all subtasks are completed before moving to PENDING_APPROVAL or DONE
+    if (status === 'PENDING_APPROVAL' || status === 'DONE') {
+      const hasUnfinishedSubtask = task.subtasks.some((s) => !s.isDone);
+      if (hasUnfinishedSubtask) {
+        return res.status(400).json({ error: 'ابتدا تمام موارد زیرلیست را تکمیل کنید' });
       }
-      if (status !== 'PENDING_APPROVAL') {
-        return res.status(403).json({ error: 'Employees can only submit tasks for approval' });
+    }
+
+    // Authorization logic
+    let isAuthorized = false;
+
+    // 1. The designated approver is always authorized to approve (transition to DONE)
+    if (status === 'DONE' && task.approverId === user.id) {
+      isAuthorized = true;
+    }
+
+    // 2. Standard role-based check if not already authorized
+    if (!isAuthorized) {
+      if (user.role === 'EMPLOYEE') {
+        const assigned = await isAssignee(id, user.id);
+        if (!assigned) return res.status(403).json({ error: 'You can only change your own tasks' });
+        if (task.status !== 'TODO' && task.status !== 'IN_PROGRESS') {
+          return res.status(403).json({ error: 'You can only submit a task that is TODO or IN_PROGRESS' });
+        }
+        if (status !== 'PENDING_APPROVAL') {
+          return res.status(403).json({ error: 'Employees can only submit tasks for approval' });
+        }
+        isAuthorized = true;
+      } else if (user.role === 'DEPARTMENT_MANAGER') {
+        const managedDept = await prisma.department.findFirst({ where: { managerId: user.id } });
+        if (!managedDept) return res.status(403).json({ error: 'Access denied' });
+        
+        // Ensure the task belongs to the manager's department
+        const project = await prisma.project.findUnique({ where: { id: task.projectId } });
+        if (!project || project.departmentId !== managedDept.id) {
+          return res.status(403).json({ error: 'Access denied' });
+        }
+
+        if (task.status !== 'PENDING_APPROVAL' && status === 'DONE') {
+          return res.status(403).json({ error: 'Task must be in PENDING_APPROVAL before approving' });
+        }
+        isAuthorized = true;
+      } else if (canManageTask(user.role)) {
+        if (task.status !== 'PENDING_APPROVAL' && status === 'DONE') {
+          return res.status(403).json({ error: 'Task must be in PENDING_APPROVAL before approving' });
+        }
+        isAuthorized = true;
       }
-    } else if (user.role === 'DEPARTMENT_MANAGER') {
-      const managedDept = await prisma.department.findFirst({ where: { managerId: user.id } });
-      if (!managedDept) return res.status(403).json({ error: 'Access denied' });
-      if (task.status !== 'PENDING_APPROVAL' && status === 'DONE') {
-        return res.status(403).json({ error: 'Task must be in PENDING_APPROVAL before approving' });
-      }
-    } else if (!canManageTask(user.role)) {
+    }
+
+    if (!isAuthorized) {
       return res.status(403).json({ error: 'Access denied' });
     }
 
@@ -334,7 +410,10 @@ router.patch('/:id/subtasks/:subtaskId', authenticate, async (req: AuthRequest, 
 
     const updated = await prisma.taskSubtask.update({
       where: { id: subtaskId },
-      data: { isDone },
+      data: { 
+        isDone,
+        completedAt: isDone ? new Date() : null,
+      },
     });
     res.json(updated);
   } catch (err) {
@@ -365,6 +444,41 @@ router.post('/:id/subtasks', authenticate, async (req: AuthRequest, res: Respons
   }
 });
 
+router.delete('/:id', authenticate, async (req: AuthRequest, res: Response) => {
+  try {
+    const id = parseInt(req.params.id as string);
+    const user = req.user!;
+
+    const task = await prisma.task.findUnique({ where: { id } });
+    if (!task) return res.status(404).json({ error: 'Task not found' });
+
+    if (!canManageTask(user.role) && task.createdById !== user.id) {
+      return res.status(403).json({ error: 'Access denied' });
+    }
+
+    await prisma.notification.deleteMany({ where: { taskId: id } });
+    
+    // Delete files from disk first
+    const attachments = await prisma.taskAttachment.findMany({ where: { taskId: id } });
+    for (const att of attachments) {
+      const filePath = path.join(__dirname, '..', att.fileUrl);
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
+    }
+    await prisma.taskAttachment.deleteMany({ where: { taskId: id } });
+
+    await prisma.taskReport.deleteMany({ where: { taskId: id } });
+    await prisma.taskAssignee.deleteMany({ where: { taskId: id } });
+    await prisma.taskSubtask.deleteMany({ where: { taskId: id } });
+    await prisma.task.delete({ where: { id } });
+    res.json({ message: 'Task deleted successfully' });
+  } catch (err) {
+    console.error('delete task error:', err);
+    res.status(500).json({ error: 'Failed to delete task' });
+  }
+});
+
 router.delete('/:id/subtasks/:subtaskId', authenticate, async (req: AuthRequest, res: Response) => {
   try {
     const id = parseInt(req.params.id as string);
@@ -379,6 +493,95 @@ router.delete('/:id/subtasks/:subtaskId', authenticate, async (req: AuthRequest,
     res.json({ message: 'Subtask deleted' });
   } catch (err) {
     res.status(500).json({ error: 'Failed to delete subtask' });
+  }
+});
+
+import multer from 'multer';
+
+const storage = multer.diskStorage({
+  destination: (_req, _file, cb) => {
+    const dir = path.join(__dirname, '../uploads');
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+    cb(null, dir);
+  },
+  filename: (_req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    const ext = path.extname(file.originalname);
+    cb(null, 'file-' + uniqueSuffix + ext);
+  },
+});
+
+const upload = multer({ storage });
+
+router.post('/:id/attachments', authenticate, upload.single('file'), async (req: AuthRequest, res: Response) => {
+  try {
+    const id = parseInt(req.params.id as string);
+    const user = req.user!;
+    const file = req.file;
+
+    if (!file) return res.status(400).json({ error: 'No file uploaded' });
+
+    const task = await prisma.task.findUnique({ where: { id } });
+    if (!task) {
+      fs.unlinkSync(file.path);
+      return res.status(404).json({ error: 'Task not found' });
+    }
+
+    if (user.role === 'EMPLOYEE') {
+      const assigned = await isAssignee(id, user.id);
+      if (!assigned) {
+        fs.unlinkSync(file.path);
+        return res.status(403).json({ error: 'Access denied' });
+      }
+    }
+
+    const fileUrl = `/uploads/${file.filename}`;
+    const attachment = await prisma.taskAttachment.create({
+      data: {
+        filename: file.originalname,
+        fileUrl,
+        mimeType: file.mimetype,
+        taskId: id,
+        userId: user.id,
+      },
+      include: { user: { select: { id: true, firstName: true, lastName: true } } },
+    });
+
+    res.status(201).json(attachment);
+  } catch (err) {
+    console.error('upload attachment error:', err);
+    res.status(500).json({ error: 'Failed to upload attachment' });
+  }
+});
+
+router.delete('/:id/attachments/:attachmentId', authenticate, async (req: AuthRequest, res: Response) => {
+  try {
+    const id = parseInt(req.params.id as string);
+    const attachmentId = parseInt(req.params.attachmentId as string);
+    const user = req.user!;
+
+    const attachment = await prisma.taskAttachment.findUnique({ where: { id: attachmentId } });
+    if (!attachment || attachment.taskId !== id) {
+      return res.status(404).json({ error: 'Attachment not found' });
+    }
+
+    if (attachment.userId !== user.id && !canManageTask(user.role)) {
+      return res.status(403).json({ error: 'Access denied' });
+    }
+
+    const filePath = path.join(__dirname, '..', attachment.fileUrl);
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
+
+    await prisma.taskAttachment.delete({ where: { id: attachmentId } });
+
+    res.json({ message: 'Attachment deleted successfully' });
+  } catch (err) {
+    console.error('delete attachment error:', err);
+    res.status(500).json({ error: 'Failed to delete attachment' });
   }
 });
 

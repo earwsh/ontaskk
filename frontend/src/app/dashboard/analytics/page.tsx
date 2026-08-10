@@ -16,16 +16,10 @@ export default function AnalyticsRedirectPage() {
     const u = JSON.parse(stored);
     setLoading(false);
     const role = u.role;
-    if (role === 'CEO' || role === 'HR_MANAGER') {
-      router.push('/dashboard/analytics/overview');
-    } else if (role === 'DEPARTMENT_MANAGER') {
-      router.push('/dashboard/analytics/department');
-    } else if (role === 'TECHNICAL_MANAGER') {
-      router.push('/dashboard/analytics/technical');
-    } else if (role === 'EMPLOYEE') {
+    if (role === 'EMPLOYEE') {
       router.push('/dashboard/analytics/employee');
     } else {
-      router.push('/dashboard/analytics/overview');
+      router.push('/dashboard/analytics/reports');
     }
   }, [router]);
 

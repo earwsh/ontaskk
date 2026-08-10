@@ -55,10 +55,47 @@ export default function NotificationDropdown() {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const prevCountRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && 'Notification' in window) {
+      if (Notification.permission === 'default') {
+        Notification.requestPermission();
+      }
+    }
+  }, []);
+
+  const playNotificationSound = () => {
+    try {
+      const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5
+      osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.15); // A5
+      gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.3);
+    } catch {}
+  };
+
+  const triggerOSNotification = (title: string, body: string) => {
+    if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted') {
+      try {
+        new window.Notification(title, {
+          body,
+          icon: '/favicon.ico',
+        });
+      } catch {}
+    }
+  };
 
   useEffect(() => {
     fetchUnreadCount();
-    const interval = setInterval(fetchUnreadCount, 30000);
+    const interval = setInterval(fetchUnreadCount, 15000);
     return () => clearInterval(interval);
   }, []);
 
@@ -81,7 +118,13 @@ export default function NotificationDropdown() {
       });
       if (res.ok) {
         const data = await res.json();
-        setUnreadCount(data.count);
+        const newCount = data.count;
+        if (prevCountRef.current !== null && newCount > prevCountRef.current) {
+          playNotificationSound();
+          triggerOSNotification('اعلان جدید OnTask', `شما ${newCount} اعلان خوانده‌نشده جدید دارید.`);
+        }
+        prevCountRef.current = newCount;
+        setUnreadCount(newCount);
       }
     } catch {}
   }

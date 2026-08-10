@@ -13,6 +13,12 @@ export function shamsiToGregorian(str: string): string {
 
 export function gregorianToShamsi(dateStr: string): string {
   if (!dateStr) return '';
+  const cleanDateStr = dateStr.split('T')[0];
+  const parts = cleanDateStr.split('-').map(Number);
+  if (parts.length === 3 && !isNaN(parts[0]) && !isNaN(parts[1]) && !isNaN(parts[2])) {
+    const j = toJalaali(parts[0], parts[1], parts[2]);
+    return `${j.jy}/${String(j.jm).padStart(2, '0')}/${String(j.jd).padStart(2, '0')}`;
+  }
   const d = new Date(dateStr);
   const j = toJalaali(d.getFullYear(), d.getMonth() + 1, d.getDate());
   return `${j.jy}/${String(j.jm).padStart(2, '0')}/${String(j.jd).padStart(2, '0')}`;

@@ -17,11 +17,23 @@ interface TaskDetail {
   estimatedHours: number | null;
   project: { id: number; name: string; departmentId: number };
   assignees: { user: { id: number; firstName: string; lastName: string; email: string } }[];
-  subtasks: { id: number; title: string; isDone: boolean }[];
+  subtasks: { id: number; title: string; isDone: boolean; completedAt?: string | null }[];
   createdBy: { id: number; firstName: string; lastName: string };
   approvedBy: { id: number; firstName: string; lastName: string } | null;
   approvedAt: string | null;
   reports: { id: number; content: string; createdAt: string; user: { id: number; firstName: string; lastName: string } }[];
+  approver?: { id: number; firstName: string; lastName: string } | null;
+  startDate: string | null;
+  estimatedMinutes: number | null;
+  weight: number | null;
+  attachments: {
+    id: number;
+    filename: string;
+    fileUrl: string;
+    mimeType: string | null;
+    createdAt: string;
+    user: { id: number; firstName: string; lastName: string };
+  }[];
 }
 
 const statusConfig: Record<string, { label: string; color: string; bg: string; border: string; icon: string }> = {
@@ -34,6 +46,17 @@ const statusConfig: Record<string, { label: string; color: string; bg: string; b
 function toJalali(dateStr: string | null) {
   if (!dateStr) return '-';
   return gregorianToShamsi(dateStr.split('T')[0]);
+}
+
+function toJalaliDateTime(dateStr: string | null) {
+  if (!dateStr) return '-';
+  const parts = dateStr.split('T');
+  const date = gregorianToShamsi(parts[0]);
+  if (parts[1]) {
+    const time = parts[1].substring(0, 5);
+    return `${date} ${time}`;
+  }
+  return date;
 }
 
 export default function TaskDetailPage() {
@@ -50,13 +73,17 @@ export default function TaskDetailPage() {
   const [editTitle, setEditTitle] = useState('');
   const [editDescription, setEditDescription] = useState('');
   const [editDeadline, setEditDeadline] = useState('');
-  const [editHours, setEditHours] = useState('');
+  const [editStartDate, setEditStartDate] = useState('');
+  const [editMinutes, setEditMinutes] = useState('');
+  const [editWeight, setEditWeight] = useState('');
   const [editAssigneeIds, setEditAssigneeIds] = useState<number[]>([]);
+  const [editApproverId, setEditApproverId] = useState<number | ''>('');
   const [projectUsers, setProjectUsers] = useState<{ id: number; firstName: string; lastName: string; email: string }[]>([]);
 
   const [reportContent, setReportContent] = useState('');
   const [sendingReport, setSendingReport] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [uploadingFile, setUploadingFile] = useState(false);
 
   const [newSubtask, setNewSubtask] = useState('');
   const { showToast } = useToast();
@@ -85,24 +112,27 @@ export default function TaskDetailPage() {
     if (id) fetchTask();
   }, [id]);
 
-  const canManage = ['TECHNICAL_MANAGER', 'DEPARTMENT_MANAGER'].includes(role);
-  const isManager = ['TECHNICAL_MANAGER', 'DEPARTMENT_MANAGER', 'CEO', 'HR_MANAGER'].includes(role);
+  const canManage = ['TECHNICAL_MANAGER', 'STRATEGY_MANAGER', 'DEPARTMENT_MANAGER', 'CEO'].includes(role);
+  const isManager = ['TECHNICAL_MANAGER', 'STRATEGY_MANAGER', 'DEPARTMENT_MANAGER', 'CEO', 'HR_MANAGER'].includes(role);
   const isAssignee = task?.assignees.some((a) => a.user.id === userId);
 
   const canSubmitForApproval = role === 'EMPLOYEE' && isAssignee &&
     task && (task.status === 'TODO' || task.status === 'IN_PROGRESS');
 
-  const canApproveOrReject = isManager && task?.status === 'PENDING_APPROVAL';
+  const canApproveOrReject = (isManager || (task && userId === task.approver?.id)) && task?.status === 'PENDING_APPROVAL';
 
-  const canChangeStatus = isManager || (role === 'EMPLOYEE' && isAssignee);
+  const canChangeStatus = isManager || (role === 'EMPLOYEE' && isAssignee) || (task && userId === task.approver?.id);
 
   const startEdit = () => {
     if (!task) return;
     setEditTitle(task.title);
     setEditDescription(task.description || '');
     setEditDeadline(task.deadline ? task.deadline.split('T')[0] : '');
-    setEditHours(task.estimatedHours?.toString() || '');
+    setEditStartDate(task.startDate ? task.startDate.split('T')[0] : '');
+    setEditMinutes(task.estimatedMinutes?.toString() || '');
+    setEditWeight(task.weight?.toString() || '');
     setEditAssigneeIds(task.assignees.map((a) => a.user.id));
+    setEditApproverId(task.approver?.id || '');
     api.get(`/projects/${task.project.id}`).then(({ data }) => {
       setProjectUsers(data.members.map((m: any) => ({ ...m.user, email: m.user.email || '' })));
     }).catch(() => {});
@@ -119,8 +149,11 @@ export default function TaskDetailPage() {
         title: editTitle,
         description: editDescription,
         deadline: editDeadline || null,
-        estimatedHours: editHours ? parseFloat(editHours) : null,
+        startDate: editStartDate || null,
+        estimatedMinutes: editMinutes ? parseInt(editMinutes) : null,
+        weight: editWeight ? parseInt(editWeight) : null,
         assigneeIds: editAssigneeIds,
+        approverId: editApproverId || null,
       });
       setEditing(false);
       fetchTask();
@@ -191,10 +224,40 @@ export default function TaskDetailPage() {
     setEditAssigneeIds((prev) => prev.includes(uid) ? prev.filter((id) => id !== uid) : [...prev, uid]);
   };
 
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingFile(true);
+    const formData = new FormData();
+    formData.append('file', file);
+    try {
+      await api.post(`/tasks/${id}/attachments`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      fetchTask();
+      showToast('فایل با موفقیت آپلود شد');
+    } catch (err: any) {
+      showToast(err.response?.data?.error || 'خطا در آپلود فایل', 'error');
+    } finally {
+      setUploadingFile(false);
+    }
+  };
+
+  const handleDeleteAttachment = async (attachmentId: number) => {
+    if (!confirm('آیا از حذف این فایل اطمینان دارید؟')) return;
+    try {
+      await api.delete(`/tasks/${id}/attachments/${attachmentId}`);
+      fetchTask();
+      showToast('فایل با موفقیت حذف شد');
+    } catch (err: any) {
+      showToast(err.response?.data?.error || 'خطا در حذف فایل', 'error');
+    }
+  };
+
   const inputClass = "w-full px-4 py-2.5 bg-[rgba(22,27,38,0.6)] border border-[rgba(255,255,255,0.08)] rounded-xl text-white placeholder-text-muted focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/30 transition-all duration-200";
 
   return (
-    <ProtectedRoute allowedRoles={['CEO', 'HR_MANAGER', 'TECHNICAL_MANAGER', 'DEPARTMENT_MANAGER', 'EMPLOYEE']}>
+    <ProtectedRoute allowedRoles={['CEO', 'HR_MANAGER', 'TECHNICAL_MANAGER', 'STRATEGY_MANAGER', 'DEPARTMENT_MANAGER', 'EMPLOYEE']}>
       <div className="h-full flex flex-col overflow-hidden animate-fade-in">
         {loading ? (
           <div className="flex items-center justify-center flex-1">
@@ -228,13 +291,29 @@ export default function TaskDetailPage() {
                 </div>
               </div>
               {canManage && !editing && (
-                <button onClick={startEdit}
-                  className="flex items-center gap-2 px-4 py-2.5 bg-card-hover hover:bg-primary/10 text-text-secondary hover:text-primary rounded-xl font-medium text-sm transition-all">
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                  </svg>
-                  ویرایش
-                </button>
+                <div className="flex gap-2">
+                  <button onClick={startEdit}
+                    className="flex items-center gap-2 px-4 py-2.5 bg-card-hover hover:bg-primary/10 text-text-secondary hover:text-primary rounded-xl font-medium text-sm transition-all">
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                    ویرایش
+                  </button>
+                  <button onClick={() => {
+                    if (!confirm(`آیا از حذف تسک "${task.title}" اطمینان دارید؟`)) return;
+                    api.delete(`/tasks/${task.id}`).then(() => {
+                      router.push(`/dashboard/projects/${task.project.id}`);
+                    }).catch((err: any) => {
+                      showToast(err.response?.data?.error || 'خطا در حذف', 'error');
+                    });
+                  }}
+                    className="flex items-center gap-2 px-4 py-2.5 bg-card-hover hover:bg-danger/10 text-text-secondary hover:text-danger rounded-xl font-medium text-sm transition-all">
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                    حذف
+                  </button>
+                </div>
               )}
             </div>
 
@@ -306,14 +385,38 @@ export default function TaskDetailPage() {
                     <textarea value={editDescription} onChange={(e) => setEditDescription(e.target.value)}
                       className={`${inputClass} min-h-[80px] resize-none`} />
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
+                  <div className="grid grid-cols-12 gap-4">
+                    <div className="col-span-12 md:col-span-6">
+                      <label className="block text-xs font-medium text-text-secondary mb-1.5">تایید کننده</label>
+                      <select required value={editApproverId} onChange={(e) => setEditApproverId(Number(e.target.value))}
+                        className="w-full h-11 px-4 bg-[rgba(22,27,38,0.6)] border border-[rgba(255,255,255,0.08)] rounded-xl text-white outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/30 transition-all duration-200 cursor-pointer text-sm">
+                        {projectUsers.map((u) => (
+                          <option key={u.id} value={u.id}>{u.firstName} {u.lastName}</option>
+                        ))}
+                        {!projectUsers.some(u => u.id === editApproverId) && editApproverId && (
+                          <option value={editApproverId}>پیشین</option>
+                        )}
+                      </select>
+                    </div>
+                    <div className="col-span-12 md:col-span-3">
+                      <label className="block text-xs font-medium text-text-secondary mb-1.5">تاریخ شروع (شمسی)</label>
+                      <ShamsiDatePicker value={editStartDate} onChange={setEditStartDate} placeholder="انتخاب شروع" />
+                    </div>
+                    <div className="col-span-12 md:col-span-3">
                       <label className="block text-xs font-medium text-text-secondary mb-1.5">ددلاین (شمسی)</label>
                       <ShamsiDatePicker value={editDeadline} onChange={setEditDeadline} placeholder="انتخاب ددلاین" />
                     </div>
-                    <div>
-                      <label className="block text-xs font-medium text-text-secondary mb-1.5">تخمین زمان (ساعت)</label>
-                      <input type="number" min="0" step="0.5" value={editHours} onChange={(e) => setEditHours(e.target.value)} className={inputClass} />
+                    <div className="col-span-12 md:col-span-6">
+                      <label className="block text-xs font-medium text-text-secondary mb-1.5">تخمین (دقیقه)</label>
+                      <input type="number" min="0" value={editMinutes} onChange={(e) => {
+                        const val = e.target.value;
+                        setEditMinutes(val);
+                        setEditWeight(val);
+                      }} className={inputClass} />
+                    </div>
+                    <div className="col-span-12 md:col-span-6">
+                      <label className="block text-xs font-medium text-text-secondary mb-1.5">وزن</label>
+                      <input type="number" min="0" value={editWeight} onChange={(e) => setEditWeight(e.target.value)} className={inputClass} />
                     </div>
                   </div>
                   <div>
@@ -365,7 +468,16 @@ export default function TaskDetailPage() {
               ) : (
                 <>
                   <div className="bg-card border border-[rgba(255,255,255,0.06)] rounded-[20px] p-5 space-y-4">
-                    <div className="grid grid-cols-3 gap-3">
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+                      <div className="bg-[rgba(22,27,38,0.6)] rounded-xl px-4 py-3.5">
+                        <div className="flex items-center gap-2 text-text-muted text-xs mb-1">
+                          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          </svg>
+                          تاریخ شروع
+                        </div>
+                        <span className="text-sm text-white font-medium">{toJalali(task.startDate)}</span>
+                      </div>
                       <div className="bg-[rgba(22,27,38,0.6)] rounded-xl px-4 py-3.5">
                         <div className="flex items-center gap-2 text-text-muted text-xs mb-1">
                           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -380,9 +492,29 @@ export default function TaskDetailPage() {
                           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
-                          تخمین زمان
+                          زمان تخمینی
                         </div>
-                        <span className="text-sm text-white font-medium">{task.estimatedHours ? `${task.estimatedHours} ساعت` : '-'}</span>
+                        <span className="text-sm text-white font-medium">{task.estimatedMinutes ? `${task.estimatedMinutes} دقیقه` : '-'}</span>
+                      </div>
+                      <div className="bg-[rgba(22,27,38,0.6)] rounded-xl px-4 py-3.5">
+                        <div className="flex items-center gap-2 text-text-muted text-xs mb-1">
+                          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          وزن تسک
+                        </div>
+                        <span className="text-sm text-white font-medium">{task.weight !== null ? `${task.weight}` : '-'}</span>
+                      </div>
+                      <div className="bg-[rgba(22,27,38,0.6)] rounded-xl px-4 py-3.5">
+                        <div className="flex items-center gap-2 text-text-muted text-xs mb-1">
+                          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                          </svg>
+                          تایید کننده
+                        </div>
+                        <span className="text-sm text-white font-medium">
+                          {task.approver ? `${task.approver.firstName} ${task.approver.lastName}` : '-'}
+                        </span>
                       </div>
                       <div className="bg-[rgba(22,27,38,0.6)] rounded-xl px-4 py-3.5">
                         <div className="flex items-center gap-2 text-text-muted text-xs mb-1">
@@ -472,7 +604,12 @@ export default function TaskDetailPage() {
                                 </svg>
                               )}
                             </button>
-                            <span className={`text-sm flex-1 ${s.isDone ? 'text-text-muted line-through' : 'text-white'}`}>{s.title}</span>
+                            <div className="flex flex-col flex-1 min-w-0">
+                              <span className={`text-sm ${s.isDone ? 'text-text-muted line-through' : 'text-white'}`}>{s.title}</span>
+                              {s.isDone && s.completedAt && (
+                                <span className="text-[10px] text-text-muted mt-0.5">تکمیل در: {toJalaliDateTime(s.completedAt)}</span>
+                              )}
+                            </div>
                             {canManage && (
                               <button onClick={() => removeSubtask(s.id)}
                                 className="p-1.5 text-text-muted hover:text-danger opacity-0 group-hover:opacity-100 transition-all rounded-lg hover:bg-danger/10">
@@ -500,6 +637,100 @@ export default function TaskDetailPage() {
                       )}
                     </div>
                   )}
+
+                  <div className="bg-card border border-[rgba(255,255,255,0.06)] rounded-[20px] p-5">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <svg className="w-4 h-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.414a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                        </svg>
+                        <h3 className="text-sm font-semibold text-white">ضمائم و فایل‌ها</h3>
+                      </div>
+                      <div>
+                        <label className={`px-4 py-2 bg-primary hover:bg-primary-hover text-white rounded-xl font-medium text-xs transition-all cursor-pointer flex items-center gap-1.5 ${uploadingFile ? 'opacity-50 pointer-events-none' : ''}`}>
+                          {uploadingFile ? (
+                            <>
+                              <svg className="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24">
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                              </svg>
+                              در حال آپلود...
+                            </>
+                          ) : (
+                            <>
+                              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                              </svg>
+                              افزودن فایل
+                            </>
+                          )}
+                          <input type="file" onChange={handleFileUpload} className="hidden" />
+                        </label>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[300px] overflow-y-auto pr-1">
+                      {task.attachments && task.attachments.length > 0 ? (
+                        task.attachments.map((att) => {
+                          const isImage = att.mimeType?.startsWith('image/');
+                          const isAudio = att.mimeType?.startsWith('audio/');
+                          return (
+                            <div key={att.id} className="bg-[rgba(22,27,38,0.6)] rounded-xl p-3 border border-[rgba(255,255,255,0.04)] flex flex-col justify-between gap-3 group relative">
+                              <div className="flex items-start gap-3">
+                                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 text-primary">
+                                  {isImage ? (
+                                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                      <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                  ) : isAudio ? (
+                                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                                    </svg>
+                                  ) : (
+                                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                    </svg>
+                                  )}
+                                </div>
+                                <div className="min-w-0 flex-1">
+                                  <a href={att.fileUrl} target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-white block truncate hover:text-primary transition-all">
+                                    {att.filename}
+                                  </a>
+                                  <span className="text-[10px] text-text-muted block mt-0.5">
+                                    توسط {att.user.firstName} {att.user.lastName} • {toJalali(att.createdAt)}
+                                  </span>
+                                </div>
+                                {(att.user.id === userId || canManage) && (
+                                  <button onClick={() => handleDeleteAttachment(att.id)} className="p-1 text-text-muted hover:text-danger rounded hover:bg-danger/10 transition-all shrink-0">
+                                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                  </button>
+                                )}
+                              </div>
+                              {isImage && (
+                                <div className="mt-1 rounded-lg overflow-hidden border border-[rgba(255,255,255,0.06)] bg-black/25 flex items-center justify-center max-h-[140px]">
+                                  <img src={att.fileUrl} alt={att.filename} className="object-contain max-h-[140px] w-full" />
+                                </div>
+                              )}
+                              {isAudio && (
+                                <div className="mt-1">
+                                  <audio src={att.fileUrl} controls className="w-full h-8 scale-95" />
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })
+                      ) : (
+                        <div className="col-span-2 flex flex-col items-center justify-center py-6 text-text-muted">
+                          <svg className="w-8 h-8 mb-2 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.414a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                          </svg>
+                          <p className="text-xs">هیچ فایلی ضمیمه نشده است</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
 
                   <div className="bg-card border border-[rgba(255,255,255,0.06)] rounded-[20px] p-5">
                     <div className="flex items-center gap-2 mb-3">

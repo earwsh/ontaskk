@@ -1,10 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import ProtectedRoute from '@/components/ProtectedRoute';
+import ProjectFormModal from '@/components/ProjectFormModal';
 import { useToast } from '@/components/Toast';
 import api from '@/lib/api';
+import { gregorianToShamsi } from '@/lib/date';
 import Link from 'next/link';
 
 interface ProjectDetail {
@@ -28,6 +30,7 @@ interface Task {
   createdBy: { id: number; firstName: string; lastName: string };
   _count: { reports: number };
   createdAt: string;
+  deadline?: string | null;
 }
 
 interface Member {
@@ -50,13 +53,41 @@ const tabLabels: Record<string, string> = {
 };
 
 function toJalali(dateStr: string) {
-  return new Date(dateStr).toLocaleDateString('fa-IR');
+  return gregorianToShamsi(dateStr);
+}
+
+const groupConfig: Record<string, { label: string; color: string; icon: string }> = {
+  overdue: { label: 'دیرکرد', color: 'text-red-400', icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z' },
+  today: { label: 'امروز', color: 'text-yellow-400', icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z' },
+  tomorrow: { label: 'فردا', color: 'text-blue-400', icon: 'M13 7h8m0 0v8m0-8l-8 8-4-4-6 6' },
+  week: { label: 'این هفته', color: 'text-cyan-400', icon: 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z' },
+  future: { label: 'آینده', color: 'text-text-secondary', icon: 'M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z' },
+  noDeadline: { label: 'بدون سررسید', color: 'text-text-muted', icon: 'M12 6v6m0 0v6m0-6h6m-6 0H6' },
+  done: { label: 'تکمیل شده', color: 'text-green-400', icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' },
+};
+
+const groupOrder = ['overdue', 'today', 'tomorrow', 'week', 'future', 'noDeadline', 'done'];
+
+function getDeadlineGroup(deadline: string | null | undefined, status: string): string {
+  if (status === 'DONE') return 'done';
+  if (!deadline) return 'noDeadline';
+  const now = new Date();
+  const d = new Date(deadline);
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const deadlineDay = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  const diff = Math.round((deadlineDay.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+  if (diff < 0) return 'overdue';
+  if (diff === 0) return 'today';
+  if (diff === 1) return 'tomorrow';
+  if (diff <= 7) return 'week';
+  return 'future';
 }
 
 const roleLabels: Record<string, string> = {
   EMPLOYEE: 'کارمند',
   DEPARTMENT_MANAGER: 'مدیر دپارتمان',
   TECHNICAL_MANAGER: 'مدیر فنی',
+  STRATEGY_MANAGER: 'مدیر استراتژی',
   CEO: 'مدیر عامل',
   HR_MANAGER: 'مدیر منابع انسانی',
   CUSTOMER: 'مشتری',
@@ -73,6 +104,7 @@ export default function ProjectDetailPage() {
   const [activeTab, setActiveTab] = useState<'board' | 'table' | 'members'>('board');
   const [role, setRole] = useState('');
 
+  const [editModalOpen, setEditModalOpen] = useState(false);
   const [memberUserId, setMemberUserId] = useState('');
   const [deptUsers, setDeptUsers] = useState<{ id: number; firstName: string; lastName: string; email: string }[]>([]);
   const [userId, setUserId] = useState<number>(0);
@@ -109,7 +141,7 @@ export default function ProjectDetailPage() {
     }
   }, [activeTab, project]);
 
-  const canManage = ['TECHNICAL_MANAGER', 'DEPARTMENT_MANAGER'].includes(role);
+  const canManage = ['TECHNICAL_MANAGER', 'STRATEGY_MANAGER', 'DEPARTMENT_MANAGER', 'CEO'].includes(role);
   const canApprove = ['CEO', 'HR_MANAGER', 'TECHNICAL_MANAGER', 'DEPARTMENT_MANAGER'].includes(role);
 
   const handleAddMember = async () => {
@@ -149,10 +181,21 @@ export default function ProjectDetailPage() {
   const pendingCount = project?.tasks.filter((t) => t.status === 'PENDING_APPROVAL').length || 0;
   const progress = totalCount > 0 ? Math.round((doneCount / totalCount) * 100) : 0;
 
+  const groupedTasks = useMemo(() => {
+    const groups: Record<string, Task[]> = {};
+    for (const key of groupOrder) groups[key] = [];
+    if (!project?.tasks) return groups;
+    for (const t of project.tasks) {
+      const key = getDeadlineGroup(t.deadline, t.status);
+      if (groups[key]) groups[key].push(t);
+    }
+    return groups;
+  }, [project?.tasks]);
+
   const taskColumns = ['TODO', 'IN_PROGRESS', 'PENDING_APPROVAL', 'DONE'];
 
   return (
-    <ProtectedRoute allowedRoles={['CEO', 'HR_MANAGER', 'TECHNICAL_MANAGER', 'DEPARTMENT_MANAGER', 'EMPLOYEE']}>
+    <ProtectedRoute allowedRoles={['CEO', 'HR_MANAGER', 'TECHNICAL_MANAGER', 'STRATEGY_MANAGER', 'DEPARTMENT_MANAGER', 'EMPLOYEE']}>
       <div className="h-full flex flex-col overflow-hidden animate-fade-in">
         {loading ? (
           <div className="flex items-center justify-center flex-1">
@@ -174,6 +217,14 @@ export default function ProjectDetailPage() {
                 </button>
                 <div className="flex items-center gap-3 flex-wrap">
                   <h1 className="text-xl font-bold text-white">{project.name}</h1>
+                  {canManage && (
+                    <button onClick={() => setEditModalOpen(true)}
+                      className="p-1.5 rounded-lg text-text-muted hover:text-primary hover:bg-primary/5 transition-all cursor-pointer" title="ویرایش پروژه">
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                      </svg>
+                    </button>
+                  )}
                   <div className="flex items-center gap-1.5">
                     {totalCount > 0 && (
                       <span className="text-xs text-text-muted bg-card-hover px-2.5 py-0.5 rounded-lg">
@@ -336,77 +387,96 @@ export default function ProjectDetailPage() {
               )}
 
               {activeTab === 'table' && (
-                <div className="bg-card border border-[rgba(255,255,255,0.06)] rounded-[20px] overflow-hidden">
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-sm">
-                      <thead>
-                        <tr className="border-b border-[rgba(255,255,255,0.06)]">
-                          <th className="text-right px-4 py-3 text-text-muted font-medium">عنوان</th>
-                          <th className="text-right px-4 py-3 text-text-muted font-medium">انجام‌دهنده</th>
-                          <th className="text-right px-4 py-3 text-text-muted font-medium">وضعیت</th>
-                          <th className="text-right px-4 py-3 text-text-muted font-medium">گزارشات</th>
-                          <th className="text-right px-4 py-3 text-text-muted font-medium">تاریخ</th>
-                          <th className="text-center px-4 py-3 text-text-muted font-medium">عملیات</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {project.tasks.map((task) => (
-                          <tr key={task.id}
-                            className="border-b border-[rgba(255,255,255,0.03)] hover:bg-card-hover transition-colors">
-                            <td className="px-4 py-3">
-                              <button onClick={() => router.push(`/dashboard/tasks/${task.id}`)} className="cursor-pointer text-white font-medium hover:text-primary transition-colors text-right">
-                                {task.title}
-                              </button>
-                            </td>
-                            <td className="px-4 py-3">
-                              <span className="text-text-secondary">{task.assignees?.map((a) => a.user.firstName + ' ' + a.user.lastName).join(', ')}</span>
-                            </td>
-                            <td className="px-4 py-3">
-                              <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium ${statusConfig[task.status].bg} ${statusConfig[task.status].color} ${statusConfig[task.status].border} border`}>
-                                <div className={`w-1.5 h-1.5 rounded-full ${statusConfig[task.status].color.replace('text', 'bg')}`} />
-                                {statusConfig[task.status].label}
-                              </span>
-                            </td>
-                            <td className="px-4 py-3 text-text-muted">{task._count.reports}</td>
-                            <td className="px-4 py-3 text-text-muted">{toJalali(task.createdAt)}</td>
-                            <td className="px-4 py-3 text-center">
-                              {task.status === 'PENDING_APPROVAL' && canApprove && (
-                                <button onClick={() => handleQuickStatus(task.id, 'DONE')}
-                                  className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium bg-green-500/10 text-green-400 hover:bg-green-500/20 transition-all cursor-pointer active:scale-[0.97]">
-                                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                                  </svg>
-                                  تایید
-                                </button>
-                              )}
-                              {['TODO', 'IN_PROGRESS'].includes(task.status) && role === 'EMPLOYEE' && task.assignees?.some((a) => a.user.id === userId) && (
-                                <button onClick={() => handleQuickStatus(task.id, 'PENDING_APPROVAL')}
-                                  className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium bg-purple-500/10 text-purple-400 hover:bg-purple-500/20 transition-all cursor-pointer active:scale-[0.97]">
-                                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                  </svg>
-                                  ارسال برای تایید
-                                </button>
-                              )}
-                              {task.status === 'DONE' && (
-                                <span className="inline-flex items-center gap-1 text-xs text-green-400/60">
-                                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                                  </svg>
-                                  انجام شده
-                                </span>
-                              )}
-                            </td>
-                          </tr>
-                        ))}
-                        {project.tasks.length === 0 && (
-                          <tr>
-                            <td colSpan={6} className="px-4 py-12 text-center text-text-muted">هیچ تسکی وجود ندارد</td>
-                          </tr>
-                        )}
-                      </tbody>
-                    </table>
-                  </div>
+                <div className="space-y-4">
+                  {project.tasks.length === 0 ? (
+                    <div className="bg-card border border-[rgba(255,255,255,0.06)] rounded-[20px] p-12 text-center text-text-muted">
+                      هیچ تسکی وجود ندارد
+                    </div>
+                  ) : (
+                    groupOrder.map((key) => {
+                      const groupTasks = groupedTasks[key];
+                      if (!groupTasks || groupTasks.length === 0) return null;
+                      const cfg = groupConfig[key];
+                      return (
+                        <div key={key} className="bg-card border border-[rgba(255,255,255,0.06)] rounded-[20px] overflow-hidden">
+                          <div className={`px-4 py-3 border-b border-[rgba(255,255,255,0.06)] flex items-center gap-2 ${cfg.color}`}>
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d={cfg.icon} />
+                            </svg>
+                            <span className="text-white font-medium text-sm">{cfg.label}</span>
+                            <span className="text-text-muted text-xs mr-auto">{groupTasks.length} تسک</span>
+                          </div>
+                          <div className="overflow-x-auto">
+                            <table className="w-full text-sm">
+                              <thead>
+                                <tr className="border-b border-[rgba(255,255,255,0.06)]">
+                                  <th className="text-right px-4 py-3 text-text-muted font-medium whitespace-nowrap text-xs">عنوان</th>
+                                  <th className="text-right px-4 py-3 text-text-muted font-medium whitespace-nowrap text-xs">انجام‌دهنده</th>
+                                  <th className="text-right px-4 py-3 text-text-muted font-medium whitespace-nowrap text-xs">وضعیت</th>
+                                  <th className="text-right px-4 py-3 text-text-muted font-medium whitespace-nowrap text-xs">گزارشات</th>
+                                  <th className="text-right px-4 py-3 text-text-muted font-medium whitespace-nowrap text-xs">سررسید</th>
+                                  <th className="text-right px-4 py-3 text-text-muted font-medium whitespace-nowrap text-xs">تاریخ ایجاد</th>
+                                  <th className="text-center px-4 py-3 text-text-muted font-medium whitespace-nowrap text-xs">عملیات</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {groupTasks.map((task) => (
+                                  <tr key={task.id}
+                                    className="border-b border-[rgba(255,255,255,0.03)] hover:bg-card-hover transition-colors">
+                                    <td className="px-4 py-3">
+                                      <button onClick={() => router.push(`/dashboard/tasks/${task.id}`)} className="cursor-pointer text-white font-medium hover:text-primary transition-colors text-right">
+                                        {task.title}
+                                      </button>
+                                    </td>
+                                    <td className="px-4 py-3">
+                                      <span className="text-text-secondary">{task.assignees?.map((a) => a.user.firstName + ' ' + a.user.lastName).join(', ') || '-'}</span>
+                                    </td>
+                                    <td className="px-4 py-3">
+                                      <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium ${statusConfig[task.status].bg} ${statusConfig[task.status].color} ${statusConfig[task.status].border} border`}>
+                                        <div className={`w-1.5 h-1.5 rounded-full ${statusConfig[task.status].color.replace('text', 'bg')}`} />
+                                        {statusConfig[task.status].label}
+                                      </span>
+                                    </td>
+                                    <td className="px-4 py-3 text-text-muted">{task._count.reports}</td>
+                                    <td className="px-4 py-3 text-text-muted font-mono">{task.deadline ? toJalali(task.deadline) : '-'}</td>
+                                    <td className="px-4 py-3 text-text-muted font-mono">{toJalali(task.createdAt)}</td>
+                                    <td className="px-4 py-3 text-center">
+                                      {task.status === 'PENDING_APPROVAL' && canApprove && (
+                                        <button onClick={() => handleQuickStatus(task.id, 'DONE')}
+                                          className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium bg-green-500/10 text-green-400 hover:bg-green-500/20 transition-all cursor-pointer active:scale-[0.97]">
+                                          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                          </svg>
+                                          تایید
+                                        </button>
+                                      )}
+                                      {['TODO', 'IN_PROGRESS'].includes(task.status) && role === 'EMPLOYEE' && task.assignees?.some((a) => a.user.id === userId) && (
+                                        <button onClick={() => handleQuickStatus(task.id, 'PENDING_APPROVAL')}
+                                          className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium bg-purple-500/10 text-purple-400 hover:bg-purple-500/20 transition-all cursor-pointer active:scale-[0.97]">
+                                          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                          </svg>
+                                          ارسال برای تایید
+                                        </button>
+                                      )}
+                                      {task.status === 'DONE' && (
+                                        <span className="inline-flex items-center gap-1 text-xs text-green-400/60">
+                                          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                          </svg>
+                                          انجام شده
+                                        </span>
+                                      )}
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      );
+                    })
+                  )}
                 </div>
               )}
 
@@ -482,6 +552,12 @@ export default function ProjectDetailPage() {
         ) : (
           <div className="flex items-center justify-center flex-1 text-text-muted">پروژه یافت نشد</div>
         )}
+        <ProjectFormModal
+          open={editModalOpen}
+          project={project ? { id: project.id, name: project.name, description: project.description, client: project.client, departmentId: project.department.id, department: project.department } : null}
+          onClose={() => setEditModalOpen(false)}
+          onSaved={() => { setEditModalOpen(false); fetchProject(); }}
+        />
       </div>
     </ProtectedRoute>
   );

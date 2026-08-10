@@ -10,6 +10,7 @@ const roles = [
   { value: 'DEPARTMENT_MANAGER', label: 'مدیر دپارتمان' },
   { value: 'HR_MANAGER', label: 'مدیر منابع انسانی' },
   { value: 'TECHNICAL_MANAGER', label: 'مدیر فنی' },
+  { value: 'STRATEGY_MANAGER', label: 'مدیر استراتژی' },
   { value: 'CEO', label: 'مدیر عامل' },
 ];
 

@@ -31,15 +31,21 @@ export async function notifyPendingApproval(taskId: number, taskTitle: string, p
   });
   if (!project) return;
 
-  const managers = await prisma.user.findMany({
+  const managerIds: number[] = [];
+  if (project.department?.managerId) {
+    managerIds.push(project.department.managerId);
+  }
+
+  const orgWideManagers = await prisma.user.findMany({
     where: {
-      OR: [
-        { role: 'TECHNICAL_MANAGER' },
-        { role: 'CEO' },
-        { role: 'DEPARTMENT_MANAGER', departmentId: project.departmentId },
-      ],
+      role: { in: ['CEO', 'TECHNICAL_MANAGER', 'STRATEGY_MANAGER'] },
+      id: { notIn: managerIds },
     },
+    select: { id: true },
   });
+  managerIds.push(...orgWideManagers.map((u) => u.id));
+
+  const managers = await prisma.user.findMany({ where: { id: { in: managerIds } } });
 
   for (const manager of managers) {
     await createNotification({
@@ -65,19 +71,25 @@ export async function notifyTaskApproved(taskId: number, taskTitle: string, crea
 export async function notifyReportAdded(taskId: number, taskTitle: string, projectId: number, reporterName: string) {
   const project = await prisma.project.findUnique({
     where: { id: projectId },
-    select: { departmentId: true },
+    select: { departmentId: true, department: { select: { managerId: true } } },
   });
   if (!project) return;
 
-  const managers = await prisma.user.findMany({
+  const managerIds: number[] = [];
+  if (project.department?.managerId) {
+    managerIds.push(project.department.managerId);
+  }
+
+  const orgWideManagers = await prisma.user.findMany({
     where: {
-      OR: [
-        { role: 'TECHNICAL_MANAGER' },
-        { role: 'CEO' },
-        { role: 'DEPARTMENT_MANAGER', departmentId: project.departmentId },
-      ],
+      role: { in: ['CEO', 'TECHNICAL_MANAGER', 'STRATEGY_MANAGER'] },
+      id: { notIn: managerIds },
     },
+    select: { id: true },
   });
+  managerIds.push(...orgWideManagers.map((u) => u.id));
+
+  const managers = await prisma.user.findMany({ where: { id: { in: managerIds } } });
 
   for (const manager of managers) {
     await createNotification({

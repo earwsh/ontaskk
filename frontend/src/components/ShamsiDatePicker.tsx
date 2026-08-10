@@ -23,9 +23,12 @@ export default function ShamsiDatePicker({ value, onChange, placeholder }: Shams
       onChange={(date: DateObject | null) => {
         if (date) {
           const g = date.toDate();
+          // Avoid timezone offset shift by formatting local Date object parts
           const year = g.getFullYear();
           const month = String(g.getMonth() + 1).padStart(2, '0');
           const day = String(g.getDate()).padStart(2, '0');
+          // If date picker returns Gregorian date after conversion:
+          // dateObject with persian calendar date.toDate() returns Gregorian JS Date
           onChange(`${year}-${month}-${day}`);
         } else {
           onChange('');

@@ -1,0 +1,14 @@
+[Unit]
+Description=OnTask Database Backup at Boot
+After=network.target postgresql.service
+
+[Service]
+Type=oneshot
+ExecStart=/home/earwsh/app/ontask/backend/backup.sh
+Environment=BACKUP_DIR=/home/earwsh/app/ontask/backups
+Environment=DATABASE_URL=postgresql://earwsh@localhost:5433/ontask
+Environment=RETENTION_DAYS=7
+User=earwsh
+
+[Install]
+WantedBy=multi-user.target

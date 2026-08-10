@@ -51,6 +51,7 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
+  UserDepartment: 'UserDepartment',
   Department: 'Department',
   Project: 'Project',
   ProjectMember: 'ProjectMember',
@@ -59,7 +60,8 @@ export const ModelName = {
   TaskSubtask: 'TaskSubtask',
   TaskReport: 'TaskReport',
   Notification: 'Notification',
-  User: 'User'
+  User: 'User',
+  TaskAttachment: 'TaskAttachment'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -76,6 +78,15 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 } as const)
 
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
+
+
+export const UserDepartmentScalarFieldEnum = {
+  userId: 'userId',
+  departmentId: 'departmentId',
+  createdAt: 'createdAt'
+} as const
+
+export type UserDepartmentScalarFieldEnum = (typeof UserDepartmentScalarFieldEnum)[keyof typeof UserDepartmentScalarFieldEnum]
 
 
 export const DepartmentScalarFieldEnum = {
@@ -119,10 +130,14 @@ export const TaskScalarFieldEnum = {
   title: 'title',
   description: 'description',
   status: 'status',
+  startDate: 'startDate',
   deadline: 'deadline',
   estimatedHours: 'estimatedHours',
+  estimatedMinutes: 'estimatedMinutes',
+  weight: 'weight',
   approvedById: 'approvedById',
   approvedAt: 'approvedAt',
+  approverId: 'approverId',
   projectId: 'projectId',
   createdById: 'createdById',
   createdAt: 'createdAt',
@@ -146,6 +161,7 @@ export const TaskSubtaskScalarFieldEnum = {
   id: 'id',
   title: 'title',
   isDone: 'isDone',
+  completedAt: 'completedAt',
   taskId: 'taskId',
   createdAt: 'createdAt'
 } as const
@@ -190,13 +206,25 @@ export const UserScalarFieldEnum = {
   nationalId: 'nationalId',
   position: 'position',
   role: 'role',
-  departmentId: 'departmentId',
   phone: 'phone',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const TaskAttachmentScalarFieldEnum = {
+  id: 'id',
+  filename: 'filename',
+  fileUrl: 'fileUrl',
+  mimeType: 'mimeType',
+  taskId: 'taskId',
+  userId: 'userId',
+  createdAt: 'createdAt'
+} as const
+
+export type TaskAttachmentScalarFieldEnum = (typeof TaskAttachmentScalarFieldEnum)[keyof typeof TaskAttachmentScalarFieldEnum]
 
 
 export const SortOrder = {

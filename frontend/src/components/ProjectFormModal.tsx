@@ -3,10 +3,20 @@
 import { useState, useEffect } from 'react';
 import api from '@/lib/api';
 
+interface ProjectData {
+  id: number;
+  name: string;
+  description: string | null;
+  client: string | null;
+  departmentId: number;
+  department?: { id: number; name: string };
+}
+
 interface ProjectFormModalProps {
   open: boolean;
   onClose: () => void;
   onSaved: () => void;
+  project?: ProjectData | null;
 }
 
 interface Department {
@@ -14,7 +24,8 @@ interface Department {
   name: string;
 }
 
-export default function ProjectFormModal({ open, onClose, onSaved }: ProjectFormModalProps) {
+export default function ProjectFormModal({ open, onClose, onSaved, project }: ProjectFormModalProps) {
+  const isEdit = !!project;
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [client, setClient] = useState('');
@@ -25,19 +36,31 @@ export default function ProjectFormModal({ open, onClose, onSaved }: ProjectForm
   useEffect(() => {
     if (open) {
       api.get('/departments').then(({ data }) => setDepartments(data)).catch(() => {});
-      setName('');
-      setDescription('');
-      setClient('');
-      setDepartmentId('');
+      if (project) {
+        setName(project.name);
+        setDescription(project.description || '');
+        setClient(project.client || '');
+        setDepartmentId(String(project.departmentId));
+      } else {
+        setName('');
+        setDescription('');
+        setClient('');
+        setDepartmentId('');
+      }
     }
-  }, [open]);
+  }, [open, project]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !departmentId) return;
     setSaving(true);
     try {
-      await api.post('/projects', { name, description, client, departmentId: parseInt(departmentId) });
+      const body = { name, description, client, departmentId: parseInt(departmentId) };
+      if (isEdit) {
+        await api.put(`/projects/${project!.id}`, body);
+      } else {
+        await api.post('/projects', body);
+      }
       onSaved();
     } catch (err: any) {
       alert(err.response?.data?.error || 'خطا');
@@ -55,7 +78,7 @@ export default function ProjectFormModal({ open, onClose, onSaved }: ProjectForm
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
       <div className="relative bg-card border border-[rgba(255,255,255,0.06)] rounded-[20px] w-full max-w-lg max-h-[90vh] overflow-y-auto animate-scale-in">
         <div className="sticky top-0 bg-card border-b border-[rgba(255,255,255,0.06)] px-6 py-4 flex items-center justify-between rounded-t-[20px] z-10">
-          <h2 className="text-lg font-semibold text-white">پروژه جدید</h2>
+          <h2 className="text-lg font-semibold text-white">{isEdit ? 'ویرایش پروژه' : 'پروژه جدید'}</h2>
           <button onClick={onClose} className="w-8 h-8 rounded-xl flex items-center justify-center text-text-muted hover:text-white hover:bg-card-hover transition-all">
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -91,7 +114,7 @@ export default function ProjectFormModal({ open, onClose, onSaved }: ProjectForm
               type="submit" disabled={saving}
               className="flex-1 py-2.5 bg-primary hover:bg-primary-hover disabled:opacity-50 text-white rounded-xl font-medium transition-all duration-200"
             >
-              {saving ? 'در حال ذخیره...' : 'ایجاد پروژه'}
+              {saving ? 'در حال ذخیره...' : isEdit ? 'ذخیره تغییرات' : 'ایجاد پروژه'}
             </button>
             <button type="button" onClick={onClose} className="px-6 py-2.5 bg-card-hover text-text-secondary hover:text-white rounded-xl font-medium transition-all duration-200">
               انصراف

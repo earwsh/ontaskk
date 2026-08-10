@@ -6,6 +6,7 @@ const roleRoutes: Record<string, string> = {
   CEO: '/dashboard/ceo',
   HR_MANAGER: '/dashboard/hr',
   TECHNICAL_MANAGER: '/dashboard/tech',
+  STRATEGY_MANAGER: '/dashboard/tech',
   DEPARTMENT_MANAGER: '/dashboard/dept',
   EMPLOYEE: '/dashboard/employee',
   CUSTOMER: '/dashboard/customer',

@@ -54,6 +54,7 @@ router.get('/:id', authenticate, async (req: AuthRequest, res: Response) => {
             assignees: {
               include: { user: { select: { id: true, firstName: true, lastName: true } } },
             },
+            approver: { select: { id: true, firstName: true, lastName: true } },
             createdBy: { select: { id: true, firstName: true, lastName: true } },
             _count: { select: { reports: true } },
           },
@@ -93,7 +94,7 @@ router.post('/', authenticate, async (req: AuthRequest, res: Response) => {
       if (!managedDept || managedDept.id !== departmentId) {
         return res.status(403).json({ error: 'You can only create projects in your department' });
       }
-    } else if (user.role !== 'TECHNICAL_MANAGER') {
+    } else if (user.role !== 'TECHNICAL_MANAGER' && user.role !== 'STRATEGY_MANAGER' && user.role !== 'CEO') {
       return res.status(403).json({ error: 'Access denied' });
     }
 
@@ -101,7 +102,31 @@ router.post('/', authenticate, async (req: AuthRequest, res: Response) => {
       data: { name, description, client, departmentId, createdById: user.id },
       include: projectInclude,
     });
-    res.status(201).json(project);
+
+    const orgWideRoles: any[] = ['CEO', 'TECHNICAL_MANAGER', 'STRATEGY_MANAGER', 'HR_MANAGER'];
+    const orgWideUsers = await prisma.user.findMany({
+      where: { role: { in: orgWideRoles } },
+      select: { id: true },
+    });
+    if (orgWideUsers.length) {
+      await prisma.projectMember.createMany({
+        data: orgWideUsers.map((u) => ({ projectId: project.id, userId: u.id })),
+        skipDuplicates: true,
+      });
+    }
+
+    const result = await prisma.project.findUnique({
+      where: { id: project.id },
+      include: {
+        ...projectInclude,
+        members: {
+          include: { user: { select: { id: true, firstName: true, lastName: true, email: true, role: true } } },
+          orderBy: { createdAt: 'asc' },
+        },
+      },
+    });
+
+    res.status(201).json(result);
   } catch (err) {
     console.error('create project error:', err);
     res.status(500).json({ error: 'Failed to create project' });
@@ -112,7 +137,7 @@ router.put('/:id', authenticate, async (req: AuthRequest, res: Response) => {
   try {
     const id = parseInt(req.params.id as string);
     const user = req.user!;
-    const { name, description, client } = req.body;
+    const { name, description, client, departmentId } = req.body;
 
     const project = await prisma.project.findUnique({ where: { id } });
     if (!project) {
@@ -126,13 +151,13 @@ router.put('/:id', authenticate, async (req: AuthRequest, res: Response) => {
       if (!managedDept || managedDept.id !== project.departmentId) {
         return res.status(403).json({ error: 'Access denied' });
       }
-    } else if (user.role !== 'TECHNICAL_MANAGER') {
+    } else if (user.role !== 'TECHNICAL_MANAGER' && user.role !== 'STRATEGY_MANAGER' && user.role !== 'CEO') {
       return res.status(403).json({ error: 'Access denied' });
     }
 
     const updated = await prisma.project.update({
       where: { id },
-      data: { ...(name && { name }), ...(description !== undefined && { description }), ...(client !== undefined && { client }) },
+      data: { ...(name && { name }), ...(description !== undefined && { description }), ...(client !== undefined && { client }), ...(departmentId && { departmentId }) },
       include: projectInclude,
     });
     res.json(updated);
@@ -142,7 +167,7 @@ router.put('/:id', authenticate, async (req: AuthRequest, res: Response) => {
   }
 });
 
-router.delete('/:id', authenticate, authorize('TECHNICAL_MANAGER'), async (req: AuthRequest, res: Response) => {
+router.delete('/:id', authenticate, authorize('TECHNICAL_MANAGER', 'STRATEGY_MANAGER', 'CEO'), async (req: AuthRequest, res: Response) => {
   try {
     const id = parseInt(req.params.id as string);
     const project = await prisma.project.findUnique({ where: { id } });
@@ -193,17 +218,13 @@ router.post('/:id/members', authenticate, async (req: AuthRequest, res: Response
       if (!managedDept || managedDept.id !== project.departmentId) {
         return res.status(403).json({ error: 'Access denied' });
       }
-    } else if (user.role !== 'TECHNICAL_MANAGER') {
+    } else if (user.role !== 'TECHNICAL_MANAGER' && user.role !== 'STRATEGY_MANAGER' && user.role !== 'CEO') {
       return res.status(403).json({ error: 'Access denied' });
     }
 
     const memberUser = await prisma.user.findUnique({ where: { id: userId } });
     if (!memberUser) {
       return res.status(404).json({ error: 'User not found' });
-    }
-
-    if (memberUser.departmentId !== project.departmentId) {
-      return res.status(400).json({ error: 'User is not in the same department as this project' });
     }
 
     const existing = await prisma.projectMember.findUnique({
@@ -243,7 +264,7 @@ router.delete('/:id/members/:userId', authenticate, async (req: AuthRequest, res
       if (!managedDept || managedDept.id !== project.departmentId) {
         return res.status(403).json({ error: 'Access denied' });
       }
-    } else if (user.role !== 'TECHNICAL_MANAGER') {
+    } else if (user.role !== 'TECHNICAL_MANAGER' && user.role !== 'STRATEGY_MANAGER' && user.role !== 'CEO') {
       return res.status(403).json({ error: 'Access denied' });
     }
 

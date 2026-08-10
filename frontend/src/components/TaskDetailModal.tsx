@@ -99,7 +99,7 @@ export default function TaskDetailModal({ open, onClose, taskId, onTaskUpdated }
     }
   };
 
-  const canManage = ['TECHNICAL_MANAGER', 'DEPARTMENT_MANAGER', 'CEO', 'HR_MANAGER'].includes(role);
+  const canManage = ['TECHNICAL_MANAGER', 'STRATEGY_MANAGER', 'DEPARTMENT_MANAGER', 'CEO', 'HR_MANAGER'].includes(role);
   const canChangeStatus = canManage || role === 'EMPLOYEE';
 
   if (!open) return null;
