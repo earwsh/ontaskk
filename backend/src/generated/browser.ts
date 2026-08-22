@@ -72,3 +72,23 @@ export type User = Prisma.UserModel
  * 
  */
 export type TaskAttachment = Prisma.TaskAttachmentModel
+/**
+ * Model Conversation
+ * 
+ */
+export type Conversation = Prisma.ConversationModel
+/**
+ * Model ChatParticipant
+ * 
+ */
+export type ChatParticipant = Prisma.ChatParticipantModel
+/**
+ * Model ChatMessage
+ * 
+ */
+export type ChatMessage = Prisma.ChatMessageModel
+/**
+ * Model Webhook
+ * 
+ */
+export type Webhook = Prisma.WebhookModel

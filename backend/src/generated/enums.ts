@@ -30,3 +30,13 @@ export const TaskStatus = {
 } as const
 
 export type TaskStatus = (typeof TaskStatus)[keyof typeof TaskStatus]
+
+
+export const ConversationType = {
+  DIRECT: 'DIRECT',
+  GROUP: 'GROUP',
+  TASK: 'TASK',
+  DEPARTMENT: 'DEPARTMENT'
+} as const
+
+export type ConversationType = (typeof ConversationType)[keyof typeof ConversationType]

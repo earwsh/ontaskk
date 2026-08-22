@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import api from '@/lib/api';
+import TaskRecurrenceConfig, { RecurrenceConfigState } from '@/components/TaskRecurrenceConfig';
 
 interface TaskFormModalProps {
   open: boolean;
@@ -24,6 +25,12 @@ export default function TaskFormModal({ open, onClose, onSaved, projectId, depar
   const [assigneeId, setAssigneeId] = useState('');
   const [users, setUsers] = useState<DeptUser[]>([]);
   const [saving, setSaving] = useState(false);
+  const [recurrence, setRecurrence] = useState<RecurrenceConfigState>({
+    isRecurring: false,
+    recurrencePattern: 'DAILY',
+    recurrenceDays: [],
+    recurrenceEnd: '',
+  });
 
   useEffect(() => {
     if (open) {
@@ -31,6 +38,12 @@ export default function TaskFormModal({ open, onClose, onSaved, projectId, depar
       setTitle('');
       setDescription('');
       setAssigneeId('');
+      setRecurrence({
+        isRecurring: false,
+        recurrencePattern: 'DAILY',
+        recurrenceDays: [],
+        recurrenceEnd: '',
+      });
     }
   }, [open, departmentId]);
 
@@ -39,7 +52,16 @@ export default function TaskFormModal({ open, onClose, onSaved, projectId, depar
     if (!title || !assigneeId) return;
     setSaving(true);
     try {
-      await api.post('/tasks', { title, description, projectId, assigneeId: parseInt(assigneeId) });
+      await api.post('/tasks', {
+        title,
+        description,
+        projectId,
+        assigneeIds: [parseInt(assigneeId)],
+        isRecurring: recurrence.isRecurring,
+        recurrencePattern: recurrence.isRecurring ? recurrence.recurrencePattern : undefined,
+        recurrenceDays: recurrence.isRecurring ? recurrence.recurrenceDays : undefined,
+        recurrenceEnd: recurrence.isRecurring && recurrence.recurrenceEnd ? recurrence.recurrenceEnd : undefined,
+      });
       onSaved();
     } catch (err: any) {
       alert(err.response?.data?.error || 'خطا');
@@ -55,7 +77,7 @@ export default function TaskFormModal({ open, onClose, onSaved, projectId, depar
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" dir="rtl">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative bg-card border border-[rgba(255,255,255,0.06)] rounded-[20px] w-full max-w-lg max-h-[90vh] overflow-y-auto animate-scale-in">
+      <div className="relative bg-card border border-[rgba(255,255,255,0.06)] rounded-[20px] w-full max-w-xl max-h-[90vh] overflow-y-auto animate-scale-in">
         <div className="sticky top-0 bg-card border-b border-[rgba(255,255,255,0.06)] px-6 py-4 flex items-center justify-between rounded-t-[20px] z-10">
           <h2 className="text-lg font-semibold text-white">تسک جدید</h2>
           <button onClick={onClose} className="w-8 h-8 rounded-xl flex items-center justify-center text-text-muted hover:text-white hover:bg-card-hover transition-all">
@@ -83,6 +105,8 @@ export default function TaskFormModal({ open, onClose, onSaved, projectId, depar
               ))}
             </select>
           </div>
+
+          <TaskRecurrenceConfig value={recurrence} onChange={setRecurrence} />
 
           <div className="flex gap-3 pt-2">
             <button type="submit" disabled={saving} className="flex-1 py-2.5 bg-primary hover:bg-primary-hover disabled:opacity-50 text-white rounded-xl font-medium transition-all duration-200">

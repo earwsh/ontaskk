@@ -13,17 +13,23 @@ import aiRoutes from './routes/ai';
 import path from 'path';
 import fs from 'fs';
 
+import http from 'http';
+import chatRoutes from './routes/chat';
+import webhookRoutes from './routes/webhooks';
+import { initSocketIO } from './lib/socket';
+import { initRecurringTasksScheduler } from './services/recurringTasks';
+
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-const uploadsDir = path.join(__dirname, '../uploads');
+const uploadsDir = path.resolve(process.cwd(), 'uploads');
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
 
 app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+app.use('/uploads', express.static(uploadsDir));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
@@ -34,11 +40,18 @@ app.use('/api/analytics', analyticsRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/calendar', calendarRoutes);
 app.use('/api/ai', aiRoutes);
+app.use('/api/chat', chatRoutes);
+app.use('/api/webhooks', webhookRoutes);
 
 app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok' });
 });
 
-app.listen(PORT, () => {
+const httpServer = http.createServer(app);
+initSocketIO(httpServer);
+
+httpServer.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+  initRecurringTasksScheduler();
 });
+

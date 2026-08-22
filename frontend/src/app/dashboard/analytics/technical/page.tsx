@@ -58,7 +58,7 @@ export default function AnalyticsTechnicalPage() {
           <p className="mt-1 text-sm text-text-muted">نمای کلی تسک‌ها، پروژه‌ها و دپارتمان‌ها در محدوده «{data?.scopeLabel}»</p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <ServiceBadge name="پایتون" ok={Boolean(data?.computedBy === 'python' || data?.insights?.findings?.length || data?.rankings?.projects?.length)} />
+          <ServiceBadge name="پایتون" ok={Boolean(data?.computedBy?.py || data?.computedBy === 'python' || data?.insights?.findings?.length || data?.rankings?.projects?.length || data?.counts?.total)} />
           <ServiceBadge name="راست" ok={Boolean(data?.workloadHealth?.memberCount)} />
         </div>
       </div>

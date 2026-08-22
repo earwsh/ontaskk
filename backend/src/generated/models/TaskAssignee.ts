@@ -42,6 +42,8 @@ export type TaskAssigneeMinAggregateOutputType = {
   id: number | null
   taskId: number | null
   userId: number | null
+  isCompleted: boolean | null
+  completedAt: Date | null
   createdAt: Date | null
 }
 
@@ -49,6 +51,8 @@ export type TaskAssigneeMaxAggregateOutputType = {
   id: number | null
   taskId: number | null
   userId: number | null
+  isCompleted: boolean | null
+  completedAt: Date | null
   createdAt: Date | null
 }
 
@@ -56,6 +60,8 @@ export type TaskAssigneeCountAggregateOutputType = {
   id: number
   taskId: number
   userId: number
+  isCompleted: number
+  completedAt: number
   createdAt: number
   _all: number
 }
@@ -77,6 +83,8 @@ export type TaskAssigneeMinAggregateInputType = {
   id?: true
   taskId?: true
   userId?: true
+  isCompleted?: true
+  completedAt?: true
   createdAt?: true
 }
 
@@ -84,6 +92,8 @@ export type TaskAssigneeMaxAggregateInputType = {
   id?: true
   taskId?: true
   userId?: true
+  isCompleted?: true
+  completedAt?: true
   createdAt?: true
 }
 
@@ -91,6 +101,8 @@ export type TaskAssigneeCountAggregateInputType = {
   id?: true
   taskId?: true
   userId?: true
+  isCompleted?: true
+  completedAt?: true
   createdAt?: true
   _all?: true
 }
@@ -185,6 +197,8 @@ export type TaskAssigneeGroupByOutputType = {
   id: number
   taskId: number
   userId: number
+  isCompleted: boolean
+  completedAt: Date | null
   createdAt: Date
   _count: TaskAssigneeCountAggregateOutputType | null
   _avg: TaskAssigneeAvgAggregateOutputType | null
@@ -215,6 +229,8 @@ export type TaskAssigneeWhereInput = {
   id?: Prisma.IntFilter<"TaskAssignee"> | number
   taskId?: Prisma.IntFilter<"TaskAssignee"> | number
   userId?: Prisma.IntFilter<"TaskAssignee"> | number
+  isCompleted?: Prisma.BoolFilter<"TaskAssignee"> | boolean
+  completedAt?: Prisma.DateTimeNullableFilter<"TaskAssignee"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"TaskAssignee"> | Date | string
   task?: Prisma.XOR<Prisma.TaskScalarRelationFilter, Prisma.TaskWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -224,6 +240,8 @@ export type TaskAssigneeOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   taskId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  isCompleted?: Prisma.SortOrder
+  completedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   task?: Prisma.TaskOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
@@ -237,6 +255,8 @@ export type TaskAssigneeWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.TaskAssigneeWhereInput | Prisma.TaskAssigneeWhereInput[]
   taskId?: Prisma.IntFilter<"TaskAssignee"> | number
   userId?: Prisma.IntFilter<"TaskAssignee"> | number
+  isCompleted?: Prisma.BoolFilter<"TaskAssignee"> | boolean
+  completedAt?: Prisma.DateTimeNullableFilter<"TaskAssignee"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"TaskAssignee"> | Date | string
   task?: Prisma.XOR<Prisma.TaskScalarRelationFilter, Prisma.TaskWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -246,6 +266,8 @@ export type TaskAssigneeOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   taskId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  isCompleted?: Prisma.SortOrder
+  completedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.TaskAssigneeCountOrderByAggregateInput
   _avg?: Prisma.TaskAssigneeAvgOrderByAggregateInput
@@ -261,10 +283,14 @@ export type TaskAssigneeScalarWhereWithAggregatesInput = {
   id?: Prisma.IntWithAggregatesFilter<"TaskAssignee"> | number
   taskId?: Prisma.IntWithAggregatesFilter<"TaskAssignee"> | number
   userId?: Prisma.IntWithAggregatesFilter<"TaskAssignee"> | number
+  isCompleted?: Prisma.BoolWithAggregatesFilter<"TaskAssignee"> | boolean
+  completedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"TaskAssignee"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"TaskAssignee"> | Date | string
 }
 
 export type TaskAssigneeCreateInput = {
+  isCompleted?: boolean
+  completedAt?: Date | string | null
   createdAt?: Date | string
   task: Prisma.TaskCreateNestedOneWithoutAssigneesInput
   user: Prisma.UserCreateNestedOneWithoutTaskAssignmentsInput
@@ -274,10 +300,14 @@ export type TaskAssigneeUncheckedCreateInput = {
   id?: number
   taskId: number
   userId: number
+  isCompleted?: boolean
+  completedAt?: Date | string | null
   createdAt?: Date | string
 }
 
 export type TaskAssigneeUpdateInput = {
+  isCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   task?: Prisma.TaskUpdateOneRequiredWithoutAssigneesNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutTaskAssignmentsNestedInput
@@ -287,6 +317,8 @@ export type TaskAssigneeUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   taskId?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
+  isCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -294,10 +326,14 @@ export type TaskAssigneeCreateManyInput = {
   id?: number
   taskId: number
   userId: number
+  isCompleted?: boolean
+  completedAt?: Date | string | null
   createdAt?: Date | string
 }
 
 export type TaskAssigneeUpdateManyMutationInput = {
+  isCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -305,6 +341,8 @@ export type TaskAssigneeUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   taskId?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
+  isCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -327,6 +365,8 @@ export type TaskAssigneeCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   taskId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  isCompleted?: Prisma.SortOrder
+  completedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -340,6 +380,8 @@ export type TaskAssigneeMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   taskId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  isCompleted?: Prisma.SortOrder
+  completedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -347,6 +389,8 @@ export type TaskAssigneeMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   taskId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  isCompleted?: Prisma.SortOrder
+  completedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -441,6 +485,8 @@ export type TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput = {
 }
 
 export type TaskAssigneeCreateWithoutTaskInput = {
+  isCompleted?: boolean
+  completedAt?: Date | string | null
   createdAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutTaskAssignmentsInput
 }
@@ -448,6 +494,8 @@ export type TaskAssigneeCreateWithoutTaskInput = {
 export type TaskAssigneeUncheckedCreateWithoutTaskInput = {
   id?: number
   userId: number
+  isCompleted?: boolean
+  completedAt?: Date | string | null
   createdAt?: Date | string
 }
 
@@ -484,10 +532,14 @@ export type TaskAssigneeScalarWhereInput = {
   id?: Prisma.IntFilter<"TaskAssignee"> | number
   taskId?: Prisma.IntFilter<"TaskAssignee"> | number
   userId?: Prisma.IntFilter<"TaskAssignee"> | number
+  isCompleted?: Prisma.BoolFilter<"TaskAssignee"> | boolean
+  completedAt?: Prisma.DateTimeNullableFilter<"TaskAssignee"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"TaskAssignee"> | Date | string
 }
 
 export type TaskAssigneeCreateWithoutUserInput = {
+  isCompleted?: boolean
+  completedAt?: Date | string | null
   createdAt?: Date | string
   task: Prisma.TaskCreateNestedOneWithoutAssigneesInput
 }
@@ -495,6 +547,8 @@ export type TaskAssigneeCreateWithoutUserInput = {
 export type TaskAssigneeUncheckedCreateWithoutUserInput = {
   id?: number
   taskId: number
+  isCompleted?: boolean
+  completedAt?: Date | string | null
   createdAt?: Date | string
 }
 
@@ -527,10 +581,14 @@ export type TaskAssigneeUpdateManyWithWhereWithoutUserInput = {
 export type TaskAssigneeCreateManyTaskInput = {
   id?: number
   userId: number
+  isCompleted?: boolean
+  completedAt?: Date | string | null
   createdAt?: Date | string
 }
 
 export type TaskAssigneeUpdateWithoutTaskInput = {
+  isCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutTaskAssignmentsNestedInput
 }
@@ -538,22 +596,30 @@ export type TaskAssigneeUpdateWithoutTaskInput = {
 export type TaskAssigneeUncheckedUpdateWithoutTaskInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
+  isCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type TaskAssigneeUncheckedUpdateManyWithoutTaskInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
+  isCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type TaskAssigneeCreateManyUserInput = {
   id?: number
   taskId: number
+  isCompleted?: boolean
+  completedAt?: Date | string | null
   createdAt?: Date | string
 }
 
 export type TaskAssigneeUpdateWithoutUserInput = {
+  isCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   task?: Prisma.TaskUpdateOneRequiredWithoutAssigneesNestedInput
 }
@@ -561,12 +627,16 @@ export type TaskAssigneeUpdateWithoutUserInput = {
 export type TaskAssigneeUncheckedUpdateWithoutUserInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   taskId?: Prisma.IntFieldUpdateOperationsInput | number
+  isCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type TaskAssigneeUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   taskId?: Prisma.IntFieldUpdateOperationsInput | number
+  isCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -576,6 +646,8 @@ export type TaskAssigneeSelect<ExtArgs extends runtime.Types.Extensions.Internal
   id?: boolean
   taskId?: boolean
   userId?: boolean
+  isCompleted?: boolean
+  completedAt?: boolean
   createdAt?: boolean
   task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -585,6 +657,8 @@ export type TaskAssigneeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   id?: boolean
   taskId?: boolean
   userId?: boolean
+  isCompleted?: boolean
+  completedAt?: boolean
   createdAt?: boolean
   task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -594,6 +668,8 @@ export type TaskAssigneeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   id?: boolean
   taskId?: boolean
   userId?: boolean
+  isCompleted?: boolean
+  completedAt?: boolean
   createdAt?: boolean
   task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -603,10 +679,12 @@ export type TaskAssigneeSelectScalar = {
   id?: boolean
   taskId?: boolean
   userId?: boolean
+  isCompleted?: boolean
+  completedAt?: boolean
   createdAt?: boolean
 }
 
-export type TaskAssigneeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "taskId" | "userId" | "createdAt", ExtArgs["result"]["taskAssignee"]>
+export type TaskAssigneeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "taskId" | "userId" | "isCompleted" | "completedAt" | "createdAt", ExtArgs["result"]["taskAssignee"]>
 export type TaskAssigneeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -630,6 +708,8 @@ export type $TaskAssigneePayload<ExtArgs extends runtime.Types.Extensions.Intern
     id: number
     taskId: number
     userId: number
+    isCompleted: boolean
+    completedAt: Date | null
     createdAt: Date
   }, ExtArgs["result"]["taskAssignee"]>
   composites: {}
@@ -1059,6 +1139,8 @@ export interface TaskAssigneeFieldRefs {
   readonly id: Prisma.FieldRef<"TaskAssignee", 'Int'>
   readonly taskId: Prisma.FieldRef<"TaskAssignee", 'Int'>
   readonly userId: Prisma.FieldRef<"TaskAssignee", 'Int'>
+  readonly isCompleted: Prisma.FieldRef<"TaskAssignee", 'Boolean'>
+  readonly completedAt: Prisma.FieldRef<"TaskAssignee", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"TaskAssignee", 'DateTime'>
 }
     

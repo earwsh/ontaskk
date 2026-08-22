@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import ProtectedRoute from '@/components/ProtectedRoute';
+import TaskRecurrenceBadge from '@/components/TaskRecurrenceBadge';
 import api from '@/lib/api';
 import { gregorianToShamsi } from '@/lib/date';
 import Link from 'next/link';
@@ -396,9 +397,18 @@ export default function OrgTasksPage() {
                                   return (
                                     <tr key={task.id} className="border-b border-[rgba(255,255,255,0.03)] hover:bg-card-hover transition-colors">
                                       <td className="px-4 py-2.5">
-                                        <Link href={`/dashboard/tasks/${task.id}`} className="text-white hover:text-primary transition-colors font-medium">
-                                          {task.title}
-                                        </Link>
+                                        <div className="flex items-center gap-2">
+                                          <Link href={`/dashboard/tasks/${task.id}`} className="text-white hover:text-primary transition-colors font-medium">
+                                            {task.title}
+                                          </Link>
+                                          <TaskRecurrenceBadge
+                                            isRecurring={task.isRecurring}
+                                            recurrencePattern={task.recurrencePattern}
+                                            recurrenceDays={task.recurrenceDays}
+                                            recurringParentId={task.recurringParentId}
+                                            compact
+                                          />
+                                        </div>
                                       </td>
                                       <td className="px-4 py-2.5 whitespace-nowrap">
                                         <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium ${conf.bg} ${conf.color}`}>

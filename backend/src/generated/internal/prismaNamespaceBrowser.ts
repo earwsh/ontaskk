@@ -61,7 +61,11 @@ export const ModelName = {
   TaskReport: 'TaskReport',
   Notification: 'Notification',
   User: 'User',
-  TaskAttachment: 'TaskAttachment'
+  TaskAttachment: 'TaskAttachment',
+  Conversation: 'Conversation',
+  ChatParticipant: 'ChatParticipant',
+  ChatMessage: 'ChatMessage',
+  Webhook: 'Webhook'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -140,6 +144,12 @@ export const TaskScalarFieldEnum = {
   approverId: 'approverId',
   projectId: 'projectId',
   createdById: 'createdById',
+  isRecurring: 'isRecurring',
+  recurrencePattern: 'recurrencePattern',
+  recurrenceDays: 'recurrenceDays',
+  recurrenceEnd: 'recurrenceEnd',
+  recurringParentId: 'recurringParentId',
+  lastGeneratedDate: 'lastGeneratedDate',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -151,6 +161,8 @@ export const TaskAssigneeScalarFieldEnum = {
   id: 'id',
   taskId: 'taskId',
   userId: 'userId',
+  isCompleted: 'isCompleted',
+  completedAt: 'completedAt',
   createdAt: 'createdAt'
 } as const
 
@@ -225,6 +237,60 @@ export const TaskAttachmentScalarFieldEnum = {
 } as const
 
 export type TaskAttachmentScalarFieldEnum = (typeof TaskAttachmentScalarFieldEnum)[keyof typeof TaskAttachmentScalarFieldEnum]
+
+
+export const ConversationScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  title: 'title',
+  taskId: 'taskId',
+  departmentId: 'departmentId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ConversationScalarFieldEnum = (typeof ConversationScalarFieldEnum)[keyof typeof ConversationScalarFieldEnum]
+
+
+export const ChatParticipantScalarFieldEnum = {
+  id: 'id',
+  conversationId: 'conversationId',
+  userId: 'userId',
+  lastReadAt: 'lastReadAt',
+  createdAt: 'createdAt'
+} as const
+
+export type ChatParticipantScalarFieldEnum = (typeof ChatParticipantScalarFieldEnum)[keyof typeof ChatParticipantScalarFieldEnum]
+
+
+export const ChatMessageScalarFieldEnum = {
+  id: 'id',
+  conversationId: 'conversationId',
+  senderId: 'senderId',
+  content: 'content',
+  attachments: 'attachments',
+  replyToId: 'replyToId',
+  isDeleted: 'isDeleted',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ChatMessageScalarFieldEnum = (typeof ChatMessageScalarFieldEnum)[keyof typeof ChatMessageScalarFieldEnum]
+
+
+export const WebhookScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  targetUrl: 'targetUrl',
+  secret: 'secret',
+  events: 'events',
+  isActive: 'isActive',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type WebhookScalarFieldEnum = (typeof WebhookScalarFieldEnum)[keyof typeof WebhookScalarFieldEnum]
 
 
 export const SortOrder = {

@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { useToast } from '@/components/Toast';
+import TaskRecurrenceBadge from '@/components/TaskRecurrenceBadge';
 import api from '@/lib/api';
 import { gregorianToShamsi } from '@/lib/date';
 import Link from 'next/link';
@@ -47,12 +48,36 @@ export default function MyTasksPage() {
   const [tasks, setTasks] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState<'active' | 'history'>('active');
+  const [userId, setUserId] = useState<number>(0);
 
-  useEffect(() => {
+  const fetchTasks = () => {
     api.get('/tasks/my').then(({ data }) => {
       setTasks(data);
     }).catch(() => {}).finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    const stored = localStorage.getItem('user');
+    if (stored) {
+      const u = JSON.parse(stored);
+      setUserId(u.id);
+    }
+    fetchTasks();
   }, []);
+
+  const handleToggleAssignee = async (task: any, isCompleted: boolean) => {
+    try {
+      const res = await api.patch(`/tasks/${task.id}/assignee-complete`, { isCompleted });
+      if (res.data?.message) {
+        showToast(res.data.message);
+      } else {
+        showToast(isCompleted ? 'تیک انجام شما ثبت شد' : 'وضعیت برداشته شد');
+      }
+      fetchTasks();
+    } catch (err: any) {
+      showToast(err.response?.data?.error || 'خطا', 'error');
+    }
+  };
 
   const handleDelete = async (task: any) => {
     if (!confirm(`آیا از حذف تسک "${task.title}" اطمینان دارید؟`)) return;
@@ -149,7 +174,16 @@ export default function MyTasksPage() {
                                 return (
                                   <tr key={task.id} className="border-b border-[rgba(255,255,255,0.03)] hover:bg-card-hover transition-colors">
                                     <td className="px-4 py-2.5">
-                                      <Link href={`/dashboard/tasks/${task.id}`} className="text-white hover:text-primary transition-colors font-medium">{task.title}</Link>
+                                      <div className="flex items-center gap-2">
+                                        <Link href={`/dashboard/tasks/${task.id}`} className="text-white hover:text-primary transition-colors font-medium">{task.title}</Link>
+                                        <TaskRecurrenceBadge
+                                          isRecurring={task.isRecurring}
+                                          recurrencePattern={task.recurrencePattern}
+                                          recurrenceDays={task.recurrenceDays}
+                                          recurringParentId={task.recurringParentId}
+                                          compact
+                                        />
+                                      </div>
                                     </td>
                                     <td className="px-4 py-2.5 text-text-secondary whitespace-nowrap text-xs">{task.project?.name || '-'}</td>
                                     <td className="px-4 py-2.5 whitespace-nowrap">
@@ -169,8 +203,28 @@ export default function MyTasksPage() {
                                     </td>
                                     <td className="px-4 py-2.5 whitespace-nowrap">
                                       <div className="flex items-center justify-center gap-1">
+                                        {task.status !== 'DONE' && (
+                                          (() => {
+                                            const myAssignee = task.assignees?.find((a: any) => a.userId === userId || a.user?.id === userId);
+                                            const isChecked = myAssignee?.isCompleted;
+                                            return (
+                                              <button
+                                                onClick={() => handleToggleAssignee(task, !isChecked)}
+                                                className={`p-1.5 rounded-lg transition-all cursor-pointer flex items-center gap-1 text-xs ${
+                                                  isChecked
+                                                    ? 'bg-green-500/15 text-green-400 hover:bg-green-500/25 border border-green-500/30'
+                                                    : 'bg-primary/10 text-primary hover:bg-primary/20 border border-primary/20'
+                                                }`}
+                                                title={isChecked ? 'لغو تیک انجام' : 'تیک زدن انجام تسک'}>
+                                                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                                                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                                </svg>
+                                              </button>
+                                            );
+                                          })()
+                                        )}
                                         <button onClick={() => router.push(`/dashboard/tasks/${task.id}`)}
-                                          className="p-1.5 rounded-lg text-text-muted hover:text-primary hover:bg-primary/5 transition-all cursor-pointer" title="ویرایش">
+                                          className="p-1.5 rounded-lg text-text-muted hover:text-primary hover:bg-primary/5 transition-all cursor-pointer" title="جزئیات">
                                           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                           </svg>

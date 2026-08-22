@@ -2,6 +2,7 @@ import { Router, Response } from 'express';
 import { authenticate, authorize, AuthRequest } from '../middleware/auth';
 import prisma from '../lib/prisma';
 import { notifyTaskAssignees, notifyPendingApproval, notifyTaskApproved, notifyReportAdded } from '../lib/notifications';
+import { processRecurringTasks } from '../services/recurringTasks';
 import path from 'path';
 import fs from 'fs';
 
@@ -23,7 +24,8 @@ const taskInclude = {
   subtasks: { orderBy: { createdAt: 'asc' as const } },
   createdBy: { select: { id: true, firstName: true, lastName: true } },
   approvedBy: { select: { id: true, firstName: true, lastName: true } },
-  _count: { select: { reports: true } },
+  recurringParent: { select: { id: true, title: true } },
+  _count: { select: { reports: true, recurringInstances: true } },
 };
 
 function canManageTask(userRole: string) {
@@ -101,6 +103,18 @@ router.get('/:id', authenticate, async (req: AuthRequest, res: Response) => {
       where: { id },
       include: {
         ...taskInclude,
+        recurringInstances: {
+          select: {
+            id: true,
+            title: true,
+            status: true,
+            startDate: true,
+            deadline: true,
+            createdAt: true,
+          },
+          orderBy: { createdAt: 'desc' },
+          take: 30,
+        },
         reports: {
           include: { user: { select: { id: true, firstName: true, lastName: true } } },
           orderBy: { createdAt: 'asc' },
@@ -128,10 +142,41 @@ router.get('/:id', authenticate, async (req: AuthRequest, res: Response) => {
   }
 });
 
+router.post('/process-recurring', authenticate, async (req: AuthRequest, res: Response) => {
+  try {
+    const user = req.user!;
+    if (!canManageTask(user.role)) {
+      return res.status(403).json({ error: 'Access denied' });
+    }
+    const generated = await processRecurringTasks();
+    res.json({ success: true, count: generated.length, generated });
+  } catch (err) {
+    console.error('process recurring error:', err);
+    res.status(500).json({ error: 'Failed to process recurring tasks' });
+  }
+});
+
 router.post('/', authenticate, async (req: AuthRequest, res: Response) => {
   try {
     const user = req.user!;
-    const { title, description, projectId, assigneeIds, approverId, startDate, deadline, estimatedHours, estimatedMinutes, weight, subtasks, status } = req.body;
+    const {
+      title,
+      description,
+      projectId,
+      assigneeIds,
+      approverId,
+      startDate,
+      deadline,
+      estimatedHours,
+      estimatedMinutes,
+      weight,
+      subtasks,
+      status,
+      isRecurring,
+      recurrencePattern,
+      recurrenceDays,
+      recurrenceEnd,
+    } = req.body;
 
     if (!title || !projectId || !assigneeIds?.length) {
       return res.status(400).json({ error: 'Title, project, and at least one assignee are required' });
@@ -156,6 +201,16 @@ router.post('/', authenticate, async (req: AuthRequest, res: Response) => {
       if (!assignee) return res.status(404).json({ error: `Assignee ${aid} not found` });
     }
 
+    const normalizedRecurring = Boolean(isRecurring);
+    const normalizedRecurrenceDays =
+      normalizedRecurring && recurrenceDays
+        ? Array.isArray(recurrenceDays)
+          ? JSON.stringify(recurrenceDays)
+          : typeof recurrenceDays === 'string'
+          ? recurrenceDays
+          : JSON.stringify(recurrenceDays)
+        : null;
+
     const task = await prisma.task.create({
       data: {
         title,
@@ -169,6 +224,10 @@ router.post('/', authenticate, async (req: AuthRequest, res: Response) => {
         estimatedHours: estimatedHours || undefined,
         estimatedMinutes: estimatedMinutes ? parseInt(estimatedMinutes as any) : undefined,
         weight: weight ? parseInt(weight as any) : (estimatedMinutes ? parseInt(estimatedMinutes as any) : undefined),
+        isRecurring: normalizedRecurring,
+        recurrencePattern: normalizedRecurring ? recurrencePattern || 'DAILY' : null,
+        recurrenceDays: normalizedRecurrenceDays,
+        recurrenceEnd: normalizedRecurring && recurrenceEnd ? new Date(recurrenceEnd) : null,
         assignees: {
           create: assigneeIds.map((aid: number) => ({ userId: aid })),
         },
@@ -181,6 +240,10 @@ router.post('/', authenticate, async (req: AuthRequest, res: Response) => {
 
     notifyTaskAssignees(task.id, task.title, assigneeIds).catch(console.error);
 
+    if (normalizedRecurring) {
+      processRecurringTasks().catch(console.error);
+    }
+
     res.status(201).json(task);
   } catch (err) {
     console.error('create task error:', err);
@@ -192,7 +255,22 @@ router.put('/:id', authenticate, async (req: AuthRequest, res: Response) => {
   try {
     const id = parseInt(req.params.id as string);
     const user = req.user!;
-    const { title, description, assigneeIds, approverId, status, startDate, deadline, estimatedHours, estimatedMinutes, weight } = req.body;
+    const {
+      title,
+      description,
+      assigneeIds,
+      approverId,
+      status,
+      startDate,
+      deadline,
+      estimatedHours,
+      estimatedMinutes,
+      weight,
+      isRecurring,
+      recurrencePattern,
+      recurrenceDays,
+      recurrenceEnd,
+    } = req.body;
 
     const task = await prisma.task.findUnique({
       where: { id },
@@ -220,6 +298,20 @@ router.put('/:id', authenticate, async (req: AuthRequest, res: Response) => {
     if (weight !== undefined) data.weight = weight ? parseInt(weight as any) : (estimatedMinutes ? parseInt(estimatedMinutes as any) : null);
     if (approverId !== undefined) data.approverId = approverId ? parseInt(approverId as any) : null;
 
+    if (isRecurring !== undefined) {
+      data.isRecurring = Boolean(isRecurring);
+      data.recurrencePattern = data.isRecurring ? recurrencePattern || 'DAILY' : null;
+      data.recurrenceDays =
+        data.isRecurring && recurrenceDays
+          ? Array.isArray(recurrenceDays)
+            ? JSON.stringify(recurrenceDays)
+            : typeof recurrenceDays === 'string'
+            ? recurrenceDays
+            : JSON.stringify(recurrenceDays)
+          : null;
+      data.recurrenceEnd = data.isRecurring && recurrenceEnd ? new Date(recurrenceEnd) : null;
+    }
+
     if (assigneeIds) {
       await prisma.taskAssignee.deleteMany({ where: { taskId: id } });
       for (const aid of assigneeIds) {
@@ -233,10 +325,91 @@ router.put('/:id', authenticate, async (req: AuthRequest, res: Response) => {
       data,
       include: taskInclude,
     });
+
+    if (data.isRecurring) {
+      processRecurringTasks().catch(console.error);
+    }
+
     res.json(updated);
   } catch (err) {
     console.error('update task error:', err);
     res.status(500).json({ error: 'Failed to update task' });
+  }
+});
+
+router.patch('/:id/assignee-complete', authenticate, async (req: AuthRequest, res: Response) => {
+  try {
+    const id = parseInt(req.params.id as string);
+    const user = req.user!;
+    const { isCompleted } = req.body;
+
+    if (typeof isCompleted !== 'boolean') {
+      return res.status(400).json({ error: 'isCompleted boolean is required' });
+    }
+
+    const task = await prisma.task.findUnique({
+      where: { id },
+      include: {
+        ...taskInclude,
+      },
+    });
+    if (!task) return res.status(404).json({ error: 'Task not found' });
+
+    const assigned = task.assignees.some((a) => a.userId === user.id);
+    if (!assigned && !canManageTask(user.role)) {
+      return res.status(403).json({ error: 'You can only complete your own assigned tasks' });
+    }
+
+    // Check subtasks if marking complete
+    if (isCompleted) {
+      const hasUnfinishedSubtask = task.subtasks.some((s) => !s.isDone);
+      if (hasUnfinishedSubtask) {
+        return res.status(400).json({ error: 'ابتدا تمام موارد زیرلیست را تکمیل کنید' });
+      }
+    }
+
+    // Update the assignee record
+    await prisma.taskAssignee.update({
+      where: { taskId_userId: { taskId: id, userId: user.id } },
+      data: {
+        isCompleted,
+        completedAt: isCompleted ? new Date() : null,
+      },
+    });
+
+    // Fetch updated assignees
+    const assignees = await prisma.taskAssignee.findMany({
+      where: { taskId: id },
+    });
+
+    const allAssigneesCompleted = assignees.length > 0 && assignees.every((a) => a.isCompleted);
+
+    let nextStatus = task.status;
+    if (allAssigneesCompleted && (task.status === 'TODO' || task.status === 'IN_PROGRESS')) {
+      nextStatus = 'PENDING_APPROVAL';
+      await prisma.task.update({
+        where: { id },
+        data: { status: 'PENDING_APPROVAL' },
+      });
+      notifyPendingApproval(id, task.title, task.projectId).catch(console.error);
+    } else if (!allAssigneesCompleted && task.status === 'PENDING_APPROVAL') {
+      // If someone unchecked, revert to IN_PROGRESS
+      nextStatus = 'IN_PROGRESS';
+      await prisma.task.update({
+        where: { id },
+        data: { status: 'IN_PROGRESS' },
+      });
+    }
+
+    const updatedTask = await prisma.task.findUnique({
+      where: { id },
+      include: taskInclude,
+    });
+
+    res.json(updatedTask);
+  } catch (err) {
+    console.error('assignee-complete error:', err);
+    res.status(500).json({ error: 'Failed to update assignee status' });
   }
 });
 
@@ -253,7 +426,7 @@ router.patch('/:id/status', authenticate, async (req: AuthRequest, res: Response
 
     const task = await prisma.task.findUnique({
       where: { id },
-      include: { subtasks: true },
+      include: { subtasks: true, assignees: true },
     });
     if (!task) return res.status(404).json({ error: 'Task not found' });
 
@@ -284,6 +457,30 @@ router.patch('/:id/status', authenticate, async (req: AuthRequest, res: Response
         if (status !== 'PENDING_APPROVAL') {
           return res.status(403).json({ error: 'Employees can only submit tasks for approval' });
         }
+
+        // Check if there are other assignees who haven't completed
+        await prisma.taskAssignee.update({
+          where: { taskId_userId: { taskId: id, userId: user.id } },
+          data: { isCompleted: true, completedAt: new Date() },
+        });
+
+        const allAssignees = await prisma.taskAssignee.findMany({ where: { taskId: id } });
+        const allDone = allAssignees.every((a) => a.isCompleted);
+        if (!allDone) {
+          // Keep in IN_PROGRESS until all have checked
+          await prisma.task.update({
+            where: { id },
+            data: { status: 'IN_PROGRESS' },
+          });
+          const updated = await prisma.task.findUnique({
+            where: { id },
+            include: taskInclude,
+          });
+          return res.json({
+            ...updated,
+            message: 'تسک توسط شما تیک خورد. منتظر تکمیل سایر انجام‌دهندگان است.',
+          });
+        }
         isAuthorized = true;
       } else if (user.role === 'DEPARTMENT_MANAGER') {
         const managedDept = await prisma.department.findFirst({ where: { managerId: user.id } });
@@ -312,13 +509,30 @@ router.patch('/:id/status', authenticate, async (req: AuthRequest, res: Response
     }
 
     const data: any = { status };
-    if (status === 'DONE' && task.status === 'PENDING_APPROVAL') {
+    if (status === 'DONE') {
       data.approvedById = user.id;
       data.approvedAt = new Date();
-    }
-    if (task.status === 'PENDING_APPROVAL' && status !== 'DONE') {
+      // Mark all assignees as completed
+      await prisma.taskAssignee.updateMany({
+        where: { taskId: id },
+        data: { isCompleted: true, completedAt: new Date() },
+      });
+    } else if (status === 'TODO') {
       data.approvedById = null;
       data.approvedAt = null;
+      // Reset all assignees
+      await prisma.taskAssignee.updateMany({
+        where: { taskId: id },
+        data: { isCompleted: false, completedAt: null },
+      });
+    } else if (status === 'PENDING_APPROVAL') {
+      data.approvedById = null;
+      data.approvedAt = null;
+      // Mark all assignees completed if moving directly to PENDING_APPROVAL
+      await prisma.taskAssignee.updateMany({
+        where: { taskId: id },
+        data: { isCompleted: true, completedAt: new Date() },
+      });
     }
 
     const updated = await prisma.task.update({
@@ -461,7 +675,8 @@ router.delete('/:id', authenticate, async (req: AuthRequest, res: Response) => {
     // Delete files from disk first
     const attachments = await prisma.taskAttachment.findMany({ where: { taskId: id } });
     for (const att of attachments) {
-      const filePath = path.join(__dirname, '..', att.fileUrl);
+      const fileName = path.basename(att.fileUrl);
+      const filePath = path.resolve(process.cwd(), 'uploads', fileName);
       if (fs.existsSync(filePath)) {
         fs.unlinkSync(filePath);
       }
@@ -498,13 +713,17 @@ router.delete('/:id/subtasks/:subtaskId', authenticate, async (req: AuthRequest,
 
 import multer from 'multer';
 
+const uploadsDir = path.resolve(process.cwd(), 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
 const storage = multer.diskStorage({
   destination: (_req, _file, cb) => {
-    const dir = path.join(__dirname, '../uploads');
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
+    if (!fs.existsSync(uploadsDir)) {
+      fs.mkdirSync(uploadsDir, { recursive: true });
     }
-    cb(null, dir);
+    cb(null, uploadsDir);
   },
   filename: (_req, file, cb) => {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
@@ -525,16 +744,18 @@ router.post('/:id/attachments', authenticate, upload.single('file'), async (req:
 
     const task = await prisma.task.findUnique({ where: { id } });
     if (!task) {
-      fs.unlinkSync(file.path);
+      if (file && fs.existsSync(file.path)) fs.unlinkSync(file.path);
       return res.status(404).json({ error: 'Task not found' });
     }
 
-    if (user.role === 'EMPLOYEE') {
-      const assigned = await isAssignee(id, user.id);
-      if (!assigned) {
-        fs.unlinkSync(file.path);
-        return res.status(403).json({ error: 'Access denied' });
-      }
+    const assigned = await isAssignee(id, user.id);
+    const isCreator = task.createdById === user.id;
+    const isApprover = task.approverId === user.id;
+    const isManager = canManageTask(user.role);
+
+    if (!assigned && !isCreator && !isApprover && !isManager) {
+      if (file && fs.existsSync(file.path)) fs.unlinkSync(file.path);
+      return res.status(403).json({ error: 'Access denied' });
     }
 
     const fileUrl = `/uploads/${file.filename}`;
@@ -571,7 +792,8 @@ router.delete('/:id/attachments/:attachmentId', authenticate, async (req: AuthRe
       return res.status(403).json({ error: 'Access denied' });
     }
 
-    const filePath = path.join(__dirname, '..', attachment.fileUrl);
+    const fileName = path.basename(attachment.fileUrl);
+    const filePath = path.resolve(process.cwd(), 'uploads', fileName);
     if (fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);
     }

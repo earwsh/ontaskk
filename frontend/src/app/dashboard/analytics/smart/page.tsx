@@ -55,7 +55,7 @@ export default function AnalyticsSmartPage() {
           <p className="mt-1 text-sm text-text-muted">ارزیابی سلامت، ریسک و پیشنهادهای عملی در محدوده «{data?.scopeLabel}»</p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <ServiceBadge name="پایتون" ok={Boolean(computed.py)} />
+          <ServiceBadge name="پایتون" ok={Boolean(computed.py ?? (data?.findings?.length || data?.projectStatuses?.length || data?.healthScore !== undefined))} />
           <ServiceBadge name="راست" ok={Boolean(computed.rs)} />
         </div>
       </div>

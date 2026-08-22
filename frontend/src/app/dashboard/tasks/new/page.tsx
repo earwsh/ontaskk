@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import ShamsiDatePicker from '@/components/ShamsiDatePicker';
+import TaskRecurrenceConfig, { RecurrenceConfigState } from '@/components/TaskRecurrenceConfig';
 import { useToast } from '@/components/Toast';
 import api from '@/lib/api';
 
@@ -27,6 +28,12 @@ export default function NewTaskPage() {
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [recurrence, setRecurrence] = useState<RecurrenceConfigState>({
+    isRecurring: false,
+    recurrencePattern: 'DAILY',
+    recurrenceDays: [],
+    recurrenceEnd: '',
+  });
 
   useEffect(() => {
     if (!projectId) {
@@ -105,6 +112,10 @@ export default function NewTaskPage() {
         estimatedMinutes: estimatedMinutes ? parseInt(estimatedMinutes) : undefined,
         weight: weight ? parseInt(weight) : undefined,
         subtasks: subtasks.filter((s) => s.trim()).map((s) => ({ title: s })),
+        isRecurring: recurrence.isRecurring,
+        recurrencePattern: recurrence.isRecurring ? recurrence.recurrencePattern : undefined,
+        recurrenceDays: recurrence.isRecurring ? recurrence.recurrenceDays : undefined,
+        recurrenceEnd: recurrence.isRecurring && recurrence.recurrenceEnd ? recurrence.recurrenceEnd : undefined,
       });
 
       if (selectedFiles.length > 0) {
@@ -131,7 +142,7 @@ export default function NewTaskPage() {
   return (
     <ProtectedRoute allowedRoles={['TECHNICAL_MANAGER', 'STRATEGY_MANAGER', 'DEPARTMENT_MANAGER', 'CEO']}>
       <div className="h-full flex flex-col overflow-hidden animate-fade-in">
-        <div className="flex items-center justify-between shrink-0 mb-6">
+        <div className="flex items-center justify-between shrink-0 mb-4">
           <div className="flex items-center gap-4">
             <button onClick={() => router.back()} className="w-9 h-9 rounded-xl flex items-center justify-center text-text-muted hover:text-white hover:bg-card-hover transition-all cursor-pointer" title="بازگشت">
               <svg className="w-5 h-5 rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -150,79 +161,83 @@ export default function NewTaskPage() {
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="flex-1 flex flex-col min-h-0">
-          <div className="flex-1 grid grid-rows-[auto_1fr] gap-4 min-h-0">
-            <div className="bg-card border border-[rgba(255,255,255,0.06)] rounded-[20px] p-5 shrink-0">
-              <div className="grid grid-cols-12 gap-4">
-                <div className="col-span-12 md:col-span-6">
-                  <label className="flex items-center gap-1.5 text-xs font-medium text-text-secondary mb-1.5">
-                    <svg className="w-3.5 h-3.5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                    عنوان تسک *
-                  </label>
-                  <input type="text" required value={title} onChange={(e) => setTitle(e.target.value)}
-                    className="w-full px-4 py-2.5 bg-[rgba(22,27,38,0.6)] border border-[rgba(255,255,255,0.08)] rounded-xl text-white placeholder-text-muted focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/30 transition-all duration-200"
-                    placeholder="عنوان تسک را وارد کنید" />
-                </div>
-                <div className="col-span-12 md:col-span-6">
-                  <label className="flex items-center gap-1.5 text-xs font-medium text-text-secondary mb-1.5">
-                    <svg className="w-3.5 h-3.5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                    </svg>
-                    تایید کننده *
-                  </label>
-                  <select required value={approverId} onChange={(e) => setApproverId(Number(e.target.value))}
-                    className="w-full px-4 py-2.5 bg-[rgba(22,27,38,0.6)] border border-[rgba(255,255,255,0.08)] rounded-xl text-white outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/30 transition-all duration-200 cursor-pointer text-sm">
-                    {projectUsers.map((u) => (
-                      <option key={u.id} value={u.id}>{u.firstName} {u.lastName}</option>
-                    ))}
-                    {!projectUsers.some(u => u.id === approverId) && approverId && (
-                      <option value={approverId}>من (ایجاد کننده)</option>
-                    )}
-                  </select>
-                </div>
-                <div className="col-span-12 md:col-span-3">
-                  <label className="flex items-center gap-1.5 text-xs font-medium text-text-secondary mb-1.5">
-                    <svg className="w-3.5 h-3.5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                    تاریخ شروع
-                  </label>
-                  <ShamsiDatePicker value={startDate} onChange={setStartDate} placeholder="شروع (اختیاری)" />
-                </div>
-                <div className="col-span-12 md:col-span-3">
-                  <label className="flex items-center gap-1.5 text-xs font-medium text-text-secondary mb-1.5">
-                    <svg className="w-3.5 h-3.5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                    ددلاین
-                  </label>
-                  <ShamsiDatePicker value={deadline} onChange={setDeadline} placeholder="سررسید (اختیاری)" />
-                </div>
-                <div className="col-span-12 md:col-span-3">
-                  <label className="flex items-center gap-1.5 text-xs font-medium text-text-secondary mb-1.5 whitespace-nowrap">
-                    زمان (دقیقه)
-                  </label>
-                  <input type="number" min="0" value={estimatedMinutes}
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      setEstimatedMinutes(val);
-                      setWeight(val);
-                    }}
-                    className="w-full px-4 py-2.5 bg-[rgba(22,27,38,0.6)] border border-[rgba(255,255,255,0.08)] rounded-xl text-white placeholder-text-muted focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/30 transition-all duration-200 text-sm"
-                    placeholder="۰" />
-                </div>
-                <div className="col-span-12 md:col-span-3">
-                  <label className="flex items-center gap-1.5 text-xs font-medium text-text-secondary mb-1.5">
-                    وزن
-                  </label>
-                  <input type="number" min="0" value={weight} onChange={(e) => setWeight(e.target.value)}
-                    className="w-full px-4 py-2.5 bg-[rgba(22,27,38,0.6)] border border-[rgba(255,255,255,0.08)] rounded-xl text-white placeholder-text-muted focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/30 transition-all duration-200 text-sm"
-                    placeholder="۰" />
-                </div>
+        <form onSubmit={handleSubmit} className="flex-1 flex flex-col min-h-0 overflow-y-auto pr-1 pb-2 space-y-4">
+          <div className="bg-card border border-[rgba(255,255,255,0.06)] rounded-[20px] p-5 shrink-0">
+            <div className="grid grid-cols-12 gap-4">
+              <div className="col-span-12 md:col-span-6">
+                <label className="flex items-center gap-1.5 text-xs font-medium text-text-secondary mb-1.5">
+                  <svg className="w-3.5 h-3.5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  عنوان تسک *
+                </label>
+                <input type="text" required value={title} onChange={(e) => setTitle(e.target.value)}
+                  className="w-full px-4 py-2.5 bg-[rgba(22,27,38,0.6)] border border-[rgba(255,255,255,0.08)] rounded-xl text-white placeholder-text-muted focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/30 transition-all duration-200"
+                  placeholder="عنوان تسک را وارد کنید" />
+              </div>
+              <div className="col-span-12 md:col-span-6">
+                <label className="flex items-center gap-1.5 text-xs font-medium text-text-secondary mb-1.5">
+                  <svg className="w-3.5 h-3.5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                  </svg>
+                  تایید کننده *
+                </label>
+                <select required value={approverId} onChange={(e) => setApproverId(Number(e.target.value))}
+                  className="w-full px-4 py-2.5 bg-[rgba(22,27,38,0.6)] border border-[rgba(255,255,255,0.08)] rounded-xl text-white outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/30 transition-all duration-200 cursor-pointer text-sm">
+                  {projectUsers.map((u) => (
+                    <option key={u.id} value={u.id}>{u.firstName} {u.lastName}</option>
+                  ))}
+                  {!projectUsers.some(u => u.id === approverId) && approverId && (
+                    <option value={approverId}>من (ایجاد کننده)</option>
+                  )}
+                </select>
+              </div>
+              <div className="col-span-12 md:col-span-3">
+                <label className="flex items-center gap-1.5 text-xs font-medium text-text-secondary mb-1.5">
+                  <svg className="w-3.5 h-3.5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  تاریخ شروع
+                </label>
+                <ShamsiDatePicker value={startDate} onChange={setStartDate} placeholder="شروع (اختیاری)" />
+              </div>
+              <div className="col-span-12 md:col-span-3">
+                <label className="flex items-center gap-1.5 text-xs font-medium text-text-secondary mb-1.5">
+                  <svg className="w-3.5 h-3.5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  ددلاین
+                </label>
+                <ShamsiDatePicker value={deadline} onChange={setDeadline} placeholder="سررسید (اختیاری)" />
+              </div>
+              <div className="col-span-12 md:col-span-3">
+                <label className="flex items-center gap-1.5 text-xs font-medium text-text-secondary mb-1.5 whitespace-nowrap">
+                  زمان (دقیقه)
+                </label>
+                <input type="number" min="0" value={estimatedMinutes}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setEstimatedMinutes(val);
+                    setWeight(val);
+                  }}
+                  className="w-full px-4 py-2.5 bg-[rgba(22,27,38,0.6)] border border-[rgba(255,255,255,0.08)] rounded-xl text-white placeholder-text-muted focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/30 transition-all duration-200 text-sm"
+                  placeholder="۰" />
+              </div>
+              <div className="col-span-12 md:col-span-3">
+                <label className="flex items-center gap-1.5 text-xs font-medium text-text-secondary mb-1.5">
+                  وزن
+                </label>
+                <input type="number" min="0" value={weight} onChange={(e) => setWeight(e.target.value)}
+                  className="w-full px-4 py-2.5 bg-[rgba(22,27,38,0.6)] border border-[rgba(255,255,255,0.08)] rounded-xl text-white placeholder-text-muted focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/30 transition-all duration-200 text-sm"
+                  placeholder="۰" />
               </div>
             </div>
+          </div>
+
+          {/* Recurrence Settings */}
+          <div className="shrink-0">
+            <TaskRecurrenceConfig value={recurrence} onChange={setRecurrence} />
+          </div>
 
             <div className="grid grid-cols-12 gap-4 min-h-0">
               <div className="col-span-5 flex flex-col gap-4 min-h-0">
@@ -369,7 +384,6 @@ export default function NewTaskPage() {
                 </div>
               </div>
             </div>
-          </div>
 
           <div className="flex items-center gap-3 mt-4 shrink-0">
             <button type="submit" disabled={saving}

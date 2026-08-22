@@ -6,6 +6,8 @@ import Header from '@/components/Header';
 import { ToastProvider } from '@/components/Toast';
 import api from '@/lib/api';
 
+import { SocketProvider } from '@/context/SocketContext';
+
 const roleLabels: Record<string, string> = {
   CEO: 'مدیر عامل',
   HR_MANAGER: 'مدیر منابع انسانی',
@@ -53,14 +55,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   };
 
   return (
-    <div className="flex min-h-screen bg-surface" dir="rtl">
-      <Sidebar role={user.role} onLogout={handleLogout} collapsed={sidebarCollapsed} isDeptManager={isDeptManager} />
-      <div className="flex-1 flex flex-col min-w-0 min-h-screen">
-        <Header onToggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)} userName={user.firstName} userRole={roleLabels[user.role] || ''} />
-        <main className="flex-1 p-6 md:p-8 animate-fade-in">
-          <ToastProvider>{children}</ToastProvider>
-        </main>
+    <SocketProvider>
+      <div className="flex min-h-screen bg-surface" dir="rtl">
+        <Sidebar role={user.role} onLogout={handleLogout} collapsed={sidebarCollapsed} isDeptManager={isDeptManager} />
+        <div className="flex-1 flex flex-col min-w-0 min-h-screen">
+          <Header onToggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)} userName={user.firstName} userRole={roleLabels[user.role] || ''} />
+          <main className="flex-1 p-6 md:p-8 animate-fade-in">
+            <ToastProvider>{children}</ToastProvider>
+          </main>
+        </div>
       </div>
-    </div>
+    </SocketProvider>
   );
 }

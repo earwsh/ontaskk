@@ -1,9 +1,14 @@
 import { Router, Response } from 'express';
 import { authenticate, AuthRequest } from '../middleware/auth';
 import prisma from '../lib/prisma';
-import { callPython, callRust } from '../services/analysisClient';
+import { callPython, callRust, microservicesHealth } from '../services/analysisClient';
 
 const router = Router();
+
+router.get('/health-check', authenticate, async (_req, res) => {
+  const health = await microservicesHealth();
+  res.json(health);
+});
 
 /* ────────────────────────────────────────────────────────────────
    Helpers: microservice-first, JS fallback
@@ -247,6 +252,9 @@ function pythonPayload(scope: Scope) {
 
 function healthPayload(scope: Scope) {
   const totals = new Map<number, { total: number; done: number; overdue: number }>();
+  for (const [id] of scope.memberNames.entries()) {
+    totals.set(id, { total: 0, done: 0, overdue: 0 });
+  }
   for (const t of scope.allTasks) {
     const done = t.status === 'DONE';
     const overdue = isTaskOverdue(t.deadline, t.status);
@@ -542,7 +550,7 @@ router.get('/technical', authenticate, async (req: AuthRequest, res: Response) =
       rankings: insights?.rankings || { departments: [], projects: [], members: [], averages: null },
       workloadHealth: health || { available: false },
       scopeLabel: scope.scopeLabel,
-      computedBy: c.computedBy || 'js',
+      computedBy: { py: Boolean(insights), rs: Boolean(health || projAgg), counts: c.computedBy || 'js' },
     });
   } catch (err) {
     console.error('analytics/technical error:', err);

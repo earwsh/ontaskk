@@ -299,6 +299,9 @@ export type UserWhereInput = {
   notifications?: Prisma.NotificationListRelationFilter
   departmentMemberships?: Prisma.UserDepartmentListRelationFilter
   attachments?: Prisma.TaskAttachmentListRelationFilter
+  chatParticipants?: Prisma.ChatParticipantListRelationFilter
+  chatMessages?: Prisma.ChatMessageListRelationFilter
+  createdWebhooks?: Prisma.WebhookListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -327,6 +330,9 @@ export type UserOrderByWithRelationInput = {
   notifications?: Prisma.NotificationOrderByRelationAggregateInput
   departmentMemberships?: Prisma.UserDepartmentOrderByRelationAggregateInput
   attachments?: Prisma.TaskAttachmentOrderByRelationAggregateInput
+  chatParticipants?: Prisma.ChatParticipantOrderByRelationAggregateInput
+  chatMessages?: Prisma.ChatMessageOrderByRelationAggregateInput
+  createdWebhooks?: Prisma.WebhookOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -358,6 +364,9 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   notifications?: Prisma.NotificationListRelationFilter
   departmentMemberships?: Prisma.UserDepartmentListRelationFilter
   attachments?: Prisma.TaskAttachmentListRelationFilter
+  chatParticipants?: Prisma.ChatParticipantListRelationFilter
+  chatMessages?: Prisma.ChatMessageListRelationFilter
+  createdWebhooks?: Prisma.WebhookListRelationFilter
 }, "id" | "email" | "nationalId">
 
 export type UserOrderByWithAggregationInput = {
@@ -427,6 +436,9 @@ export type UserCreateInput = {
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
   attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -455,6 +467,9 @@ export type UserUncheckedCreateInput = {
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
   attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageUncheckedCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUpdateInput = {
@@ -482,6 +497,9 @@ export type UserUpdateInput = {
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
   attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -510,6 +528,9 @@ export type UserUncheckedUpdateInput = {
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
   attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -795,6 +816,48 @@ export type UserUpdateOneRequiredWithoutAttachmentsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAttachmentsInput, Prisma.UserUpdateWithoutAttachmentsInput>, Prisma.UserUncheckedUpdateWithoutAttachmentsInput>
 }
 
+export type UserCreateNestedOneWithoutChatParticipantsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutChatParticipantsInput, Prisma.UserUncheckedCreateWithoutChatParticipantsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutChatParticipantsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutChatParticipantsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutChatParticipantsInput, Prisma.UserUncheckedCreateWithoutChatParticipantsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutChatParticipantsInput
+  upsert?: Prisma.UserUpsertWithoutChatParticipantsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutChatParticipantsInput, Prisma.UserUpdateWithoutChatParticipantsInput>, Prisma.UserUncheckedUpdateWithoutChatParticipantsInput>
+}
+
+export type UserCreateNestedOneWithoutChatMessagesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutChatMessagesInput, Prisma.UserUncheckedCreateWithoutChatMessagesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutChatMessagesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutChatMessagesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutChatMessagesInput, Prisma.UserUncheckedCreateWithoutChatMessagesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutChatMessagesInput
+  upsert?: Prisma.UserUpsertWithoutChatMessagesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutChatMessagesInput, Prisma.UserUpdateWithoutChatMessagesInput>, Prisma.UserUncheckedUpdateWithoutChatMessagesInput>
+}
+
+export type UserCreateNestedOneWithoutCreatedWebhooksInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCreatedWebhooksInput, Prisma.UserUncheckedCreateWithoutCreatedWebhooksInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCreatedWebhooksInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutCreatedWebhooksNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCreatedWebhooksInput, Prisma.UserUncheckedCreateWithoutCreatedWebhooksInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCreatedWebhooksInput
+  upsert?: Prisma.UserUpsertWithoutCreatedWebhooksInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCreatedWebhooksInput, Prisma.UserUpdateWithoutCreatedWebhooksInput>, Prisma.UserUncheckedUpdateWithoutCreatedWebhooksInput>
+}
+
 export type UserCreateWithoutDepartmentMembershipsInput = {
   email: string
   password: string
@@ -819,6 +882,9 @@ export type UserCreateWithoutDepartmentMembershipsInput = {
   approverTasks?: Prisma.TaskCreateNestedManyWithoutApproverInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutDepartmentMembershipsInput = {
@@ -846,6 +912,9 @@ export type UserUncheckedCreateWithoutDepartmentMembershipsInput = {
   approverTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApproverInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageUncheckedCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutDepartmentMembershipsInput = {
@@ -888,6 +957,9 @@ export type UserUpdateWithoutDepartmentMembershipsInput = {
   approverTasks?: Prisma.TaskUpdateManyWithoutApproverNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDepartmentMembershipsInput = {
@@ -915,6 +987,9 @@ export type UserUncheckedUpdateWithoutDepartmentMembershipsInput = {
   approverTasks?: Prisma.TaskUncheckedUpdateManyWithoutApproverNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutManagedDeptInput = {
@@ -941,6 +1016,9 @@ export type UserCreateWithoutManagedDeptInput = {
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
   attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutManagedDeptInput = {
@@ -968,6 +1046,9 @@ export type UserUncheckedCreateWithoutManagedDeptInput = {
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
   attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageUncheckedCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutManagedDeptInput = {
@@ -1010,6 +1091,9 @@ export type UserUpdateWithoutManagedDeptInput = {
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
   attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutManagedDeptInput = {
@@ -1037,6 +1121,9 @@ export type UserUncheckedUpdateWithoutManagedDeptInput = {
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
   attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutProjectsInput = {
@@ -1063,6 +1150,9 @@ export type UserCreateWithoutProjectsInput = {
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
   attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutProjectsInput = {
@@ -1090,6 +1180,9 @@ export type UserUncheckedCreateWithoutProjectsInput = {
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
   attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageUncheckedCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutProjectsInput = {
@@ -1132,6 +1225,9 @@ export type UserUpdateWithoutProjectsInput = {
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
   attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProjectsInput = {
@@ -1159,6 +1255,9 @@ export type UserUncheckedUpdateWithoutProjectsInput = {
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
   attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutProjectMembershipsInput = {
@@ -1185,6 +1284,9 @@ export type UserCreateWithoutProjectMembershipsInput = {
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
   attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutProjectMembershipsInput = {
@@ -1212,6 +1314,9 @@ export type UserUncheckedCreateWithoutProjectMembershipsInput = {
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
   attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageUncheckedCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutProjectMembershipsInput = {
@@ -1254,6 +1359,9 @@ export type UserUpdateWithoutProjectMembershipsInput = {
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
   attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProjectMembershipsInput = {
@@ -1281,6 +1389,9 @@ export type UserUncheckedUpdateWithoutProjectMembershipsInput = {
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
   attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutApprovedTasksInput = {
@@ -1307,6 +1418,9 @@ export type UserCreateWithoutApprovedTasksInput = {
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
   attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutApprovedTasksInput = {
@@ -1334,6 +1448,9 @@ export type UserUncheckedCreateWithoutApprovedTasksInput = {
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
   attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageUncheckedCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutApprovedTasksInput = {
@@ -1365,6 +1482,9 @@ export type UserCreateWithoutApproverTasksInput = {
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
   attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutApproverTasksInput = {
@@ -1392,6 +1512,9 @@ export type UserUncheckedCreateWithoutApproverTasksInput = {
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
   attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageUncheckedCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutApproverTasksInput = {
@@ -1423,6 +1546,9 @@ export type UserCreateWithoutCreatedTasksInput = {
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
   attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutCreatedTasksInput = {
@@ -1450,6 +1576,9 @@ export type UserUncheckedCreateWithoutCreatedTasksInput = {
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
   attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageUncheckedCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutCreatedTasksInput = {
@@ -1492,6 +1621,9 @@ export type UserUpdateWithoutApprovedTasksInput = {
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
   attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutApprovedTasksInput = {
@@ -1519,6 +1651,9 @@ export type UserUncheckedUpdateWithoutApprovedTasksInput = {
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
   attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUpsertWithoutApproverTasksInput = {
@@ -1556,6 +1691,9 @@ export type UserUpdateWithoutApproverTasksInput = {
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
   attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutApproverTasksInput = {
@@ -1583,6 +1721,9 @@ export type UserUncheckedUpdateWithoutApproverTasksInput = {
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
   attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUpsertWithoutCreatedTasksInput = {
@@ -1620,6 +1761,9 @@ export type UserUpdateWithoutCreatedTasksInput = {
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
   attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCreatedTasksInput = {
@@ -1647,6 +1791,9 @@ export type UserUncheckedUpdateWithoutCreatedTasksInput = {
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
   attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutTaskAssignmentsInput = {
@@ -1673,6 +1820,9 @@ export type UserCreateWithoutTaskAssignmentsInput = {
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
   attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutTaskAssignmentsInput = {
@@ -1700,6 +1850,9 @@ export type UserUncheckedCreateWithoutTaskAssignmentsInput = {
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
   attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageUncheckedCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutTaskAssignmentsInput = {
@@ -1742,6 +1895,9 @@ export type UserUpdateWithoutTaskAssignmentsInput = {
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
   attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTaskAssignmentsInput = {
@@ -1769,6 +1925,9 @@ export type UserUncheckedUpdateWithoutTaskAssignmentsInput = {
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
   attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutTaskReportsInput = {
@@ -1795,6 +1954,9 @@ export type UserCreateWithoutTaskReportsInput = {
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
   attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutTaskReportsInput = {
@@ -1822,6 +1984,9 @@ export type UserUncheckedCreateWithoutTaskReportsInput = {
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
   attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageUncheckedCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutTaskReportsInput = {
@@ -1864,6 +2029,9 @@ export type UserUpdateWithoutTaskReportsInput = {
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
   attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTaskReportsInput = {
@@ -1891,6 +2059,9 @@ export type UserUncheckedUpdateWithoutTaskReportsInput = {
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
   attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutNotificationsInput = {
@@ -1917,6 +2088,9 @@ export type UserCreateWithoutNotificationsInput = {
   approverTasks?: Prisma.TaskCreateNestedManyWithoutApproverInput
   departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
   attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -1944,6 +2118,9 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   approverTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApproverInput
   departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
   attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageUncheckedCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -1986,6 +2163,9 @@ export type UserUpdateWithoutNotificationsInput = {
   approverTasks?: Prisma.TaskUpdateManyWithoutApproverNestedInput
   departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
   attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -2013,6 +2193,9 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   approverTasks?: Prisma.TaskUncheckedUpdateManyWithoutApproverNestedInput
   departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
   attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutAttachmentsInput = {
@@ -2039,6 +2222,9 @@ export type UserCreateWithoutAttachmentsInput = {
   approverTasks?: Prisma.TaskCreateNestedManyWithoutApproverInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutAttachmentsInput = {
@@ -2066,6 +2252,9 @@ export type UserUncheckedCreateWithoutAttachmentsInput = {
   approverTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApproverInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageUncheckedCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutAttachmentsInput = {
@@ -2108,6 +2297,9 @@ export type UserUpdateWithoutAttachmentsInput = {
   approverTasks?: Prisma.TaskUpdateManyWithoutApproverNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAttachmentsInput = {
@@ -2135,6 +2327,411 @@ export type UserUncheckedUpdateWithoutAttachmentsInput = {
   approverTasks?: Prisma.TaskUncheckedUpdateManyWithoutApproverNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUncheckedUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserCreateWithoutChatParticipantsInput = {
+  email: string
+  password: string
+  firstName: string
+  lastName: string
+  displayName?: string | null
+  birthDate?: Date | string | null
+  startDate?: Date | string | null
+  nationalId?: string | null
+  position?: string | null
+  role?: $Enums.Role
+  phone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  managedDept?: Prisma.DepartmentCreateNestedOneWithoutManagerInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
+  taskAssignments?: Prisma.TaskAssigneeCreateNestedManyWithoutUserInput
+  createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
+  taskReports?: Prisma.TaskReportCreateNestedManyWithoutUserInput
+  approvedTasks?: Prisma.TaskCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskCreateNestedManyWithoutApproverInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserUncheckedCreateWithoutChatParticipantsInput = {
+  id?: number
+  email: string
+  password: string
+  firstName: string
+  lastName: string
+  displayName?: string | null
+  birthDate?: Date | string | null
+  startDate?: Date | string | null
+  nationalId?: string | null
+  position?: string | null
+  role?: $Enums.Role
+  phone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  managedDept?: Prisma.DepartmentUncheckedCreateNestedOneWithoutManagerInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  taskAssignments?: Prisma.TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
+  createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
+  taskReports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutUserInput
+  approvedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApproverInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageUncheckedCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookUncheckedCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserCreateOrConnectWithoutChatParticipantsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutChatParticipantsInput, Prisma.UserUncheckedCreateWithoutChatParticipantsInput>
+}
+
+export type UserUpsertWithoutChatParticipantsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutChatParticipantsInput, Prisma.UserUncheckedUpdateWithoutChatParticipantsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutChatParticipantsInput, Prisma.UserUncheckedCreateWithoutChatParticipantsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutChatParticipantsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutChatParticipantsInput, Prisma.UserUncheckedUpdateWithoutChatParticipantsInput>
+}
+
+export type UserUpdateWithoutChatParticipantsInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  managedDept?: Prisma.DepartmentUpdateOneWithoutManagerNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
+  taskAssignments?: Prisma.TaskAssigneeUpdateManyWithoutUserNestedInput
+  createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
+  taskReports?: Prisma.TaskReportUpdateManyWithoutUserNestedInput
+  approvedTasks?: Prisma.TaskUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUpdateManyWithoutApproverNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutChatParticipantsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  managedDept?: Prisma.DepartmentUncheckedUpdateOneWithoutManagerNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  taskAssignments?: Prisma.TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
+  createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
+  taskReports?: Prisma.TaskReportUncheckedUpdateManyWithoutUserNestedInput
+  approvedTasks?: Prisma.TaskUncheckedUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUncheckedUpdateManyWithoutApproverNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUncheckedUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserCreateWithoutChatMessagesInput = {
+  email: string
+  password: string
+  firstName: string
+  lastName: string
+  displayName?: string | null
+  birthDate?: Date | string | null
+  startDate?: Date | string | null
+  nationalId?: string | null
+  position?: string | null
+  role?: $Enums.Role
+  phone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  managedDept?: Prisma.DepartmentCreateNestedOneWithoutManagerInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
+  taskAssignments?: Prisma.TaskAssigneeCreateNestedManyWithoutUserInput
+  createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
+  taskReports?: Prisma.TaskReportCreateNestedManyWithoutUserInput
+  approvedTasks?: Prisma.TaskCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskCreateNestedManyWithoutApproverInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantCreateNestedManyWithoutUserInput
+  createdWebhooks?: Prisma.WebhookCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserUncheckedCreateWithoutChatMessagesInput = {
+  id?: number
+  email: string
+  password: string
+  firstName: string
+  lastName: string
+  displayName?: string | null
+  birthDate?: Date | string | null
+  startDate?: Date | string | null
+  nationalId?: string | null
+  position?: string | null
+  role?: $Enums.Role
+  phone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  managedDept?: Prisma.DepartmentUncheckedCreateNestedOneWithoutManagerInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  taskAssignments?: Prisma.TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
+  createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
+  taskReports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutUserInput
+  approvedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApproverInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedCreateNestedManyWithoutUserInput
+  createdWebhooks?: Prisma.WebhookUncheckedCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserCreateOrConnectWithoutChatMessagesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutChatMessagesInput, Prisma.UserUncheckedCreateWithoutChatMessagesInput>
+}
+
+export type UserUpsertWithoutChatMessagesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutChatMessagesInput, Prisma.UserUncheckedUpdateWithoutChatMessagesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutChatMessagesInput, Prisma.UserUncheckedCreateWithoutChatMessagesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutChatMessagesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutChatMessagesInput, Prisma.UserUncheckedUpdateWithoutChatMessagesInput>
+}
+
+export type UserUpdateWithoutChatMessagesInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  managedDept?: Prisma.DepartmentUpdateOneWithoutManagerNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
+  taskAssignments?: Prisma.TaskAssigneeUpdateManyWithoutUserNestedInput
+  createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
+  taskReports?: Prisma.TaskReportUpdateManyWithoutUserNestedInput
+  approvedTasks?: Prisma.TaskUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUpdateManyWithoutApproverNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUpdateManyWithoutUserNestedInput
+  createdWebhooks?: Prisma.WebhookUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutChatMessagesInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  managedDept?: Prisma.DepartmentUncheckedUpdateOneWithoutManagerNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  taskAssignments?: Prisma.TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
+  createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
+  taskReports?: Prisma.TaskReportUncheckedUpdateManyWithoutUserNestedInput
+  approvedTasks?: Prisma.TaskUncheckedUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUncheckedUpdateManyWithoutApproverNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
+  createdWebhooks?: Prisma.WebhookUncheckedUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserCreateWithoutCreatedWebhooksInput = {
+  email: string
+  password: string
+  firstName: string
+  lastName: string
+  displayName?: string | null
+  birthDate?: Date | string | null
+  startDate?: Date | string | null
+  nationalId?: string | null
+  position?: string | null
+  role?: $Enums.Role
+  phone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  managedDept?: Prisma.DepartmentCreateNestedOneWithoutManagerInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
+  taskAssignments?: Prisma.TaskAssigneeCreateNestedManyWithoutUserInput
+  createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
+  taskReports?: Prisma.TaskReportCreateNestedManyWithoutUserInput
+  approvedTasks?: Prisma.TaskCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskCreateNestedManyWithoutApproverInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageCreateNestedManyWithoutSenderInput
+}
+
+export type UserUncheckedCreateWithoutCreatedWebhooksInput = {
+  id?: number
+  email: string
+  password: string
+  firstName: string
+  lastName: string
+  displayName?: string | null
+  birthDate?: Date | string | null
+  startDate?: Date | string | null
+  nationalId?: string | null
+  position?: string | null
+  role?: $Enums.Role
+  phone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  managedDept?: Prisma.DepartmentUncheckedCreateNestedOneWithoutManagerInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  taskAssignments?: Prisma.TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
+  createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
+  taskReports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutUserInput
+  approvedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApproverInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageUncheckedCreateNestedManyWithoutSenderInput
+}
+
+export type UserCreateOrConnectWithoutCreatedWebhooksInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutCreatedWebhooksInput, Prisma.UserUncheckedCreateWithoutCreatedWebhooksInput>
+}
+
+export type UserUpsertWithoutCreatedWebhooksInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutCreatedWebhooksInput, Prisma.UserUncheckedUpdateWithoutCreatedWebhooksInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutCreatedWebhooksInput, Prisma.UserUncheckedCreateWithoutCreatedWebhooksInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutCreatedWebhooksInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutCreatedWebhooksInput, Prisma.UserUncheckedUpdateWithoutCreatedWebhooksInput>
+}
+
+export type UserUpdateWithoutCreatedWebhooksInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  managedDept?: Prisma.DepartmentUpdateOneWithoutManagerNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
+  taskAssignments?: Prisma.TaskAssigneeUpdateManyWithoutUserNestedInput
+  createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
+  taskReports?: Prisma.TaskReportUpdateManyWithoutUserNestedInput
+  approvedTasks?: Prisma.TaskUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUpdateManyWithoutApproverNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUpdateManyWithoutSenderNestedInput
+}
+
+export type UserUncheckedUpdateWithoutCreatedWebhooksInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  managedDept?: Prisma.DepartmentUncheckedUpdateOneWithoutManagerNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  taskAssignments?: Prisma.TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
+  createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
+  taskReports?: Prisma.TaskReportUncheckedUpdateManyWithoutUserNestedInput
+  approvedTasks?: Prisma.TaskUncheckedUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUncheckedUpdateManyWithoutApproverNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
 }
 
 
@@ -2153,6 +2750,9 @@ export type UserCountOutputType = {
   notifications: number
   departmentMemberships: number
   attachments: number
+  chatParticipants: number
+  chatMessages: number
+  createdWebhooks: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2166,6 +2766,9 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   notifications?: boolean | UserCountOutputTypeCountNotificationsArgs
   departmentMemberships?: boolean | UserCountOutputTypeCountDepartmentMembershipsArgs
   attachments?: boolean | UserCountOutputTypeCountAttachmentsArgs
+  chatParticipants?: boolean | UserCountOutputTypeCountChatParticipantsArgs
+  chatMessages?: boolean | UserCountOutputTypeCountChatMessagesArgs
+  createdWebhooks?: boolean | UserCountOutputTypeCountCreatedWebhooksArgs
 }
 
 /**
@@ -2248,6 +2851,27 @@ export type UserCountOutputTypeCountAttachmentsArgs<ExtArgs extends runtime.Type
   where?: Prisma.TaskAttachmentWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountChatParticipantsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ChatParticipantWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountChatMessagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ChatMessageWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountCreatedWebhooksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.WebhookWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2275,6 +2899,9 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
   departmentMemberships?: boolean | Prisma.User$departmentMembershipsArgs<ExtArgs>
   attachments?: boolean | Prisma.User$attachmentsArgs<ExtArgs>
+  chatParticipants?: boolean | Prisma.User$chatParticipantsArgs<ExtArgs>
+  chatMessages?: boolean | Prisma.User$chatMessagesArgs<ExtArgs>
+  createdWebhooks?: boolean | Prisma.User$createdWebhooksArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -2342,6 +2969,9 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
   departmentMemberships?: boolean | Prisma.User$departmentMembershipsArgs<ExtArgs>
   attachments?: boolean | Prisma.User$attachmentsArgs<ExtArgs>
+  chatParticipants?: boolean | Prisma.User$chatParticipantsArgs<ExtArgs>
+  chatMessages?: boolean | Prisma.User$chatMessagesArgs<ExtArgs>
+  createdWebhooks?: boolean | Prisma.User$createdWebhooksArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -2361,6 +2991,9 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     notifications: Prisma.$NotificationPayload<ExtArgs>[]
     departmentMemberships: Prisma.$UserDepartmentPayload<ExtArgs>[]
     attachments: Prisma.$TaskAttachmentPayload<ExtArgs>[]
+    chatParticipants: Prisma.$ChatParticipantPayload<ExtArgs>[]
+    chatMessages: Prisma.$ChatMessagePayload<ExtArgs>[]
+    createdWebhooks: Prisma.$WebhookPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -2782,6 +3415,9 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   notifications<T extends Prisma.User$notificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   departmentMemberships<T extends Prisma.User$departmentMembershipsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$departmentMembershipsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserDepartmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   attachments<T extends Prisma.User$attachmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$attachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskAttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  chatParticipants<T extends Prisma.User$chatParticipantsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$chatParticipantsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ChatParticipantPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  chatMessages<T extends Prisma.User$chatMessagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$chatMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ChatMessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  createdWebhooks<T extends Prisma.User$createdWebhooksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$createdWebhooksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WebhookPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3474,6 +4110,78 @@ export type User$attachmentsArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   distinct?: Prisma.TaskAttachmentScalarFieldEnum | Prisma.TaskAttachmentScalarFieldEnum[]
+}
+
+/**
+ * User.chatParticipants
+ */
+export type User$chatParticipantsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ChatParticipant
+   */
+  select?: Prisma.ChatParticipantSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ChatParticipant
+   */
+  omit?: Prisma.ChatParticipantOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ChatParticipantInclude<ExtArgs> | null
+  where?: Prisma.ChatParticipantWhereInput
+  orderBy?: Prisma.ChatParticipantOrderByWithRelationInput | Prisma.ChatParticipantOrderByWithRelationInput[]
+  cursor?: Prisma.ChatParticipantWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ChatParticipantScalarFieldEnum | Prisma.ChatParticipantScalarFieldEnum[]
+}
+
+/**
+ * User.chatMessages
+ */
+export type User$chatMessagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ChatMessage
+   */
+  select?: Prisma.ChatMessageSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ChatMessage
+   */
+  omit?: Prisma.ChatMessageOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ChatMessageInclude<ExtArgs> | null
+  where?: Prisma.ChatMessageWhereInput
+  orderBy?: Prisma.ChatMessageOrderByWithRelationInput | Prisma.ChatMessageOrderByWithRelationInput[]
+  cursor?: Prisma.ChatMessageWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ChatMessageScalarFieldEnum | Prisma.ChatMessageScalarFieldEnum[]
+}
+
+/**
+ * User.createdWebhooks
+ */
+export type User$createdWebhooksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Webhook
+   */
+  select?: Prisma.WebhookSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Webhook
+   */
+  omit?: Prisma.WebhookOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WebhookInclude<ExtArgs> | null
+  where?: Prisma.WebhookWhereInput
+  orderBy?: Prisma.WebhookOrderByWithRelationInput | Prisma.WebhookOrderByWithRelationInput[]
+  cursor?: Prisma.WebhookWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.WebhookScalarFieldEnum | Prisma.WebhookScalarFieldEnum[]
 }
 
 /**

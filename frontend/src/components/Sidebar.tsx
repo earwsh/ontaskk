@@ -2,14 +2,18 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useChatSocket } from '@/context/SocketContext';
 
 const analyticsIcon = 'M3 3v18h18';
+const chatIcon = 'M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z';
+const webhookIcon = 'M13 10V3L4 14h7v7l9-11h-7z';
 
 const roleConfig: Record<string, { title: string; links: { label: string; href: string; icon: string }[] }> = {
   CEO: {
     title: 'مدیر عامل',
     links: [
       { label: 'داشبورد', href: '/dashboard/ceo', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
+      { label: 'پیام‌رسان', href: '/dashboard/chat', icon: chatIcon },
       { label: 'کاربران', href: '/dashboard/users', icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z' },
       { label: 'پروژه‌ها', href: '/dashboard/projects', icon: 'M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z' },
       { label: 'دپارتمان‌ها', href: '/dashboard/departments', icon: 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4' },
@@ -23,6 +27,7 @@ const roleConfig: Record<string, { title: string; links: { label: string; href: 
     title: 'مدیر منابع انسانی',
     links: [
       { label: 'داشبورد', href: '/dashboard/hr', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
+      { label: 'پیام‌رسان', href: '/dashboard/chat', icon: chatIcon },
       { label: 'کاربران', href: '/dashboard/users', icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z' },
       { label: 'پروژه‌ها', href: '/dashboard/projects', icon: 'M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z' },
       { label: 'تسک‌های من', href: '/dashboard/my-tasks', icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4' },
@@ -35,18 +40,21 @@ const roleConfig: Record<string, { title: string; links: { label: string; href: 
     title: 'مدیر فنی',
     links: [
       { label: 'داشبورد', href: '/dashboard/tech', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
+      { label: 'پیام‌رسان', href: '/dashboard/chat', icon: chatIcon },
       { label: 'دپارتمان‌ها', href: '/dashboard/departments', icon: 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4' },
       { label: 'پروژه‌ها', href: '/dashboard/projects', icon: 'M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z' },
       { label: 'تسک‌های من', href: '/dashboard/my-tasks', icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4' },
       { label: 'تسک‌های سازمان', href: '/dashboard/tech/tasks', icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4' },
       { label: 'تایید تسک‌ها', href: '/dashboard/approvals', icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' },
       { label: 'تحلیل', href: '/dashboard/analytics', icon: analyticsIcon },
+      { label: 'وب‌هوک‌ها', href: '/dashboard/webhooks', icon: webhookIcon },
     ],
   },
   STRATEGY_MANAGER: {
     title: 'مدیر استراتژی',
     links: [
       { label: 'داشبورد', href: '/dashboard/tech', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
+      { label: 'پیام‌رسان', href: '/dashboard/chat', icon: chatIcon },
       { label: 'دپارتمان‌ها', href: '/dashboard/departments', icon: 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4' },
       { label: 'پروژه‌ها', href: '/dashboard/projects', icon: 'M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z' },
       { label: 'تسک‌های من', href: '/dashboard/my-tasks', icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4' },
@@ -59,6 +67,7 @@ const roleConfig: Record<string, { title: string; links: { label: string; href: 
     title: 'مدیر دپارتمان',
     links: [
       { label: 'داشبورد', href: '/dashboard/dept', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
+      { label: 'پیام‌رسان', href: '/dashboard/chat', icon: chatIcon },
       { label: 'پروژه‌ها', href: '/dashboard/projects', icon: 'M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z' },
       { label: 'تسک‌های من', href: '/dashboard/my-tasks', icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4' },
       { label: 'تسک‌های دپارتمان', href: '/dashboard/dept/tasks', icon: 'M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
@@ -70,6 +79,7 @@ const roleConfig: Record<string, { title: string; links: { label: string; href: 
     title: 'کارمند',
     links: [
       { label: 'داشبورد', href: '/dashboard/employee', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
+      { label: 'پیام‌رسان', href: '/dashboard/chat', icon: chatIcon },
       { label: 'پروژه‌ها و تسک‌های من', href: '/dashboard/projects', icon: 'M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z' },
       { label: 'تسک‌های من', href: '/dashboard/my-tasks', icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4' },
       { label: 'تحلیل من', href: '/dashboard/analytics', icon: analyticsIcon },
@@ -79,6 +89,7 @@ const roleConfig: Record<string, { title: string; links: { label: string; href: 
     title: 'مشتری',
     links: [
       { label: 'داشبورد', href: '/dashboard/customer', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
+      { label: 'پیام‌رسان', href: '/dashboard/chat', icon: chatIcon },
       { label: 'سفارشات', href: '/dashboard/customer/orders', icon: 'M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z' },
       { label: 'تیکت‌ها', href: '/dashboard/customer/tickets', icon: 'M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z' },
     ],
@@ -87,6 +98,7 @@ const roleConfig: Record<string, { title: string; links: { label: string; href: 
 
 export default function Sidebar({ role, onLogout, collapsed, isDeptManager }: { role: string; onLogout: () => void; collapsed: boolean; isDeptManager?: boolean }) {
   const pathname = usePathname();
+  const { unreadTotal } = useChatSocket();
   const config = roleConfig[role] || roleConfig.EMPLOYEE;
 
   const links = config.links.filter((link) => {
@@ -156,7 +168,12 @@ export default function Sidebar({ role, onLogout, collapsed, isDeptManager }: { 
               {!collapsed && (
                 <span className="truncate">{link.label}</span>
               )}
-              {!collapsed && active && (
+              {link.href === '/dashboard/chat' && unreadTotal > 0 && (
+                <span className={`min-w-[18px] h-[18px] px-1 bg-primary text-white rounded-full text-[10px] font-bold flex items-center justify-center shrink-0 ${collapsed ? 'absolute top-1.5 right-1.5' : 'mr-auto'}`}>
+                  {unreadTotal}
+                </span>
+              )}
+              {!collapsed && active && (!unreadTotal || link.href !== '/dashboard/chat') && (
                 <div className="w-1 h-5 rounded-full bg-primary mr-auto shrink-0" />
               )}
             </Link>

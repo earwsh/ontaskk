@@ -66,6 +66,22 @@ def _tier_label(rate: float) -> str:
     return "نیاز به بهبود"
 
 
+def _task_weight(t: dict) -> float:
+    prio_map = {"URGENT": 2.5, "HIGH": 1.8, "NORMAL": 1.0, "LOW": 0.5}
+    prio = str(t.get("priority") or "NORMAL").upper()
+    mult = prio_map.get(prio, 1.0)
+    
+    est_mins = t.get("estimatedMinutes")
+    if est_mins is None:
+        est_mins = 120
+        
+    est_hours = t.get("estimatedHours") or t.get("storyPoints") or (est_mins / 60.0)
+    if not est_hours or est_hours <= 0:
+        est_hours = 2.0
+    return float(est_hours) * mult
+
+
+
 def _build_rankings(payload: dict, today: date) -> dict:
     tasks: list[dict] = payload.get("tasks") or []
     projects: list[dict] = payload.get("projects") or []
@@ -82,6 +98,7 @@ def _build_rankings(payload: dict, today: date) -> dict:
         dept_tasks = [t for t in tasks if (project_map.get(t.get("projectId")) or {}).get("departmentId") == did]
         done = sum(1 for t in dept_tasks if _is_done(t))
         overdue = sum(1 for t in dept_tasks if _is_overdue(t, today))
+        overdue_weight = sum(_task_weight(t) for t in dept_tasks if _is_overdue(t, today))
         pending = sum(1 for t in dept_tasks if _status_of(t) == "PENDING_APPROVAL")
         total = len(dept_tasks)
         dept_rows.append({
@@ -91,6 +108,7 @@ def _build_rankings(payload: dict, today: date) -> dict:
             "total": total,
             "done": done,
             "overdue": overdue,
+            "overdueWeight": overdue_weight,
             "pending": pending,
             "completionRate": _pct(done, total),
         })
@@ -195,37 +213,46 @@ def _build_rankings(payload: dict, today: date) -> dict:
     mem_mean = stat.fmean(mem_rates) if mem_rates else 0.0
     mem_std = _stddev(mem_rates)
     overload_threshold = mem_mean + mem_std
-    under_threshold = max(0.0, mem_mean - mem_std)
+    mem_rows = []
+    for mem in members:
+        mid = mem.get("id") or mem.get("userId")
+        mem_tasks = [t for t in tasks if t.get("assigneeId") == mid or t.get("userId") == mid]
+        total_weight = sum(_task_weight(t) for t in mem_tasks)
+        done_weight = sum(_task_weight(t) for t in mem_tasks if _is_done(t))
+        active_tasks = [t for t in mem_tasks if not _is_done(t)]
+        active_weight = sum(_task_weight(t) for t in active_tasks)
+        overdue_count = sum(1 for t in mem_tasks if _is_overdue(t, today))
+        
+        # Load Status based on active weighted workload
+        if active_weight > 30.0 or len(active_tasks) > 8:
+            load_status = "overloaded"
+        elif active_weight < 8.0 and len(active_tasks) < 3:
+            load_status = "underloaded"
+        else:
+            load_status = "balanced"
 
-    for m in mem_rows:
-        m["tier"] = _tier_label(m["completionRate"])
-        if m["total"] > overload_threshold:
-            m["loadStatus"] = "overloaded"
-        elif m["total"] < under_threshold:
-            m["loadStatus"] = "underloaded"
-        else:
-            m["loadStatus"] = "balanced"
-        if m["loadStatus"] == "overloaded":
-            m["reason"] = f"{m['total']} دقیقه بار کاری — بیش از میانگین تیم ({_round(mem_mean, 1)})"
-        elif m["loadStatus"] == "underloaded":
-            m["reason"] = f"{m['total']} دقیقه بار کاری — کمتر از میانگین تیم ({_round(mem_mean, 1)})"
-        elif m["completionRate"] >= 75:
-            m["reason"] = "عملکرد عالی و بار متعادل"
-        elif m["overdue"] > 0:
-            m["reason"] = f"{m['overdue']} دقیقه دیرکرد کاری دارد"
-        else:
-            m["reason"] = f"نرخ تکمیل {m['completionRate']}٪ — بار متعادل"
-    mem_rows.sort(key=lambda x: (x["completionRate"], -x["total"]), reverse=True)
+        rate = _round((done_weight / total_weight) * 100, 1) if total_weight > 0 else 0.0
+        mem_rows.append({
+            "memberId": mid,
+            "name": mem.get("name") or mem.get("fullName") or "کاربر",
+            "total": len(mem_tasks),
+            "done": sum(1 for t in mem_tasks if _is_done(t)),
+            "activeWeight": _round(active_weight, 1),
+            "overdue": overdue_count,
+            "completionRate": rate,
+            "loadStatus": load_status,
+        })
+    mem_rows.sort(key=lambda m: m["completionRate"])
 
     return {
         "departments": dept_rows,
         "projects": proj_rows,
         "members": mem_rows,
         "averages": {
-            "departmentCompletionRate": _round(dept_mean, 1),
-            "projectCompletionRate": _round(proj_mean, 1),
-            "memberCompletionRate": _round(mem_mean, 1),
-            "memberLoadThreshold": _round(overload_threshold, 1),
+            "deptCompletionMean": _round(dept_mean, 1),
+            "projCompletionMean": _round(proj_mean, 1),
+            "deptStdDev": _round(_stddev(dept_rates), 1),
+            "projStdDev": _round(_stddev(proj_rates), 1),
         },
     }
 
@@ -233,77 +260,107 @@ def _build_rankings(payload: dict, today: date) -> dict:
 def _build_insights(payload: dict, today: date, rankings: dict) -> dict:
     tasks: list[dict] = payload.get("tasks") or []
     total = len(tasks)
-    done = sum(1 for t in tasks if _is_done(t))
-    overdue = sum(1 for t in tasks if _is_overdue(t, today))
-    pending = sum(1 for t in tasks if _status_of(t) == "PENDING_APPROVAL")
-    completion = _pct(done, total)
+    done_tasks = [t for t in tasks if _is_done(t)]
+    overdue_tasks = [t for t in tasks if _is_overdue(t, today)]
+    pending_tasks = [t for t in tasks if _status_of(t) == "PENDING_APPROVAL"]
+    
+    total_weight = sum(_task_weight(t) for t in tasks)
+    done_weight = sum(_task_weight(t) for t in done_tasks)
+    overdue_weight = sum(_task_weight(t) for t in overdue_tasks)
+    
+    completion_rate = _round((done_weight / total_weight) * 100, 1) if total_weight > 0 else 0.0
 
     dept_rows = rankings["departments"]
     proj_rows = rankings["projects"]
     mem_rows = rankings["members"]
-    avg = rankings["averages"]
 
     findings: list[dict] = []
     risks: list[dict] = []
     recommendations: list[dict] = []
 
-    # ── Completion overview ──
-    if total > 0:
-        if completion >= 75:
-            findings.append({"severity": "good", "title": "پیشرفت کلی خوب", "text": f"نرخ تکمیل کل سازمان {completion}٪ است و سازمان در مسیر مطلوبی قرار دارد."})
-        elif completion >= 50:
-            findings.append({"severity": "warning", "title": "پیشرفت متوسط", "text": f"نرخ تکمیل کل {completion}٪ است؛ برای رسیدن به ۷۵٪ به تمرکز بیشتری نیاز است."})
-        else:
-            findings.append({"severity": "critical", "title": "پیشرفت پایین", "text": f"نرخ تکمیل کل فقط {completion}٪ است و اکثر تسک‌ها باز مانده‌اند."})
+    # ── 1. Weighted Overall Progress & EVM ──
+    planned_weight = sum(_task_weight(t) for t in tasks if _parse_date(t.get("deadline")) and _parse_date(t.get("deadline")) <= today)
+    org_spi = _round(done_weight / planned_weight, 2) if planned_weight > 0 else 1.0
 
-    # ── Overdue ──
-    if overdue > 0:
-        overdue_pct = _pct(overdue, total)
-        risk_text = f"{overdue} تسک ({overdue_pct}٪) از مهلت خود گذشته‌اند."
-        if overdue_pct >= 20:
-            risks.append({"severity": "critical", "title": "انباشت دیرکرد", "text": risk_text + " این وضعیت می‌تواند به تاخیر پروژه‌ها منجر شود."})
+    if total_weight > 0:
+        if org_spi >= 1.0:
+            findings.append({
+                "severity": "good",
+                "title": "شاخص زمانی مطلوب (SPI ≥ 1.0)",
+                "text": f"پیشرفت وزنی کل سازمان {completion_rate}٪ است و شاخص زمان‌بندی (SPI={org_spi}) نشان‌دهنده تطابق کامل با برنامه است."
+            })
+        elif org_spi >= 0.8:
+            findings.append({
+                "severity": "warning",
+                "title": "انحراف جزئی از زمان‌بندی (SPI)",
+                "text": f"شاخص زمانی سازمان SPI={org_spi} است؛ سرعت پیشرفت وزنی کم‌تر از زمان‌بندی اولیه است."
+            })
         else:
-            risks.append({"severity": "warning", "title": "دیرکرد وجود دارد", "text": risk_text + " بهتر است هرچه سریع‌تر پیگیری شود."})
-        worst_dept = max((d for d in dept_rows if d["overdue"] > 0), key=lambda d: d["overdue"], default=None)
+            risks.append({
+                "severity": "critical",
+                "title": "انحراف شدید از زمان‌بندی کل (SPI < 0.8)",
+                "text": f"شاخص زمان‌بندی سازمان SPI={org_spi} است؛ پیشرفت واقعی وزنی تنها {completion_rate}٪ بوده و سازمان از برنامه عقب مانده است."
+            })
+
+    # ── 2. Weighted Overdue & Bottlenecks ──
+    if overdue_tasks:
+        overdue_pct = _pct(len(overdue_tasks), total)
+        overdue_weight_pct = _round((overdue_weight / total_weight) * 100, 1) if total_weight > 0 else 0.0
+        
+        risk_title = "انباشت سنگین کار در تاخیر" if overdue_weight_pct >= 15 else "دیرکرد در تسک‌ها"
+        severity = "critical" if overdue_weight_pct >= 15 else "warning"
+        
+        risks.append({
+            "severity": severity,
+            "title": risk_title,
+            "text": f"تعداد {len(overdue_tasks)} تسک ({overdue_pct}٪ عددی) معادل {overdue_weight_pct}٪ از کل وزن کاری سازمان دچار دیرکرد شده‌اند."
+        })
+        
+        worst_dept = max((d for d in dept_rows if d["overdueWeight"] > 0), key=lambda d: d["overdueWeight"], default=None)
         if worst_dept:
-            risks.append({"severity": "warning", "title": f"دیرکرد در «{worst_dept['name']}»", "text": f"بیشترین دیرکرد سازمان مربوط به این دپارتمان با {worst_dept['overdue']} تسک است."})
-        rec = "برای تسک‌های دیرکرد، برنامه پیگیری هفتگی مشخص کنید؛ ابتدا دیرکردهای بحرانی را اولویت‌بندی و دوباره زمان‌بندی کنید."
-        recommendations.append({"title": "مدیریت دیرکرد", "text": rec})
-    else:
-        findings.append({"severity": "good", "title": "بدون دیرکرد", "text": "هیچ تسکی از مهلت خود نگذشته است. عالی است!"})
+            risks.append({
+                "severity": "warning",
+                "title": f"گلوگاه در دپارتمان «{worst_dept['name']}»",
+                "text": f"بیشترین وزن دیرکرد سازمان ({worst_dept['overdueWeight']} ساعت-اولویت) در این دپارتمان تمرکز یافته است."
+            })
+            
+        recommendations.append({
+            "title": "مدیریت گلوگاه‌های زمانی (CEO/Manager)",
+            "text": f"تسک‌های دارای اولویت URGENT و HIGH در دپارتمان «{worst_dept['name'] if worst_dept else 'اصلی'}» را باززمان‌بندی کرده یا نیروی کمکی اختصاص دهید."
+        })
 
-    # ── Pending approvals ──
-    if pending > 0:
-        risks.append({"severity": "warning", "title": "تسک‌های بلاتکلیف", "text": f"{pending} تسک منتظر تایید هستند که باید هرچه سریع‌تر بررسی شوند."})
-        recommendations.append({"title": "رفع بلاتکلیفی", "text": f"{pending} تسک در انتظار تایید است؛ با تایید یا بازگشت آن‌ها، چرخه کار را باز کنید."})
+    # ── 3. Task Dependency & Blockers ──
+    blocked_tasks = [t for t in tasks if not _is_done(t) and t.get("dependencies") and any(dep_id for dep_id in t.get("dependencies", []) if not any(_is_done(dt) for dt in tasks if dt.get("id") == dep_id))]
+    if blocked_tasks:
+        risks.append({
+            "severity": "warning",
+            "title": "تسک‌های مسدودشده (Blocked Tasks)",
+            "text": f"تعداد {len(blocked_tasks)} تسک به علت عدم اتمام تسک‌های پیش‌نیاز (Dependencies) قفل شده‌اند و امکان پیشرفت ندارند."
+        })
+        recommendations.append({
+            "title": "رفع مسدودکننده‌ها (Tech Lead)",
+            "text": "تسک‌های پیش‌نیاز را اولویت‌بندی کنید تا مسیر حرکت تسک‌های مسدودشده باز شود."
+        })
 
-    # ── Workload ──
+    # ── 4. Pending Approvals ──
+    if pending_tasks:
+        pending_weight = sum(_task_weight(t) for t in pending_tasks)
+        risks.append({
+            "severity": "warning",
+            "title": "توقف چرخه تایید مدیران",
+            "text": f"تعداد {len(pending_tasks)} تسک (معادل {round(pending_weight)} ساعت-اولویت) در انتظار تایید مدیران معطل مانده‌اند."
+        })
+        recommendations.append({
+            "title": "تایید یا تعیین تکلیف تسک‌ها",
+            "text": "مدیران مربوطه باید ظرف ۲۴ ساعت تسک‌های در انتظار تایید را بررسی کنند تا زنجیره کار متوقف نشود."
+        })
+
+    # ── 5. Workload Distribution ──
     overloaded = [m for m in mem_rows if m["loadStatus"] == "overloaded"]
     underloaded = [m for m in mem_rows if m["loadStatus"] == "underloaded"]
     if overloaded:
         names = "، ".join(m["name"] for m in overloaded[:3])
-        risks.append({"severity": "critical", "title": "تمرکز بار کاری", "text": f"{names} بیش از حد مشغول هستند و ریسک فرسودگی و تاخیر وجود دارد."})
-        recommendations.append({"title": "توزیع بار کاری", "text": f"برخی تسک‌های {', '.join(m['name'] for m in overloaded[:3])} را به اعضای کم‌کارتر منتقل کنید."})
-    if underloaded:
-        findings.append({"severity": "warning", "title": "ظرفیت بلااستفاده", "text": f"{', '.join(m['name'] for m in underloaded[:3])} ظرفیت خالی دارند و می‌توانند بار بیشتری بپذیرند."})
-
-    # ── Top / bottom performers ──
-    if dept_rows:
-        best = dept_rows[-1]
-        worst = dept_rows[0]
-        if best.get("total", 0) > 0:
-            findings.append({"severity": "good", "title": f"دپارتمان برتر «{best['name']}»", "text": best["reason"]})
-        if worst.get("total", 0) > 0 and worst["completionRate"] < 50:
-            risks.append({"severity": "warning", "title": f"دپارتمان ضعیف «{worst['name']}»", "text": worst["reason"]})
-    if proj_rows:
-        critical = [p for p in proj_rows if p["status"] == "critical" and p["total"] > 0]
-        if critical:
-            risks.append({"severity": "critical", "title": "پروژه‌های در خطر", "text": "، ".join(p["name"] for p in critical[:3]) + " در وضعیت بحرانی هستند و نیاز به مداخله فوری دارند."})
-        good = [p for p in proj_rows if p["status"] == "good" and p["total"] > 0]
-        if good:
-            findings.append({"severity": "good", "title": "پروژه‌های موفق", "text": "، ".join(p["name"] for p in good[:3]) + " در مسیر درست قرار دارند."})
-
-    # ── Description quality ──
+    # ── 6. Description Quality ──
     with_desc = sum(1 for t in tasks if t.get("description") and len(t.get("description") or "") > 10)
     no_desc = total - with_desc
     if total > 0 and no_desc / total >= 0.5:

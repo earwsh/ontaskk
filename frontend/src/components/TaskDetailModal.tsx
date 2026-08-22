@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import TaskRecurrenceBadge from '@/components/TaskRecurrenceBadge';
 import api from '@/lib/api';
 
 interface TaskDetailModalProps {
@@ -26,6 +27,10 @@ interface TaskDetail {
   createdBy: { id: number; firstName: string; lastName: string };
   project: { id: number; name: string; departmentId: number };
   reports: Report[];
+  isRecurring?: boolean;
+  recurrencePattern?: string | null;
+  recurrenceDays?: string | null;
+  recurringParentId?: number | null;
 }
 
 const statusColors: Record<string, string> = {
@@ -125,7 +130,15 @@ export default function TaskDetailModal({ open, onClose, taskId, onTaskUpdated }
           <div className="p-6 space-y-6">
             <div className="flex items-start justify-between">
               <div className="flex-1">
-                <h3 className="text-xl font-bold text-white mb-1">{task.title}</h3>
+                <div className="flex items-center gap-2 flex-wrap mb-1">
+                  <h3 className="text-xl font-bold text-white">{task.title}</h3>
+                  <TaskRecurrenceBadge
+                    isRecurring={task.isRecurring}
+                    recurrencePattern={task.recurrencePattern}
+                    recurrenceDays={task.recurrenceDays}
+                    recurringParentId={task.recurringParentId}
+                  />
+                </div>
                 <p className="text-sm text-text-muted">پروژه: {task.project.name}</p>
               </div>
               <span className={`px-3 py-1 rounded-lg text-xs font-medium ${statusColors[task.status]}`}>

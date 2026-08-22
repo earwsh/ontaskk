@@ -4,9 +4,12 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import ShamsiDatePicker from '@/components/ShamsiDatePicker';
+import TaskRecurrenceConfig, { RecurrenceConfigState } from '@/components/TaskRecurrenceConfig';
+import TaskRecurrenceBadge, { getRecurrenceDescription } from '@/components/TaskRecurrenceBadge';
 import { useToast } from '@/components/Toast';
 import { gregorianToShamsi } from '@/lib/date';
 import api from '@/lib/api';
+import Link from 'next/link';
 
 interface TaskDetail {
   id: number;
@@ -16,7 +19,7 @@ interface TaskDetail {
   deadline: string | null;
   estimatedHours: number | null;
   project: { id: number; name: string; departmentId: number };
-  assignees: { user: { id: number; firstName: string; lastName: string; email: string } }[];
+  assignees: { userId: number; isCompleted?: boolean; completedAt?: string | null; user: { id: number; firstName: string; lastName: string; email: string } }[];
   subtasks: { id: number; title: string; isDone: boolean; completedAt?: string | null }[];
   createdBy: { id: number; firstName: string; lastName: string };
   approvedBy: { id: number; firstName: string; lastName: string } | null;
@@ -26,6 +29,20 @@ interface TaskDetail {
   startDate: string | null;
   estimatedMinutes: number | null;
   weight: number | null;
+  isRecurring?: boolean;
+  recurrencePattern?: string | null;
+  recurrenceDays?: string | null;
+  recurrenceEnd?: string | null;
+  recurringParentId?: number | null;
+  recurringParent?: { id: number; title: string } | null;
+  recurringInstances?: {
+    id: number;
+    title: string;
+    status: string;
+    startDate: string | null;
+    deadline: string | null;
+    createdAt: string;
+  }[];
   attachments: {
     id: number;
     filename: string;
@@ -79,6 +96,13 @@ export default function TaskDetailPage() {
   const [editAssigneeIds, setEditAssigneeIds] = useState<number[]>([]);
   const [editApproverId, setEditApproverId] = useState<number | ''>('');
   const [projectUsers, setProjectUsers] = useState<{ id: number; firstName: string; lastName: string; email: string }[]>([]);
+  const [editRecurrence, setEditRecurrence] = useState<RecurrenceConfigState>({
+    isRecurring: false,
+    recurrencePattern: 'DAILY',
+    recurrenceDays: [],
+    recurrenceEnd: '',
+  });
+  const [generatingInstance, setGeneratingInstance] = useState(false);
 
   const [reportContent, setReportContent] = useState('');
   const [sendingReport, setSendingReport] = useState(false);
@@ -133,6 +157,21 @@ export default function TaskDetailPage() {
     setEditWeight(task.weight?.toString() || '');
     setEditAssigneeIds(task.assignees.map((a) => a.user.id));
     setEditApproverId(task.approver?.id || '');
+
+    let days: number[] = [];
+    if (task.recurrenceDays) {
+      try {
+        const parsed = typeof task.recurrenceDays === 'string' ? JSON.parse(task.recurrenceDays) : task.recurrenceDays;
+        if (Array.isArray(parsed)) days = parsed;
+      } catch {}
+    }
+    setEditRecurrence({
+      isRecurring: !!task.isRecurring,
+      recurrencePattern: (task.recurrencePattern as any) || 'DAILY',
+      recurrenceDays: days,
+      recurrenceEnd: task.recurrenceEnd ? task.recurrenceEnd.split('T')[0] : '',
+    });
+
     api.get(`/projects/${task.project.id}`).then(({ data }) => {
       setProjectUsers(data.members.map((m: any) => ({ ...m.user, email: m.user.email || '' })));
     }).catch(() => {});
@@ -154,6 +193,10 @@ export default function TaskDetailPage() {
         weight: editWeight ? parseInt(editWeight) : null,
         assigneeIds: editAssigneeIds,
         approverId: editApproverId || null,
+        isRecurring: editRecurrence.isRecurring,
+        recurrencePattern: editRecurrence.isRecurring ? editRecurrence.recurrencePattern : null,
+        recurrenceDays: editRecurrence.isRecurring ? editRecurrence.recurrenceDays : null,
+        recurrenceEnd: editRecurrence.isRecurring && editRecurrence.recurrenceEnd ? editRecurrence.recurrenceEnd : null,
       });
       setEditing(false);
       fetchTask();
@@ -165,12 +208,44 @@ export default function TaskDetailPage() {
     }
   };
 
+  const handleManualTriggerRecurrence = async () => {
+    setGeneratingInstance(true);
+    try {
+      const res = await api.post('/tasks/process-recurring');
+      if (res.data?.count > 0) {
+        showToast(`${res.data.count} تسک جدید برای امروز ایجاد شد`);
+      } else {
+        showToast('تسک‌های امروز قبلاً ایجاد شده‌اند یا زمان تکرار هنوز فرا نرسیده است');
+      }
+      fetchTask();
+    } catch (err: any) {
+      showToast(err.response?.data?.error || 'خطا در اجرای تکرار تسک', 'error');
+    } finally {
+      setGeneratingInstance(false);
+    }
+  };
+
   const handleStatusChange = async (status: string) => {
     if (!task) return;
     try {
       await api.patch(`/tasks/${task.id}/status`, { status });
       fetchTask();
       showToast('وضعیت تسک با موفقیت تغییر کرد');
+    } catch (err: any) {
+      showToast(err.response?.data?.error || 'خطا', 'error');
+    }
+  };
+
+  const toggleAssigneeComplete = async (isCompleted: boolean) => {
+    if (!task) return;
+    try {
+      const res = await api.patch(`/tasks/${task.id}/assignee-complete`, { isCompleted });
+      if (res.data?.message) {
+        showToast(res.data.message);
+      } else {
+        showToast(isCompleted ? 'انجام تسک توسط شما ثبت شد' : 'وضعیت انجام برداشته شد');
+      }
+      fetchTask();
     } catch (err: any) {
       showToast(err.response?.data?.error || 'خطا', 'error');
     }
@@ -282,6 +357,13 @@ export default function TaskDetailPage() {
                   <span className={`px-3 py-1 rounded-lg text-xs font-medium ${statusConfig[task.status].bg} ${statusConfig[task.status].color} ${statusConfig[task.status].border} border`}>
                     {statusConfig[task.status].label}
                   </span>
+                  <TaskRecurrenceBadge
+                    isRecurring={task.isRecurring}
+                    recurrencePattern={task.recurrencePattern}
+                    recurrenceDays={task.recurrenceDays}
+                    recurringParentId={task.recurringParentId}
+                    recurringParent={task.recurringParent}
+                  />
                 </div>
                 <div className="flex items-center gap-2 mt-1 text-text-muted text-xs">
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -289,9 +371,40 @@ export default function TaskDetailPage() {
                   </svg>
                   {task.project.name}
                 </div>
+
+                {task.recurringParentId && task.recurringParent && (
+                  <div className="mt-2.5 px-3 py-2 bg-cyan-500/10 border border-cyan-500/20 rounded-xl flex items-center justify-between gap-3 text-xs">
+                    <div className="flex items-center gap-2 text-cyan-300">
+                      <svg className="w-4 h-4 text-cyan-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                      </svg>
+                      <span>تولید شده از تسک تکرارشونده اصلی:</span>
+                      <strong className="text-white">{task.recurringParent.title}</strong>
+                    </div>
+                    <Link
+                      href={`/dashboard/tasks/${task.recurringParentId}`}
+                      className="px-2.5 py-1 bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-200 rounded-lg transition-all"
+                    >
+                      مشاهده مادر
+                    </Link>
+                  </div>
+                )}
               </div>
               {canManage && !editing && (
                 <div className="flex gap-2">
+                  {task.isRecurring && (
+                    <button
+                      onClick={handleManualTriggerRecurrence}
+                      disabled={generatingInstance}
+                      className="flex items-center gap-2 px-3.5 py-2.5 bg-primary/10 hover:bg-primary/20 text-primary border border-primary/25 rounded-xl font-medium text-xs transition-all cursor-pointer"
+                      title="اجرای تکرار امروز"
+                    >
+                      <svg className={`w-3.5 h-3.5 ${generatingInstance ? 'animate-spin' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                      </svg>
+                      {generatingInstance ? 'در حال تولید...' : 'تولید تسک امروز'}
+                    </button>
+                  )}
                   <button onClick={startEdit}
                     className="flex items-center gap-2 px-4 py-2.5 bg-card-hover hover:bg-primary/10 text-text-secondary hover:text-primary rounded-xl font-medium text-sm transition-all">
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -446,6 +559,9 @@ export default function TaskDetailPage() {
                       ))}
                     </div>
                   </div>
+
+                  <TaskRecurrenceConfig value={editRecurrence} onChange={setEditRecurrence} />
+
                   <div className="flex gap-3 pt-2">
                     <button onClick={saveEdit} disabled={saving || !editTitle}
                       className="flex-1 h-11 bg-primary hover:bg-primary-hover disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-xl font-medium text-sm transition-all flex items-center justify-center gap-2">
@@ -527,6 +643,87 @@ export default function TaskDetailPage() {
                       </div>
                     </div>
 
+                    {task.isRecurring && (
+                      <div className="space-y-3">
+                        <div className="p-3 bg-primary/[0.06] border border-primary/20 rounded-xl flex items-center justify-between gap-4">
+                          <div className="flex items-center gap-3">
+                            <div className="w-9 h-9 rounded-lg bg-primary/15 text-primary flex items-center justify-center shrink-0">
+                              <svg className="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                              </svg>
+                            </div>
+                            <div>
+                              <span className="text-xs font-semibold text-white block">
+                                وضعیت تکرار: {getRecurrenceDescription(task.recurrencePattern, task.recurrenceDays)}
+                              </span>
+                              <span className="text-[11px] text-text-muted">
+                                {task.recurrenceEnd ? `پایان تکرار تا تاریخ ${toJalali(task.recurrenceEnd)}` : 'بدون محدودیت زمانی پایان (تکرار دائمی)'}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Generated Instances */}
+                        <div className="p-4 bg-[rgba(22,27,38,0.5)] border border-[rgba(255,255,255,0.06)] rounded-xl space-y-2.5">
+                          <div className="flex items-center justify-between">
+                            <label className="flex items-center gap-1.5 text-xs font-semibold text-text-secondary">
+                              <svg className="w-3.5 h-3.5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                              </svg>
+                              نمونه‌های ایجاد شده از این تسک ({task.recurringInstances?.length || 0})
+                            </label>
+                            {canManage && (
+                              <button
+                                type="button"
+                                onClick={handleManualTriggerRecurrence}
+                                disabled={generatingInstance}
+                                className="text-xs text-primary hover:text-primary-hover flex items-center gap-1 cursor-pointer transition-all"
+                              >
+                                <svg className={`w-3 h-3 ${generatingInstance ? 'animate-spin' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                </svg>
+                                {generatingInstance ? 'در حال بررسی...' : 'بررسی و ایجاد تسک امروز'}
+                              </button>
+                            )}
+                          </div>
+
+                          {task.recurringInstances && task.recurringInstances.length > 0 ? (
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[220px] overflow-y-auto">
+                              {task.recurringInstances.map((inst) => {
+                                const cfg = statusConfig[inst.status] || statusConfig.TODO;
+                                return (
+                                  <Link
+                                    key={inst.id}
+                                    href={`/dashboard/tasks/${inst.id}`}
+                                    className="flex items-center justify-between p-2.5 bg-[rgba(22,27,38,0.7)] hover:bg-[rgba(22,27,38,0.95)] border border-[rgba(255,255,255,0.04)] hover:border-primary/40 rounded-xl transition-all group"
+                                  >
+                                    <div className="flex items-center gap-2 min-w-0">
+                                      <div className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
+                                      <div className="min-w-0">
+                                        <span className="text-xs font-medium text-white group-hover:text-primary transition-colors block truncate">
+                                          {inst.title}
+                                        </span>
+                                        <span className="text-[10px] text-text-muted">
+                                          موعد: {toJalali(inst.startDate || inst.createdAt)}
+                                        </span>
+                                      </div>
+                                    </div>
+                                    <span className={`shrink-0 px-2 py-0.5 rounded-md text-[10px] font-medium ${cfg.bg} ${cfg.color} ${cfg.border} border`}>
+                                      {cfg.label}
+                                    </span>
+                                  </Link>
+                                );
+                              })}
+                            </div>
+                          ) : (
+                            <p className="text-[11px] text-text-muted py-2 text-center">
+                              هنوز نمونه‌ای برای این تسک تولید نشده است. با فرا رسیدن روز موعد، سیستم خودکار نمونه جدید را ایجاد می‌کند.
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
                     {task.status === 'DONE' && task.approvedBy && (
                       <div className="bg-[rgba(34,197,94,0.06)] border border-green-500/20 rounded-xl px-4 py-3 flex items-center gap-3">
                         <div className="w-8 h-8 rounded-lg bg-green-500/10 flex items-center justify-center shrink-0">
@@ -555,23 +752,67 @@ export default function TaskDetailPage() {
 
                     {task.assignees.length > 0 && (
                       <div>
-                        <label className="flex items-center gap-1.5 text-xs font-medium text-text-secondary mb-2">
-                          <svg className="w-3.5 h-3.5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
-                          </svg>
-                          انجام‌دهندگان
-                          <span className="text-xs text-text-muted font-normal">({task.assignees.length} نفر)</span>
-                        </label>
-                        <div className="flex flex-wrap gap-2">
-                          {task.assignees.map((a) => (
-                            <span key={a.user.id}
-                              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/[0.08] border border-primary/20 text-primary text-xs rounded-lg">
-                              <div className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center text-[10px] font-bold">
-                                {a.user.firstName[0]}
-                              </div>
-                              {a.user.firstName} {a.user.lastName}
+                        <div className="flex items-center justify-between mb-2">
+                          <label className="flex items-center gap-1.5 text-xs font-medium text-text-secondary">
+                            <svg className="w-3.5 h-3.5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+                            </svg>
+                            انجام‌دهندگان
+                            <span className="text-xs text-text-muted font-normal">
+                              ({task.assignees.filter((a) => a.isCompleted).length} از {task.assignees.length} نفر تیک زده‌اند)
                             </span>
-                          ))}
+                          </label>
+                          {task.status !== 'DONE' && isAssignee && (
+                            <button
+                              onClick={() => {
+                                const myAssignee = task.assignees.find((a) => a.user.id === userId);
+                                toggleAssigneeComplete(!myAssignee?.isCompleted);
+                              }}
+                              className={`px-3 py-1 rounded-lg text-xs font-medium transition-all flex items-center gap-1.5 cursor-pointer ${
+                                task.assignees.find((a) => a.user.id === userId)?.isCompleted
+                                  ? 'bg-green-500/15 text-green-400 border border-green-500/30 hover:bg-green-500/25'
+                                  : 'bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20'
+                              }`}>
+                              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                              </svg>
+                              {task.assignees.find((a) => a.user.id === userId)?.isCompleted
+                                ? 'تیک انجام زده شده (لغو)'
+                                : 'تیک زدن انجام تسک توسط من'}
+                            </button>
+                          )}
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+                          {task.assignees.map((a) => {
+                            const isMe = a.user.id === userId;
+                            return (
+                              <div
+                                key={a.user.id}
+                                className={`flex items-center justify-between px-3 py-2 rounded-xl border text-xs transition-all ${
+                                  a.isCompleted
+                                    ? 'bg-green-500/[0.06] border-green-500/25 text-green-400'
+                                    : 'bg-[rgba(22,27,38,0.6)] border-[rgba(255,255,255,0.06)] text-text-secondary'
+                                }`}>
+                                <div className="flex items-center gap-2 min-w-0">
+                                  <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 ${
+                                    a.isCompleted ? 'bg-green-500/20 text-green-400' : 'bg-primary/20 text-primary'
+                                  }`}>
+                                    {a.user.firstName[0]}
+                                  </div>
+                                  <span className="truncate font-medium">
+                                    {a.user.firstName} {a.user.lastName} {isMe && '(شما)'}
+                                  </span>
+                                </div>
+                                <span className={`shrink-0 text-[10px] px-2 py-0.5 rounded-md font-medium ${
+                                  a.isCompleted
+                                    ? 'bg-green-500/20 text-green-300'
+                                    : 'bg-[rgba(255,255,255,0.05)] text-text-muted'
+                                }`}>
+                                  {a.isCompleted ? 'انجام داده ✓' : 'در انتظار انجام'}
+                                </span>
+                              </div>
+                            );
+                          })}
                         </div>
                       </div>
                     )}

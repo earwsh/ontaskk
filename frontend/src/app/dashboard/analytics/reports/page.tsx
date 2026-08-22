@@ -50,7 +50,7 @@ export default function AnalyticsReportsPage() {
           <p className="mt-1 text-sm text-text-muted">تحلیل آماری، رتبه‌بندی و پیش‌بینی در محدوده «{data?.scopeLabel}»</p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <ServiceBadge name="پایتون" ok={Boolean(computed.py)} />
+          <ServiceBadge name="پایتون" ok={Boolean(computed.py ?? (data?.insights?.findings?.length || data?.rankings?.projects?.length || counts.total !== undefined))} />
           <ServiceBadge name="راست" ok={Boolean(computed.rs)} />
         </div>
       </div>

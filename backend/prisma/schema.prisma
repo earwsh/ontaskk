@@ -96,17 +96,27 @@ model Task {
   reports        TaskReport[]
   attachments    TaskAttachment[]
   notifications  Notification[]
+  isRecurring         Boolean        @default(false)
+  recurrencePattern   String?
+  recurrenceDays      String?
+  recurrenceEnd       DateTime?
+  recurringParentId   Int?
+  recurringParent     Task?          @relation("RecurringInstances", fields: [recurringParentId], references: [id], onDelete: SetNull)
+  recurringInstances  Task[]         @relation("RecurringInstances")
+  lastGeneratedDate   DateTime?
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
 }
 
 model TaskAssignee {
-  id        Int      @id @default(autoincrement())
-  taskId    Int
-  task      Task     @relation(fields: [taskId], references: [id])
-  userId    Int
-  user      User     @relation("TaskAssignees", fields: [userId], references: [id])
-  createdAt DateTime @default(now())
+  id          Int       @id @default(autoincrement())
+  taskId      Int
+  task        Task      @relation(fields: [taskId], references: [id])
+  userId      Int
+  user        User      @relation("TaskAssignees", fields: [userId], references: [id])
+  isCompleted Boolean   @default(false)
+  completedAt DateTime?
+  createdAt   DateTime  @default(now())
 
   @@unique([taskId, userId])
 }
@@ -170,6 +180,9 @@ model User {
   notifications  Notification[]
   departmentMemberships UserDepartment[]
   attachments    TaskAttachment[]
+  chatParticipants ChatParticipant[]
+  chatMessages     ChatMessage[]
+  createdWebhooks  Webhook[]
 }
 
 model TaskAttachment {
@@ -183,4 +196,65 @@ model TaskAttachment {
   user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
 }
+
+enum ConversationType {
+  DIRECT
+  GROUP
+  TASK
+  DEPARTMENT
+}
+
+model Conversation {
+  id           Int               @id @default(autoincrement())
+  type         ConversationType  @default(DIRECT)
+  title        String?
+  taskId       Int?
+  departmentId Int?
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  participants ChatParticipant[]
+  messages     ChatMessage[]
+}
+
+model ChatParticipant {
+  id             Int          @id @default(autoincrement())
+  conversationId Int
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  userId         Int
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lastReadAt     DateTime     @default(now())
+  createdAt      DateTime     @default(now())
+
+  @@unique([conversationId, userId])
+}
+
+model ChatMessage {
+  id             Int          @id @default(autoincrement())
+  conversationId Int
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  senderId       Int
+  sender         User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  content        String
+  attachments    String?
+  replyToId      Int?
+  replyTo        ChatMessage? @relation("ReplyTo", fields: [replyToId], references: [id], onDelete: SetNull)
+  replies        ChatMessage[] @relation("ReplyTo")
+  isDeleted      Boolean      @default(false)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+
+model Webhook {
+  id          Int      @id @default(autoincrement())
+  name        String
+  targetUrl   String
+  secret      String?
+  events      String
+  isActive    Boolean  @default(true)
+  createdById Int
+  createdBy   User     @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
 

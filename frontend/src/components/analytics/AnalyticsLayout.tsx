@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 
 const tabs = [
   { key: 'reports', label: 'گزارشات عمومی', roles: ['CEO', 'HR_MANAGER', 'TECHNICAL_MANAGER', 'STRATEGY_MANAGER', 'DEPARTMENT_MANAGER'] },
+  { key: 'visual', label: 'تحلیل بصری', roles: ['CEO', 'HR_MANAGER', 'TECHNICAL_MANAGER', 'STRATEGY_MANAGER', 'DEPARTMENT_MANAGER'] },
   { key: 'technical', label: 'تحلیل فنی', roles: ['CEO', 'HR_MANAGER', 'TECHNICAL_MANAGER', 'STRATEGY_MANAGER', 'DEPARTMENT_MANAGER'] },
   { key: 'scrum', label: 'اسکرام و ظرفیت', roles: ['CEO', 'HR_MANAGER', 'TECHNICAL_MANAGER', 'STRATEGY_MANAGER', 'DEPARTMENT_MANAGER'] },
   { key: 'gantt', label: 'نمودار گانت', roles: ['CEO', 'HR_MANAGER', 'TECHNICAL_MANAGER', 'STRATEGY_MANAGER', 'DEPARTMENT_MANAGER'] },
