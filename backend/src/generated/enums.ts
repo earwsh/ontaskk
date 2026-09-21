@@ -12,7 +12,7 @@
 export const Role = {
   CEO: 'CEO',
   DEPARTMENT_MANAGER: 'DEPARTMENT_MANAGER',
-  HR_MANAGER: 'HR_MANAGER',
+  INTERNAL_MANAGER: 'INTERNAL_MANAGER',
   TECHNICAL_MANAGER: 'TECHNICAL_MANAGER',
   STRATEGY_MANAGER: 'STRATEGY_MANAGER',
   EMPLOYEE: 'EMPLOYEE',
@@ -25,11 +25,41 @@ export type Role = (typeof Role)[keyof typeof Role]
 export const TaskStatus = {
   TODO: 'TODO',
   IN_PROGRESS: 'IN_PROGRESS',
+  PENDING_QC: 'PENDING_QC',
   PENDING_APPROVAL: 'PENDING_APPROVAL',
   DONE: 'DONE'
 } as const
 
 export type TaskStatus = (typeof TaskStatus)[keyof typeof TaskStatus]
+
+
+export const RejectionCategory = {
+  CONTENT: 'CONTENT',
+  DESIGN: 'DESIGN',
+  BRIEF_MISMATCH: 'BRIEF_MISMATCH',
+  INCOMPLETE: 'INCOMPLETE',
+  WEAK_REPORT: 'WEAK_REPORT',
+  TIMING: 'TIMING',
+  OTHER: 'OTHER'
+} as const
+
+export type RejectionCategory = (typeof RejectionCategory)[keyof typeof RejectionCategory]
+
+
+export const ReviewStage = {
+  QC: 'QC',
+  APPROVAL: 'APPROVAL'
+} as const
+
+export type ReviewStage = (typeof ReviewStage)[keyof typeof ReviewStage]
+
+
+export const StorageProvider = {
+  LOCAL: 'LOCAL',
+  GOOGLE_DRIVE: 'GOOGLE_DRIVE'
+} as const
+
+export type StorageProvider = (typeof StorageProvider)[keyof typeof StorageProvider]
 
 
 export const ConversationType = {
@@ -40,3 +70,74 @@ export const ConversationType = {
 } as const
 
 export type ConversationType = (typeof ConversationType)[keyof typeof ConversationType]
+
+
+export const TicketStatus = {
+  OPEN: 'OPEN',
+  IN_PROGRESS: 'IN_PROGRESS',
+  RESOLVED: 'RESOLVED',
+  CLOSED: 'CLOSED'
+} as const
+
+export type TicketStatus = (typeof TicketStatus)[keyof typeof TicketStatus]
+
+
+export const TicketPriority = {
+  LOW: 'LOW',
+  NORMAL: 'NORMAL',
+  HIGH: 'HIGH',
+  CRITICAL: 'CRITICAL'
+} as const
+
+export type TicketPriority = (typeof TicketPriority)[keyof typeof TicketPriority]
+
+
+export const InvoiceStatus = {
+  DRAFT: 'DRAFT',
+  ISSUED: 'ISSUED',
+  PAID: 'PAID',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type InvoiceStatus = (typeof InvoiceStatus)[keyof typeof InvoiceStatus]
+
+
+export const FinancialRequestType = {
+  ADVANCE: 'ADVANCE',
+  LOAN: 'LOAN',
+  PETTY_CASH: 'PETTY_CASH'
+} as const
+
+export type FinancialRequestType = (typeof FinancialRequestType)[keyof typeof FinancialRequestType]
+
+
+export const AdvanceStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  PAID: 'PAID',
+  REJECTED: 'REJECTED',
+  RECOVERED: 'RECOVERED'
+} as const
+
+export type AdvanceStatus = (typeof AdvanceStatus)[keyof typeof AdvanceStatus]
+
+
+export const PayrollPeriodStatus = {
+  DRAFT: 'DRAFT',
+  PROCESSING: 'PROCESSING',
+  APPROVED: 'APPROVED',
+  PAID: 'PAID',
+  CLOSED: 'CLOSED'
+} as const
+
+export type PayrollPeriodStatus = (typeof PayrollPeriodStatus)[keyof typeof PayrollPeriodStatus]
+
+
+export const PayslipStatus = {
+  DRAFT: 'DRAFT',
+  PENDING_APPROVAL: 'PENDING_APPROVAL',
+  APPROVED: 'APPROVED',
+  PAID: 'PAID'
+} as const
+
+export type PayslipStatus = (typeof PayslipStatus)[keyof typeof PayslipStatus]

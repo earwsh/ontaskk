@@ -25,7 +25,7 @@ router.post('/register', async (req: Request, res: Response) => {
       },
       include: { departmentMemberships: { include: { department: true } } },
     });
-    const orgWideRoles = ['CEO', 'TECHNICAL_MANAGER', 'HR_MANAGER', 'STRATEGY_MANAGER'];
+    const orgWideRoles = ['CEO', 'TECHNICAL_MANAGER', 'INTERNAL_MANAGER', 'STRATEGY_MANAGER'];
     if (orgWideRoles.includes(role) && departmentIds?.length) {
       const allDepts = await prisma.department.findMany({ select: { id: true } });
       for (const dept of allDepts) {

@@ -1,4 +1,5 @@
 import { PrismaClient } from '../../generated/client';
+import { isTaskOverdue } from '../../lib/deadline';
 
 interface ScopeFilter {
   userId: number;
@@ -14,7 +15,7 @@ async function getTaskFilter(prisma: PrismaClient, scope: ScopeFilter) {
 
   if (departmentId) return { project: { departmentId } };
 
-  if (['CEO', 'HR_MANAGER'].includes(userRole)) return {};
+  if (['CEO', 'INTERNAL_MANAGER'].includes(userRole)) return {};
   if (userRole === 'TECHNICAL_MANAGER' || userRole === 'STRATEGY_MANAGER') return {};
 
   if (userRole === 'DEPARTMENT_MANAGER') {
@@ -47,18 +48,8 @@ export async function buildHealthContext(prisma: PrismaClient, scope: ScopeFilte
   const inProgress = tasks.filter((t) => t.status === 'IN_PROGRESS').length;
   const todo = tasks.filter((t) => t.status === 'TODO').length;
   const pending = tasks.filter((t) => t.status === 'PENDING_APPROVAL').length;
-  const overdue = tasks.filter((t) => {
-    if (!t.deadline || t.status === 'DONE') return false;
-    const d = new Date(t.deadline);
-    const deadlineEnd = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 23, 59, 59, 999);
-    return deadlineEnd.getTime() < Date.now();
-  }).length;
-  const blocked = tasks.filter((t) => {
-    if (!t.deadline || t.status !== 'TODO') return false;
-    const d = new Date(t.deadline);
-    const deadlineEnd = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 23, 59, 59, 999);
-    return deadlineEnd.getTime() < Date.now();
-  }).length;
+  const overdue = tasks.filter((t) => isTaskOverdue(t.deadline, t.status)).length;
+  const blocked = tasks.filter((t) => t.status === 'TODO' && isTaskOverdue(t.deadline, t.status)).length;
 
   const assigneeCounts: Record<number, number> = {};
   for (const t of tasks) {
@@ -129,11 +120,11 @@ export async function buildWorkloadContext(prisma: PrismaClient, scope: ScopeFil
     const memberUsers = memberEntries.map((e: any) => e.user);
     const memberIds = memberUsers.map((u: any) => u.id);
     const orgWideUsers = await prisma.user.findMany({
-      where: { role: { in: ['CEO', 'TECHNICAL_MANAGER', 'HR_MANAGER', 'STRATEGY_MANAGER'] }, id: { notIn: memberIds } },
+      where: { role: { in: ['CEO', 'TECHNICAL_MANAGER', 'INTERNAL_MANAGER', 'STRATEGY_MANAGER'] }, id: { notIn: memberIds } },
       select: { id: true, firstName: true, lastName: true, role: true },
     });
     users = [...memberUsers, ...orgWideUsers];
-  } else if (['CEO', 'HR_MANAGER', 'TECHNICAL_MANAGER'].includes(userRole)) {
+  } else if (['CEO', 'INTERNAL_MANAGER', 'TECHNICAL_MANAGER'].includes(userRole)) {
     users = await prisma.user.findMany({ select: { id: true, firstName: true, lastName: true, role: true, departmentMemberships: { include: { department: { select: { name: true } } } } } });
   } else if (userRole === 'DEPARTMENT_MANAGER') {
     const dept = await prisma.department.findFirst({ where: { managerId: userId } });
@@ -145,7 +136,7 @@ export async function buildWorkloadContext(prisma: PrismaClient, scope: ScopeFil
     const memberUsers = memberEntries.map((e: any) => e.user);
     const memberIds = memberUsers.map((u: any) => u.id);
     const orgWideUsers = await prisma.user.findMany({
-      where: { role: { in: ['CEO', 'TECHNICAL_MANAGER', 'HR_MANAGER', 'STRATEGY_MANAGER'] }, id: { notIn: memberIds } },
+      where: { role: { in: ['CEO', 'TECHNICAL_MANAGER', 'INTERNAL_MANAGER', 'STRATEGY_MANAGER'] }, id: { notIn: memberIds } },
       select: { id: true, firstName: true, lastName: true, role: true },
     });
     users = [...memberUsers, ...orgWideUsers];
@@ -180,18 +171,8 @@ export async function buildDailyContext(prisma: PrismaClient, scope: ScopeFilter
 
   const completed = tasks.filter((t) => t.status === 'DONE' && t.updatedAt >= today).length;
   const created = tasks.filter((t) => t.createdAt >= today).length;
-  const overdue = tasks.filter((t) => {
-    if (!t.deadline || t.status === 'DONE') return false;
-    const d = new Date(t.deadline);
-    const deadlineEnd = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 23, 59, 59, 999);
-    return deadlineEnd.getTime() < today.getTime();
-  }).length;
-  const blocked = tasks.filter((t) => {
-    if (!t.deadline || t.status !== 'TODO') return false;
-    const d = new Date(t.deadline);
-    const deadlineEnd = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 23, 59, 59, 999);
-    return deadlineEnd.getTime() < today.getTime();
-  }).length;
+  const overdue = tasks.filter((t) => isTaskOverdue(t.deadline, t.status)).length;
+  const blocked = tasks.filter((t) => t.status === 'TODO' && isTaskOverdue(t.deadline, t.status)).length;
 
   const recent = tasks.slice(0, 20).map((t) => `- "${t.title}" [${t.status}] (${t.project?.name || 'بدون پروژه'})${t.deadline ? ` ددلاین: ${toShamsi(t.deadline)}` : ''}`).join('\n');
 
@@ -223,12 +204,7 @@ export async function buildWeeklyContext(prisma: PrismaClient, scope: ScopeFilte
   const weekTasks = tasks.filter((t) => t.updatedAt >= weekStart && t.updatedAt <= weekEnd);
   const completed = weekTasks.filter((t) => t.status === 'DONE').length;
   const newTasks = tasks.filter((t) => t.createdAt >= weekStart && t.createdAt <= weekEnd).length;
-  const overdue = tasks.filter((t) => {
-    if (!t.deadline || t.status === 'DONE') return false;
-    const d = new Date(t.deadline);
-    const deadlineEnd = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 23, 59, 59, 999);
-    return deadlineEnd.getTime() < now.getTime();
-  }).length;
+  const overdue = tasks.filter((t) => isTaskOverdue(t.deadline, t.status)).length;
   const completionRate = tasks.length > 0 ? Math.round(tasks.filter((t) => t.status === 'DONE').length / tasks.length * 100) : 0;
 
   const performerCount: Record<string, number> = {};
@@ -265,7 +241,7 @@ export async function buildSearchContext(prisma: PrismaClient, userId: number, u
   let users: any[];
   let departments: any[];
 
-  if (['CEO', 'HR_MANAGER'].includes(userRole)) {
+  if (['CEO', 'INTERNAL_MANAGER'].includes(userRole)) {
     tasks = await prisma.task.findMany({ include: { project: { select: { name: true } }, assignees: { include: { user: { select: { firstName: true, lastName: true } } } } }, take: 200 });
     projects = await prisma.project.findMany({ take: 50 });
     users = await prisma.user.findMany({ select: { id: true, firstName: true, lastName: true, role: true, email: true }, take: 50 });
@@ -280,7 +256,7 @@ export async function buildSearchContext(prisma: PrismaClient, userId: number, u
       where: {
         OR: [
           { departmentMemberships: { some: { departmentId: dept.id } } },
-          { role: { in: ['CEO', 'TECHNICAL_MANAGER', 'HR_MANAGER', 'STRATEGY_MANAGER'] } },
+          { role: { in: ['CEO', 'TECHNICAL_MANAGER', 'INTERNAL_MANAGER', 'STRATEGY_MANAGER'] } },
         ],
       },
       select: { id: true, firstName: true, lastName: true, role: true, email: true }, take: 50,
@@ -339,12 +315,7 @@ export async function buildExecutiveContext(prisma: PrismaClient, scope: ScopeFi
   });
 
   const doneTasks = tasks.filter((t) => t.status === 'DONE').length;
-  const overdueTasks = tasks.filter((t) => {
-    if (!t.deadline || t.status === 'DONE') return false;
-    const d = new Date(t.deadline);
-    const deadlineEnd = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 23, 59, 59, 999);
-    return deadlineEnd.getTime() < Date.now();
-  }).length;
+  const overdueTasks = tasks.filter((t) => isTaskOverdue(t.deadline, t.status)).length;
 
   const assigneeLoad: Record<string, number> = {};
   for (const t of tasks) {
@@ -356,7 +327,7 @@ export async function buildExecutiveContext(prisma: PrismaClient, scope: ScopeFi
   const overloaded = Object.entries(assigneeLoad).filter(([, count]) => count > 10).length;
 
   const criticalTasks = tasks
-    .filter((t) => t.deadline && t.status !== 'DONE' && new Date(t.deadline) < new Date())
+    .filter((t) => isTaskOverdue(t.deadline, t.status))
     .slice(0, 10)
     .map((t) => `- "${t.title}" (پروژه: ${t.project?.name || 'بدون پروژه'}) ددلاین گذشته: ${t.deadline ? toShamsi(t.deadline) : ''}`);
 
@@ -433,7 +404,7 @@ function buildTaskContextFromTasks(tasks: any[]): string {
 
   for (const t of tasks) {
     statusCount[t.status] = (statusCount[t.status] || 0) + 1;
-    if (t.deadline && t.status !== 'DONE' && new Date(t.deadline) < new Date()) {
+    if (isTaskOverdue(t.deadline, t.status)) {
       overdue++;
     }
     lines.push(
@@ -467,7 +438,7 @@ export async function buildSummaryContext(prisma: PrismaClient, scope: ScopeFilt
   let tasks: any[];
   let scopeLabel = '';
 
-  if (['CEO', 'HR_MANAGER'].includes(userRole)) {
+  if (['CEO', 'INTERNAL_MANAGER'].includes(userRole)) {
     tasks = await prisma.task.findMany({ include: { project: { select: { name: true } } } });
     scopeLabel = 'کل سازمان';
   } else if (userRole === 'TECHNICAL_MANAGER' || userRole === 'STRATEGY_MANAGER') {
@@ -491,7 +462,7 @@ export async function buildRecommendationsContext(prisma: PrismaClient, scope: S
   const { userId, userRole } = scope;
   let tasks: any[];
 
-  if (['CEO', 'HR_MANAGER'].includes(userRole)) {
+  if (['CEO', 'INTERNAL_MANAGER'].includes(userRole)) {
     tasks = await prisma.task.findMany({
       include: { project: { select: { name: true } } },
       orderBy: { createdAt: 'desc' },
@@ -530,7 +501,7 @@ export async function buildDashboardContext(prisma: PrismaClient, scope: ScopeFi
   let reports: any[];
   let scopeLabel = '';
 
-  if (['CEO', 'HR_MANAGER'].includes(userRole)) {
+  if (['CEO', 'INTERNAL_MANAGER'].includes(userRole)) {
     tasks = await prisma.task.findMany({
       include: { project: { select: { name: true, department: { select: { name: true } } } }, assignees: { include: { user: { select: { firstName: true, lastName: true } } } } }
     });
@@ -562,7 +533,7 @@ export async function buildDashboardContext(prisma: PrismaClient, scope: ScopeFi
     const memberUsers = memberEntries.map((e: any) => e.user);
     const memberIds = memberUsers.map((u: any) => u.id);
     const orgWideUsers = await prisma.user.findMany({
-      where: { role: { in: ['CEO', 'TECHNICAL_MANAGER', 'HR_MANAGER', 'STRATEGY_MANAGER'] }, id: { notIn: memberIds } },
+      where: { role: { in: ['CEO', 'TECHNICAL_MANAGER', 'INTERNAL_MANAGER', 'STRATEGY_MANAGER'] }, id: { notIn: memberIds } },
       select: { id: true, firstName: true, lastName: true, role: true },
     });
     users = [...memberUsers, ...orgWideUsers];
@@ -575,12 +546,7 @@ export async function buildDashboardContext(prisma: PrismaClient, scope: ScopeFi
   const taskStats = {
     total: tasks.length,
     byStatus: tasks.reduce((acc: any, t: any) => { acc[t.status] = (acc[t.status] || 0) + 1; return acc; }, {}),
-    overdue: tasks.filter((t: any) => {
-      if (!t.deadline || t.status === 'DONE') return false;
-      const d = new Date(t.deadline);
-      const deadlineEnd = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 23, 59, 59, 999);
-      return deadlineEnd.getTime() < Date.now();
-    }).length,
+    overdue: tasks.filter((t: any) => isTaskOverdue(t.deadline, t.status)).length,
     byPriority: tasks.reduce((acc: any, t: any) => { acc[t.priority] = (acc[t.priority] || 0) + 1; return acc; }, {}),
   };
 

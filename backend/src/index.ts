@@ -16,16 +16,19 @@ import fs from 'fs';
 import http from 'http';
 import chatRoutes from './routes/chat';
 import webhookRoutes from './routes/webhooks';
+import formRoutes from './routes/forms';
+import storageRoutes from './routes/storage';
+import ticketRoutes from './routes/tickets';
+import invoiceRoutes from './routes/invoices';
+import payrollRoutes from './routes/payroll';
 import { initSocketIO } from './lib/socket';
 import { initRecurringTasksScheduler } from './services/recurringTasks';
+import { uploadsDir, ensureUploadsDir } from './lib/uploads';
 
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-const uploadsDir = path.resolve(process.cwd(), 'uploads');
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true });
-}
+ensureUploadsDir();
 
 app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
@@ -42,6 +45,13 @@ app.use('/api/calendar', calendarRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/webhooks', webhookRoutes);
+// Public ingest lives under /api/forms/submit; its own tighter body cap is
+// applied here so an unauthenticated caller can't push a 100kb payload.
+app.use('/api/forms', express.json({ limit: '64kb' }), formRoutes);
+app.use('/api/storage', storageRoutes);
+app.use('/api/tickets', ticketRoutes);
+app.use('/api/invoices', invoiceRoutes);
+app.use('/api/finance', payrollRoutes);
 
 app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok' });
@@ -50,7 +60,7 @@ app.get('/api/health', (_req, res) => {
 const httpServer = http.createServer(app);
 initSocketIO(httpServer);
 
-httpServer.listen(PORT, () => {
+httpServer.listen(Number(PORT), '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
   initRecurringTasksScheduler();
 });

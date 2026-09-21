@@ -1,14 +1,20 @@
 import { Router, Response } from 'express';
 import { authenticate, authorize, AuthRequest } from '../middleware/auth';
 import prisma from '../lib/prisma';
+import { NOT_TEMPLATE } from '../services/recurringTasks';
+import { managedDepartmentIds, managesDepartment } from '../lib/departments';
 
 const router = Router();
 
 const projectInclude = {
   department: { select: { id: true, name: true } },
   createdBy: { select: { id: true, firstName: true, lastName: true } },
+  qc: { select: { id: true, firstName: true, lastName: true, email: true } },
   _count: { select: { tasks: true, members: true } },
 };
+
+/** Only these roles may name (or clear) a project's QC reviewer. */
+const QC_ASSIGNERS = ['CEO', 'TECHNICAL_MANAGER', 'STRATEGY_MANAGER'];
 
 router.get('/', authenticate, async (req: AuthRequest, res: Response) => {
   try {
@@ -20,13 +26,28 @@ router.get('/', authenticate, async (req: AuthRequest, res: Response) => {
         where: { userId: user.id },
         select: { projectId: true },
       });
-      where = { id: { in: projectIds.map((p) => p.projectId) } };
+      // Being named QC does not make someone a project member, so without
+      // this the reviewer cannot see the very project they must review.
+      where = {
+        OR: [
+          { id: { in: projectIds.map((p) => p.projectId) } },
+          { qcId: user.id },
+        ],
+      };
     } else if (user.role === 'DEPARTMENT_MANAGER') {
-      const managedDept = await prisma.department.findFirst({
-        where: { managerId: user.id },
-      });
-      if (managedDept) {
-        where = { departmentId: managedDept.id };
+      const deptIds = await managedDepartmentIds(user.id);
+      if (deptIds.length > 0) {
+        // A QC reviewer is deliberately someone outside the project, which in
+        // practice means outside the department too. Scoping a department
+        // manager to their own department alone hid the very project they were
+        // assigned to review — and because the sidebar decides whether to show
+        // the QC entry from this list, the whole section vanished for them.
+        where = {
+          OR: [
+            { departmentId: { in: deptIds } },
+            { qcId: user.id },
+          ],
+        };
       }
     }
 
@@ -50,6 +71,7 @@ router.get('/:id', authenticate, async (req: AuthRequest, res: Response) => {
       include: {
         ...projectInclude,
         tasks: {
+          where: NOT_TEMPLATE,
           include: {
             assignees: {
               include: { user: { select: { id: true, firstName: true, lastName: true } } },
@@ -88,10 +110,7 @@ router.post('/', authenticate, async (req: AuthRequest, res: Response) => {
     }
 
     if (user.role === 'DEPARTMENT_MANAGER') {
-      const managedDept = await prisma.department.findFirst({
-        where: { managerId: user.id },
-      });
-      if (!managedDept || managedDept.id !== departmentId) {
+      if (!(await managesDepartment(user.id, departmentId))) {
         return res.status(403).json({ error: 'You can only create projects in your department' });
       }
     } else if (user.role !== 'TECHNICAL_MANAGER' && user.role !== 'STRATEGY_MANAGER' && user.role !== 'CEO') {
@@ -103,7 +122,7 @@ router.post('/', authenticate, async (req: AuthRequest, res: Response) => {
       include: projectInclude,
     });
 
-    const orgWideRoles: any[] = ['CEO', 'TECHNICAL_MANAGER', 'STRATEGY_MANAGER', 'HR_MANAGER'];
+    const orgWideRoles: any[] = ['CEO', 'TECHNICAL_MANAGER', 'STRATEGY_MANAGER', 'INTERNAL_MANAGER'];
     const orgWideUsers = await prisma.user.findMany({
       where: { role: { in: orgWideRoles } },
       select: { id: true },
@@ -145,10 +164,7 @@ router.put('/:id', authenticate, async (req: AuthRequest, res: Response) => {
     }
 
     if (user.role === 'DEPARTMENT_MANAGER') {
-      const managedDept = await prisma.department.findFirst({
-        where: { managerId: user.id },
-      });
-      if (!managedDept || managedDept.id !== project.departmentId) {
+      if (!(await managesDepartment(user.id, project.departmentId))) {
         return res.status(403).json({ error: 'Access denied' });
       }
     } else if (user.role !== 'TECHNICAL_MANAGER' && user.role !== 'STRATEGY_MANAGER' && user.role !== 'CEO') {
@@ -214,8 +230,7 @@ router.post('/:id/members', authenticate, async (req: AuthRequest, res: Response
     }
 
     if (user.role === 'DEPARTMENT_MANAGER') {
-      const managedDept = await prisma.department.findFirst({ where: { managerId: user.id } });
-      if (!managedDept || managedDept.id !== project.departmentId) {
+      if (!(await managesDepartment(user.id, project.departmentId))) {
         return res.status(403).json({ error: 'Access denied' });
       }
     } else if (user.role !== 'TECHNICAL_MANAGER' && user.role !== 'STRATEGY_MANAGER' && user.role !== 'CEO') {
@@ -260,8 +275,7 @@ router.delete('/:id/members/:userId', authenticate, async (req: AuthRequest, res
     }
 
     if (user.role === 'DEPARTMENT_MANAGER') {
-      const managedDept = await prisma.department.findFirst({ where: { managerId: user.id } });
-      if (!managedDept || managedDept.id !== project.departmentId) {
+      if (!(await managesDepartment(user.id, project.departmentId))) {
         return res.status(403).json({ error: 'Access denied' });
       }
     } else if (user.role !== 'TECHNICAL_MANAGER' && user.role !== 'STRATEGY_MANAGER' && user.role !== 'CEO') {
@@ -275,6 +289,67 @@ router.delete('/:id/members/:userId', authenticate, async (req: AuthRequest, res
   } catch (err) {
     console.error('remove member error:', err);
     res.status(500).json({ error: 'Failed to remove member' });
+  }
+});
+
+router.post('/:id/qc', authenticate, async (req: AuthRequest, res: Response) => {
+  try {
+    const user = req.user!;
+    if (!QC_ASSIGNERS.includes(user.role)) {
+      return res.status(403).json({ error: 'فقط مدیرعامل، مدیر فنی و مدیر استراتژی می‌توانند مسئول کنترل کیفیت تعیین کنند' });
+    }
+    const id = parseInt(req.params.id as string);
+    const userId = parseInt(req.body.userId);
+    if (isNaN(userId)) return res.status(400).json({ error: 'Invalid user ID' });
+
+    const [project, target] = await Promise.all([
+      prisma.project.findUnique({ where: { id } }),
+      prisma.user.findUnique({ where: { id: userId }, select: { id: true, role: true } }),
+    ]);
+    if (!project) return res.status(404).json({ error: 'Project not found' });
+    if (!target) return res.status(404).json({ error: 'User not found' });
+    // A customer has no business reviewing internal work.
+    if (target.role === 'CUSTOMER') {
+      return res.status(400).json({ error: 'کاربر با نقش مشتری نمی‌تواند مسئول کنترل کیفیت باشد' });
+    }
+
+    const updated = await prisma.project.update({
+      where: { id },
+      data: { qcId: userId },
+      include: projectInclude,
+    });
+    res.json(updated);
+  } catch (err) {
+    console.error('set project qc error:', err);
+    res.status(500).json({ error: 'Failed to set QC reviewer' });
+  }
+});
+
+router.delete('/:id/qc', authenticate, async (req: AuthRequest, res: Response) => {
+  try {
+    const user = req.user!;
+    if (!QC_ASSIGNERS.includes(user.role)) {
+      return res.status(403).json({ error: 'دسترسی ندارید' });
+    }
+    const id = parseInt(req.params.id as string);
+    const project = await prisma.project.findUnique({ where: { id } });
+    if (!project) return res.status(404).json({ error: 'Project not found' });
+
+    // Tasks already waiting on QC would strand, so release them to approval.
+    await prisma.task.updateMany({
+      where: { projectId: id, status: 'PENDING_QC' },
+      data: { status: 'PENDING_APPROVAL', qcNote: 'مسئول کنترل کیفیت پروژه برداشته شد' },
+    });
+
+    const updated = await prisma.project.update({
+      where: { id },
+      data: { qcId: null },
+      include: projectInclude,
+    });
+    res.json(updated);
+  } catch (err) {
+    console.error('remove project qc error:', err);
+    res.status(500).json({ error: 'Failed to remove QC reviewer' });
   }
 });
 

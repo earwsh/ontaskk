@@ -45,6 +45,7 @@ export type UserMinAggregateOutputType = {
   startDate: Date | null
   nationalId: string | null
   position: string | null
+  avatarUrl: string | null
   role: $Enums.Role | null
   phone: string | null
   createdAt: Date | null
@@ -62,6 +63,7 @@ export type UserMaxAggregateOutputType = {
   startDate: Date | null
   nationalId: string | null
   position: string | null
+  avatarUrl: string | null
   role: $Enums.Role | null
   phone: string | null
   createdAt: Date | null
@@ -79,6 +81,7 @@ export type UserCountAggregateOutputType = {
   startDate: number
   nationalId: number
   position: number
+  avatarUrl: number
   role: number
   phone: number
   createdAt: number
@@ -106,6 +109,7 @@ export type UserMinAggregateInputType = {
   startDate?: true
   nationalId?: true
   position?: true
+  avatarUrl?: true
   role?: true
   phone?: true
   createdAt?: true
@@ -123,6 +127,7 @@ export type UserMaxAggregateInputType = {
   startDate?: true
   nationalId?: true
   position?: true
+  avatarUrl?: true
   role?: true
   phone?: true
   createdAt?: true
@@ -140,6 +145,7 @@ export type UserCountAggregateInputType = {
   startDate?: true
   nationalId?: true
   position?: true
+  avatarUrl?: true
   role?: true
   phone?: true
   createdAt?: true
@@ -244,6 +250,7 @@ export type UserGroupByOutputType = {
   startDate: Date | null
   nationalId: string | null
   position: string | null
+  avatarUrl: string | null
   role: $Enums.Role
   phone: string | null
   createdAt: Date
@@ -284,11 +291,12 @@ export type UserWhereInput = {
   startDate?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   nationalId?: Prisma.StringNullableFilter<"User"> | string | null
   position?: Prisma.StringNullableFilter<"User"> | string | null
+  avatarUrl?: Prisma.StringNullableFilter<"User"> | string | null
   role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
   phone?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
-  managedDept?: Prisma.XOR<Prisma.DepartmentNullableScalarRelationFilter, Prisma.DepartmentWhereInput> | null
+  managedDepts?: Prisma.DepartmentListRelationFilter
   projects?: Prisma.ProjectListRelationFilter
   taskAssignments?: Prisma.TaskAssigneeListRelationFilter
   createdTasks?: Prisma.TaskListRelationFilter
@@ -296,12 +304,27 @@ export type UserWhereInput = {
   taskReports?: Prisma.TaskReportListRelationFilter
   approvedTasks?: Prisma.TaskListRelationFilter
   approverTasks?: Prisma.TaskListRelationFilter
+  qcReviewedTasks?: Prisma.TaskListRelationFilter
+  qcProjects?: Prisma.ProjectListRelationFilter
   notifications?: Prisma.NotificationListRelationFilter
   departmentMemberships?: Prisma.UserDepartmentListRelationFilter
   attachments?: Prisma.TaskAttachmentListRelationFilter
   chatParticipants?: Prisma.ChatParticipantListRelationFilter
   chatMessages?: Prisma.ChatMessageListRelationFilter
   createdWebhooks?: Prisma.WebhookListRelationFilter
+  storageAccounts?: Prisma.StorageAccountListRelationFilter
+  subtasksAssigned?: Prisma.TaskSubtaskListRelationFilter
+  subtasksCompleted?: Prisma.TaskSubtaskListRelationFilter
+  rejectionsReceived?: Prisma.TaskRejectionListRelationFilter
+  rejectionsMade?: Prisma.TaskRejectionListRelationFilter
+  approvalsMade?: Prisma.TaskApprovalListRelationFilter
+  tickets?: Prisma.TicketListRelationFilter
+  createdInvoices?: Prisma.InvoiceListRelationFilter
+  financialProfile?: Prisma.XOR<Prisma.EmployeeFinancialProfileNullableScalarRelationFilter, Prisma.EmployeeFinancialProfileWhereInput> | null
+  userAdvances?: Prisma.PersonnelAdvanceListRelationFilter
+  approvedAdvances?: Prisma.PersonnelAdvanceListRelationFilter
+  approvedPayrolls?: Prisma.PayrollPeriodListRelationFilter
+  userPayslips?: Prisma.PayslipListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -315,11 +338,12 @@ export type UserOrderByWithRelationInput = {
   startDate?: Prisma.SortOrderInput | Prisma.SortOrder
   nationalId?: Prisma.SortOrderInput | Prisma.SortOrder
   position?: Prisma.SortOrderInput | Prisma.SortOrder
+  avatarUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   role?: Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  managedDept?: Prisma.DepartmentOrderByWithRelationInput
+  managedDepts?: Prisma.DepartmentOrderByRelationAggregateInput
   projects?: Prisma.ProjectOrderByRelationAggregateInput
   taskAssignments?: Prisma.TaskAssigneeOrderByRelationAggregateInput
   createdTasks?: Prisma.TaskOrderByRelationAggregateInput
@@ -327,12 +351,27 @@ export type UserOrderByWithRelationInput = {
   taskReports?: Prisma.TaskReportOrderByRelationAggregateInput
   approvedTasks?: Prisma.TaskOrderByRelationAggregateInput
   approverTasks?: Prisma.TaskOrderByRelationAggregateInput
+  qcReviewedTasks?: Prisma.TaskOrderByRelationAggregateInput
+  qcProjects?: Prisma.ProjectOrderByRelationAggregateInput
   notifications?: Prisma.NotificationOrderByRelationAggregateInput
   departmentMemberships?: Prisma.UserDepartmentOrderByRelationAggregateInput
   attachments?: Prisma.TaskAttachmentOrderByRelationAggregateInput
   chatParticipants?: Prisma.ChatParticipantOrderByRelationAggregateInput
   chatMessages?: Prisma.ChatMessageOrderByRelationAggregateInput
   createdWebhooks?: Prisma.WebhookOrderByRelationAggregateInput
+  storageAccounts?: Prisma.StorageAccountOrderByRelationAggregateInput
+  subtasksAssigned?: Prisma.TaskSubtaskOrderByRelationAggregateInput
+  subtasksCompleted?: Prisma.TaskSubtaskOrderByRelationAggregateInput
+  rejectionsReceived?: Prisma.TaskRejectionOrderByRelationAggregateInput
+  rejectionsMade?: Prisma.TaskRejectionOrderByRelationAggregateInput
+  approvalsMade?: Prisma.TaskApprovalOrderByRelationAggregateInput
+  tickets?: Prisma.TicketOrderByRelationAggregateInput
+  createdInvoices?: Prisma.InvoiceOrderByRelationAggregateInput
+  financialProfile?: Prisma.EmployeeFinancialProfileOrderByWithRelationInput
+  userAdvances?: Prisma.PersonnelAdvanceOrderByRelationAggregateInput
+  approvedAdvances?: Prisma.PersonnelAdvanceOrderByRelationAggregateInput
+  approvedPayrolls?: Prisma.PayrollPeriodOrderByRelationAggregateInput
+  userPayslips?: Prisma.PayslipOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -349,11 +388,12 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   birthDate?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   startDate?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   position?: Prisma.StringNullableFilter<"User"> | string | null
+  avatarUrl?: Prisma.StringNullableFilter<"User"> | string | null
   role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
   phone?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
-  managedDept?: Prisma.XOR<Prisma.DepartmentNullableScalarRelationFilter, Prisma.DepartmentWhereInput> | null
+  managedDepts?: Prisma.DepartmentListRelationFilter
   projects?: Prisma.ProjectListRelationFilter
   taskAssignments?: Prisma.TaskAssigneeListRelationFilter
   createdTasks?: Prisma.TaskListRelationFilter
@@ -361,12 +401,27 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   taskReports?: Prisma.TaskReportListRelationFilter
   approvedTasks?: Prisma.TaskListRelationFilter
   approverTasks?: Prisma.TaskListRelationFilter
+  qcReviewedTasks?: Prisma.TaskListRelationFilter
+  qcProjects?: Prisma.ProjectListRelationFilter
   notifications?: Prisma.NotificationListRelationFilter
   departmentMemberships?: Prisma.UserDepartmentListRelationFilter
   attachments?: Prisma.TaskAttachmentListRelationFilter
   chatParticipants?: Prisma.ChatParticipantListRelationFilter
   chatMessages?: Prisma.ChatMessageListRelationFilter
   createdWebhooks?: Prisma.WebhookListRelationFilter
+  storageAccounts?: Prisma.StorageAccountListRelationFilter
+  subtasksAssigned?: Prisma.TaskSubtaskListRelationFilter
+  subtasksCompleted?: Prisma.TaskSubtaskListRelationFilter
+  rejectionsReceived?: Prisma.TaskRejectionListRelationFilter
+  rejectionsMade?: Prisma.TaskRejectionListRelationFilter
+  approvalsMade?: Prisma.TaskApprovalListRelationFilter
+  tickets?: Prisma.TicketListRelationFilter
+  createdInvoices?: Prisma.InvoiceListRelationFilter
+  financialProfile?: Prisma.XOR<Prisma.EmployeeFinancialProfileNullableScalarRelationFilter, Prisma.EmployeeFinancialProfileWhereInput> | null
+  userAdvances?: Prisma.PersonnelAdvanceListRelationFilter
+  approvedAdvances?: Prisma.PersonnelAdvanceListRelationFilter
+  approvedPayrolls?: Prisma.PayrollPeriodListRelationFilter
+  userPayslips?: Prisma.PayslipListRelationFilter
 }, "id" | "email" | "nationalId">
 
 export type UserOrderByWithAggregationInput = {
@@ -380,6 +435,7 @@ export type UserOrderByWithAggregationInput = {
   startDate?: Prisma.SortOrderInput | Prisma.SortOrder
   nationalId?: Prisma.SortOrderInput | Prisma.SortOrder
   position?: Prisma.SortOrderInput | Prisma.SortOrder
+  avatarUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   role?: Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -405,6 +461,7 @@ export type UserScalarWhereWithAggregatesInput = {
   startDate?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   nationalId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   position?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  avatarUrl?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   role?: Prisma.EnumRoleWithAggregatesFilter<"User"> | $Enums.Role
   phone?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
@@ -421,11 +478,12 @@ export type UserCreateInput = {
   startDate?: Date | string | null
   nationalId?: string | null
   position?: string | null
+  avatarUrl?: string | null
   role?: $Enums.Role
   phone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  managedDept?: Prisma.DepartmentCreateNestedOneWithoutManagerInput
+  managedDepts?: Prisma.DepartmentCreateNestedManyWithoutManagerInput
   projects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
   taskAssignments?: Prisma.TaskAssigneeCreateNestedManyWithoutUserInput
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
@@ -433,12 +491,27 @@ export type UserCreateInput = {
   taskReports?: Prisma.TaskReportCreateNestedManyWithoutUserInput
   approvedTasks?: Prisma.TaskCreateNestedManyWithoutApprovedByInput
   approverTasks?: Prisma.TaskCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectCreateNestedManyWithoutQcInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
   attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
   chatParticipants?: Prisma.ChatParticipantCreateNestedManyWithoutUserInput
   chatMessages?: Prisma.ChatMessageCreateNestedManyWithoutSenderInput
   createdWebhooks?: Prisma.WebhookCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -452,11 +525,12 @@ export type UserUncheckedCreateInput = {
   startDate?: Date | string | null
   nationalId?: string | null
   position?: string | null
+  avatarUrl?: string | null
   role?: $Enums.Role
   phone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  managedDept?: Prisma.DepartmentUncheckedCreateNestedOneWithoutManagerInput
+  managedDepts?: Prisma.DepartmentUncheckedCreateNestedManyWithoutManagerInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskAssignments?: Prisma.TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
@@ -464,12 +538,27 @@ export type UserUncheckedCreateInput = {
   taskReports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutUserInput
   approvedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApprovedByInput
   approverTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutQcInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
   attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
   chatParticipants?: Prisma.ChatParticipantUncheckedCreateNestedManyWithoutUserInput
   chatMessages?: Prisma.ChatMessageUncheckedCreateNestedManyWithoutSenderInput
   createdWebhooks?: Prisma.WebhookUncheckedCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountUncheckedCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -482,11 +571,12 @@ export type UserUpdateInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  managedDept?: Prisma.DepartmentUpdateOneWithoutManagerNestedInput
+  managedDepts?: Prisma.DepartmentUpdateManyWithoutManagerNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
   taskAssignments?: Prisma.TaskAssigneeUpdateManyWithoutUserNestedInput
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
@@ -494,12 +584,27 @@ export type UserUpdateInput = {
   taskReports?: Prisma.TaskReportUpdateManyWithoutUserNestedInput
   approvedTasks?: Prisma.TaskUpdateManyWithoutApprovedByNestedInput
   approverTasks?: Prisma.TaskUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUpdateManyWithoutQcNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
   attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
   chatParticipants?: Prisma.ChatParticipantUpdateManyWithoutUserNestedInput
   chatMessages?: Prisma.ChatMessageUpdateManyWithoutSenderNestedInput
   createdWebhooks?: Prisma.WebhookUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -513,11 +618,12 @@ export type UserUncheckedUpdateInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  managedDept?: Prisma.DepartmentUncheckedUpdateOneWithoutManagerNestedInput
+  managedDepts?: Prisma.DepartmentUncheckedUpdateManyWithoutManagerNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskAssignments?: Prisma.TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -525,12 +631,27 @@ export type UserUncheckedUpdateInput = {
   taskReports?: Prisma.TaskReportUncheckedUpdateManyWithoutUserNestedInput
   approvedTasks?: Prisma.TaskUncheckedUpdateManyWithoutApprovedByNestedInput
   approverTasks?: Prisma.TaskUncheckedUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUncheckedUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUncheckedUpdateManyWithoutQcNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
   attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
   chatParticipants?: Prisma.ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
   chatMessages?: Prisma.ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   createdWebhooks?: Prisma.WebhookUncheckedUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUncheckedUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -544,6 +665,7 @@ export type UserCreateManyInput = {
   startDate?: Date | string | null
   nationalId?: string | null
   position?: string | null
+  avatarUrl?: string | null
   role?: $Enums.Role
   phone?: string | null
   createdAt?: Date | string
@@ -560,6 +682,7 @@ export type UserUpdateManyMutationInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -577,6 +700,7 @@ export type UserUncheckedUpdateManyInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -604,6 +728,7 @@ export type UserCountOrderByAggregateInput = {
   startDate?: Prisma.SortOrder
   nationalId?: Prisma.SortOrder
   position?: Prisma.SortOrder
+  avatarUrl?: Prisma.SortOrder
   role?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -625,6 +750,7 @@ export type UserMaxOrderByAggregateInput = {
   startDate?: Prisma.SortOrder
   nationalId?: Prisma.SortOrder
   position?: Prisma.SortOrder
+  avatarUrl?: Prisma.SortOrder
   role?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -642,6 +768,7 @@ export type UserMinOrderByAggregateInput = {
   startDate?: Prisma.SortOrder
   nationalId?: Prisma.SortOrder
   position?: Prisma.SortOrder
+  avatarUrl?: Prisma.SortOrder
   role?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -666,25 +793,31 @@ export type UserUpdateOneRequiredWithoutDepartmentMembershipsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutDepartmentMembershipsInput, Prisma.UserUpdateWithoutDepartmentMembershipsInput>, Prisma.UserUncheckedUpdateWithoutDepartmentMembershipsInput>
 }
 
-export type UserCreateNestedOneWithoutManagedDeptInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutManagedDeptInput, Prisma.UserUncheckedCreateWithoutManagedDeptInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutManagedDeptInput
+export type UserCreateNestedOneWithoutManagedDeptsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutManagedDeptsInput, Prisma.UserUncheckedCreateWithoutManagedDeptsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutManagedDeptsInput
   connect?: Prisma.UserWhereUniqueInput
 }
 
-export type UserUpdateOneWithoutManagedDeptNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutManagedDeptInput, Prisma.UserUncheckedCreateWithoutManagedDeptInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutManagedDeptInput
-  upsert?: Prisma.UserUpsertWithoutManagedDeptInput
+export type UserUpdateOneWithoutManagedDeptsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutManagedDeptsInput, Prisma.UserUncheckedCreateWithoutManagedDeptsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutManagedDeptsInput
+  upsert?: Prisma.UserUpsertWithoutManagedDeptsInput
   disconnect?: Prisma.UserWhereInput | boolean
   delete?: Prisma.UserWhereInput | boolean
   connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutManagedDeptInput, Prisma.UserUpdateWithoutManagedDeptInput>, Prisma.UserUncheckedUpdateWithoutManagedDeptInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutManagedDeptsInput, Prisma.UserUpdateWithoutManagedDeptsInput>, Prisma.UserUncheckedUpdateWithoutManagedDeptsInput>
 }
 
 export type UserCreateNestedOneWithoutProjectsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutProjectsInput, Prisma.UserUncheckedCreateWithoutProjectsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutProjectsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutQcProjectsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutQcProjectsInput, Prisma.UserUncheckedCreateWithoutQcProjectsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutQcProjectsInput
   connect?: Prisma.UserWhereUniqueInput
 }
 
@@ -694,6 +827,16 @@ export type UserUpdateOneRequiredWithoutProjectsNestedInput = {
   upsert?: Prisma.UserUpsertWithoutProjectsInput
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutProjectsInput, Prisma.UserUpdateWithoutProjectsInput>, Prisma.UserUncheckedUpdateWithoutProjectsInput>
+}
+
+export type UserUpdateOneWithoutQcProjectsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutQcProjectsInput, Prisma.UserUncheckedCreateWithoutQcProjectsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutQcProjectsInput
+  upsert?: Prisma.UserUpsertWithoutQcProjectsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutQcProjectsInput, Prisma.UserUpdateWithoutQcProjectsInput>, Prisma.UserUncheckedUpdateWithoutQcProjectsInput>
 }
 
 export type UserCreateNestedOneWithoutProjectMembershipsInput = {
@@ -719,6 +862,12 @@ export type UserCreateNestedOneWithoutApprovedTasksInput = {
 export type UserCreateNestedOneWithoutApproverTasksInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutApproverTasksInput, Prisma.UserUncheckedCreateWithoutApproverTasksInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutApproverTasksInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutQcReviewedTasksInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutQcReviewedTasksInput, Prisma.UserUncheckedCreateWithoutQcReviewedTasksInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutQcReviewedTasksInput
   connect?: Prisma.UserWhereUniqueInput
 }
 
@@ -748,6 +897,16 @@ export type UserUpdateOneWithoutApproverTasksNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutApproverTasksInput, Prisma.UserUpdateWithoutApproverTasksInput>, Prisma.UserUncheckedUpdateWithoutApproverTasksInput>
 }
 
+export type UserUpdateOneWithoutQcReviewedTasksNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutQcReviewedTasksInput, Prisma.UserUncheckedCreateWithoutQcReviewedTasksInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutQcReviewedTasksInput
+  upsert?: Prisma.UserUpsertWithoutQcReviewedTasksInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutQcReviewedTasksInput, Prisma.UserUpdateWithoutQcReviewedTasksInput>, Prisma.UserUncheckedUpdateWithoutQcReviewedTasksInput>
+}
+
 export type UserUpdateOneRequiredWithoutCreatedTasksNestedInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutCreatedTasksInput, Prisma.UserUncheckedCreateWithoutCreatedTasksInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutCreatedTasksInput
@@ -768,6 +927,38 @@ export type UserUpdateOneRequiredWithoutTaskAssignmentsNestedInput = {
   upsert?: Prisma.UserUpsertWithoutTaskAssignmentsInput
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutTaskAssignmentsInput, Prisma.UserUpdateWithoutTaskAssignmentsInput>, Prisma.UserUncheckedUpdateWithoutTaskAssignmentsInput>
+}
+
+export type UserCreateNestedOneWithoutSubtasksAssignedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSubtasksAssignedInput, Prisma.UserUncheckedCreateWithoutSubtasksAssignedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSubtasksAssignedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutSubtasksCompletedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSubtasksCompletedInput, Prisma.UserUncheckedCreateWithoutSubtasksCompletedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSubtasksCompletedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutSubtasksAssignedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSubtasksAssignedInput, Prisma.UserUncheckedCreateWithoutSubtasksAssignedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSubtasksAssignedInput
+  upsert?: Prisma.UserUpsertWithoutSubtasksAssignedInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSubtasksAssignedInput, Prisma.UserUpdateWithoutSubtasksAssignedInput>, Prisma.UserUncheckedUpdateWithoutSubtasksAssignedInput>
+}
+
+export type UserUpdateOneWithoutSubtasksCompletedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSubtasksCompletedInput, Prisma.UserUncheckedCreateWithoutSubtasksCompletedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSubtasksCompletedInput
+  upsert?: Prisma.UserUpsertWithoutSubtasksCompletedInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSubtasksCompletedInput, Prisma.UserUpdateWithoutSubtasksCompletedInput>, Prisma.UserUncheckedUpdateWithoutSubtasksCompletedInput>
 }
 
 export type UserCreateNestedOneWithoutTaskReportsInput = {
@@ -816,6 +1007,68 @@ export type UserUpdateOneRequiredWithoutAttachmentsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAttachmentsInput, Prisma.UserUpdateWithoutAttachmentsInput>, Prisma.UserUncheckedUpdateWithoutAttachmentsInput>
 }
 
+export type UserCreateNestedOneWithoutRejectionsReceivedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutRejectionsReceivedInput, Prisma.UserUncheckedCreateWithoutRejectionsReceivedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutRejectionsReceivedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutRejectionsMadeInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutRejectionsMadeInput, Prisma.UserUncheckedCreateWithoutRejectionsMadeInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutRejectionsMadeInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutRejectionsReceivedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutRejectionsReceivedInput, Prisma.UserUncheckedCreateWithoutRejectionsReceivedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutRejectionsReceivedInput
+  upsert?: Prisma.UserUpsertWithoutRejectionsReceivedInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutRejectionsReceivedInput, Prisma.UserUpdateWithoutRejectionsReceivedInput>, Prisma.UserUncheckedUpdateWithoutRejectionsReceivedInput>
+}
+
+export type UserUpdateOneWithoutRejectionsMadeNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutRejectionsMadeInput, Prisma.UserUncheckedCreateWithoutRejectionsMadeInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutRejectionsMadeInput
+  upsert?: Prisma.UserUpsertWithoutRejectionsMadeInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutRejectionsMadeInput, Prisma.UserUpdateWithoutRejectionsMadeInput>, Prisma.UserUncheckedUpdateWithoutRejectionsMadeInput>
+}
+
+export type UserCreateNestedOneWithoutApprovalsMadeInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutApprovalsMadeInput, Prisma.UserUncheckedCreateWithoutApprovalsMadeInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutApprovalsMadeInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutApprovalsMadeNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutApprovalsMadeInput, Prisma.UserUncheckedCreateWithoutApprovalsMadeInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutApprovalsMadeInput
+  upsert?: Prisma.UserUpsertWithoutApprovalsMadeInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutApprovalsMadeInput, Prisma.UserUpdateWithoutApprovalsMadeInput>, Prisma.UserUncheckedUpdateWithoutApprovalsMadeInput>
+}
+
+export type UserCreateNestedOneWithoutStorageAccountsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutStorageAccountsInput, Prisma.UserUncheckedCreateWithoutStorageAccountsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutStorageAccountsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutStorageAccountsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutStorageAccountsInput, Prisma.UserUncheckedCreateWithoutStorageAccountsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutStorageAccountsInput
+  upsert?: Prisma.UserUpsertWithoutStorageAccountsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutStorageAccountsInput, Prisma.UserUpdateWithoutStorageAccountsInput>, Prisma.UserUncheckedUpdateWithoutStorageAccountsInput>
+}
+
 export type UserCreateNestedOneWithoutChatParticipantsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutChatParticipantsInput, Prisma.UserUncheckedCreateWithoutChatParticipantsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutChatParticipantsInput
@@ -858,6 +1111,108 @@ export type UserUpdateOneRequiredWithoutCreatedWebhooksNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCreatedWebhooksInput, Prisma.UserUpdateWithoutCreatedWebhooksInput>, Prisma.UserUncheckedUpdateWithoutCreatedWebhooksInput>
 }
 
+export type UserCreateNestedOneWithoutTicketsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutTicketsInput, Prisma.UserUncheckedCreateWithoutTicketsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTicketsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutTicketsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutTicketsInput, Prisma.UserUncheckedCreateWithoutTicketsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTicketsInput
+  upsert?: Prisma.UserUpsertWithoutTicketsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutTicketsInput, Prisma.UserUpdateWithoutTicketsInput>, Prisma.UserUncheckedUpdateWithoutTicketsInput>
+}
+
+export type UserCreateNestedOneWithoutCreatedInvoicesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCreatedInvoicesInput, Prisma.UserUncheckedCreateWithoutCreatedInvoicesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCreatedInvoicesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutCreatedInvoicesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCreatedInvoicesInput, Prisma.UserUncheckedCreateWithoutCreatedInvoicesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCreatedInvoicesInput
+  upsert?: Prisma.UserUpsertWithoutCreatedInvoicesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCreatedInvoicesInput, Prisma.UserUpdateWithoutCreatedInvoicesInput>, Prisma.UserUncheckedUpdateWithoutCreatedInvoicesInput>
+}
+
+export type UserCreateNestedOneWithoutFinancialProfileInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutFinancialProfileInput, Prisma.UserUncheckedCreateWithoutFinancialProfileInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutFinancialProfileInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutFinancialProfileNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutFinancialProfileInput, Prisma.UserUncheckedCreateWithoutFinancialProfileInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutFinancialProfileInput
+  upsert?: Prisma.UserUpsertWithoutFinancialProfileInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutFinancialProfileInput, Prisma.UserUpdateWithoutFinancialProfileInput>, Prisma.UserUncheckedUpdateWithoutFinancialProfileInput>
+}
+
+export type UserCreateNestedOneWithoutUserAdvancesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutUserAdvancesInput, Prisma.UserUncheckedCreateWithoutUserAdvancesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutUserAdvancesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutApprovedAdvancesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutApprovedAdvancesInput, Prisma.UserUncheckedCreateWithoutApprovedAdvancesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutApprovedAdvancesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutUserAdvancesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutUserAdvancesInput, Prisma.UserUncheckedCreateWithoutUserAdvancesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutUserAdvancesInput
+  upsert?: Prisma.UserUpsertWithoutUserAdvancesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutUserAdvancesInput, Prisma.UserUpdateWithoutUserAdvancesInput>, Prisma.UserUncheckedUpdateWithoutUserAdvancesInput>
+}
+
+export type UserUpdateOneWithoutApprovedAdvancesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutApprovedAdvancesInput, Prisma.UserUncheckedCreateWithoutApprovedAdvancesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutApprovedAdvancesInput
+  upsert?: Prisma.UserUpsertWithoutApprovedAdvancesInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutApprovedAdvancesInput, Prisma.UserUpdateWithoutApprovedAdvancesInput>, Prisma.UserUncheckedUpdateWithoutApprovedAdvancesInput>
+}
+
+export type UserCreateNestedOneWithoutApprovedPayrollsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutApprovedPayrollsInput, Prisma.UserUncheckedCreateWithoutApprovedPayrollsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutApprovedPayrollsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutApprovedPayrollsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutApprovedPayrollsInput, Prisma.UserUncheckedCreateWithoutApprovedPayrollsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutApprovedPayrollsInput
+  upsert?: Prisma.UserUpsertWithoutApprovedPayrollsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutApprovedPayrollsInput, Prisma.UserUpdateWithoutApprovedPayrollsInput>, Prisma.UserUncheckedUpdateWithoutApprovedPayrollsInput>
+}
+
+export type UserCreateNestedOneWithoutUserPayslipsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutUserPayslipsInput, Prisma.UserUncheckedCreateWithoutUserPayslipsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutUserPayslipsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutUserPayslipsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutUserPayslipsInput, Prisma.UserUncheckedCreateWithoutUserPayslipsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutUserPayslipsInput
+  upsert?: Prisma.UserUpsertWithoutUserPayslipsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutUserPayslipsInput, Prisma.UserUpdateWithoutUserPayslipsInput>, Prisma.UserUncheckedUpdateWithoutUserPayslipsInput>
+}
+
 export type UserCreateWithoutDepartmentMembershipsInput = {
   email: string
   password: string
@@ -868,11 +1223,12 @@ export type UserCreateWithoutDepartmentMembershipsInput = {
   startDate?: Date | string | null
   nationalId?: string | null
   position?: string | null
+  avatarUrl?: string | null
   role?: $Enums.Role
   phone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  managedDept?: Prisma.DepartmentCreateNestedOneWithoutManagerInput
+  managedDepts?: Prisma.DepartmentCreateNestedManyWithoutManagerInput
   projects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
   taskAssignments?: Prisma.TaskAssigneeCreateNestedManyWithoutUserInput
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
@@ -880,11 +1236,26 @@ export type UserCreateWithoutDepartmentMembershipsInput = {
   taskReports?: Prisma.TaskReportCreateNestedManyWithoutUserInput
   approvedTasks?: Prisma.TaskCreateNestedManyWithoutApprovedByInput
   approverTasks?: Prisma.TaskCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectCreateNestedManyWithoutQcInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
   chatParticipants?: Prisma.ChatParticipantCreateNestedManyWithoutUserInput
   chatMessages?: Prisma.ChatMessageCreateNestedManyWithoutSenderInput
   createdWebhooks?: Prisma.WebhookCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutDepartmentMembershipsInput = {
@@ -898,11 +1269,12 @@ export type UserUncheckedCreateWithoutDepartmentMembershipsInput = {
   startDate?: Date | string | null
   nationalId?: string | null
   position?: string | null
+  avatarUrl?: string | null
   role?: $Enums.Role
   phone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  managedDept?: Prisma.DepartmentUncheckedCreateNestedOneWithoutManagerInput
+  managedDepts?: Prisma.DepartmentUncheckedCreateNestedManyWithoutManagerInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskAssignments?: Prisma.TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
@@ -910,11 +1282,26 @@ export type UserUncheckedCreateWithoutDepartmentMembershipsInput = {
   taskReports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutUserInput
   approvedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApprovedByInput
   approverTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutQcInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
   chatParticipants?: Prisma.ChatParticipantUncheckedCreateNestedManyWithoutUserInput
   chatMessages?: Prisma.ChatMessageUncheckedCreateNestedManyWithoutSenderInput
   createdWebhooks?: Prisma.WebhookUncheckedCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountUncheckedCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutDepartmentMembershipsInput = {
@@ -943,11 +1330,12 @@ export type UserUpdateWithoutDepartmentMembershipsInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  managedDept?: Prisma.DepartmentUpdateOneWithoutManagerNestedInput
+  managedDepts?: Prisma.DepartmentUpdateManyWithoutManagerNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
   taskAssignments?: Prisma.TaskAssigneeUpdateManyWithoutUserNestedInput
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
@@ -955,11 +1343,26 @@ export type UserUpdateWithoutDepartmentMembershipsInput = {
   taskReports?: Prisma.TaskReportUpdateManyWithoutUserNestedInput
   approvedTasks?: Prisma.TaskUpdateManyWithoutApprovedByNestedInput
   approverTasks?: Prisma.TaskUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUpdateManyWithoutQcNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
   chatParticipants?: Prisma.ChatParticipantUpdateManyWithoutUserNestedInput
   chatMessages?: Prisma.ChatMessageUpdateManyWithoutSenderNestedInput
   createdWebhooks?: Prisma.WebhookUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDepartmentMembershipsInput = {
@@ -973,11 +1376,12 @@ export type UserUncheckedUpdateWithoutDepartmentMembershipsInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  managedDept?: Prisma.DepartmentUncheckedUpdateOneWithoutManagerNestedInput
+  managedDepts?: Prisma.DepartmentUncheckedUpdateManyWithoutManagerNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskAssignments?: Prisma.TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -985,14 +1389,29 @@ export type UserUncheckedUpdateWithoutDepartmentMembershipsInput = {
   taskReports?: Prisma.TaskReportUncheckedUpdateManyWithoutUserNestedInput
   approvedTasks?: Prisma.TaskUncheckedUpdateManyWithoutApprovedByNestedInput
   approverTasks?: Prisma.TaskUncheckedUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUncheckedUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUncheckedUpdateManyWithoutQcNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
   chatParticipants?: Prisma.ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
   chatMessages?: Prisma.ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   createdWebhooks?: Prisma.WebhookUncheckedUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUncheckedUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUncheckedUpdateManyWithoutUserNestedInput
 }
 
-export type UserCreateWithoutManagedDeptInput = {
+export type UserCreateWithoutManagedDeptsInput = {
   email: string
   password: string
   firstName: string
@@ -1002,6 +1421,7 @@ export type UserCreateWithoutManagedDeptInput = {
   startDate?: Date | string | null
   nationalId?: string | null
   position?: string | null
+  avatarUrl?: string | null
   role?: $Enums.Role
   phone?: string | null
   createdAt?: Date | string
@@ -1013,15 +1433,30 @@ export type UserCreateWithoutManagedDeptInput = {
   taskReports?: Prisma.TaskReportCreateNestedManyWithoutUserInput
   approvedTasks?: Prisma.TaskCreateNestedManyWithoutApprovedByInput
   approverTasks?: Prisma.TaskCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectCreateNestedManyWithoutQcInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
   attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
   chatParticipants?: Prisma.ChatParticipantCreateNestedManyWithoutUserInput
   chatMessages?: Prisma.ChatMessageCreateNestedManyWithoutSenderInput
   createdWebhooks?: Prisma.WebhookCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipCreateNestedManyWithoutUserInput
 }
 
-export type UserUncheckedCreateWithoutManagedDeptInput = {
+export type UserUncheckedCreateWithoutManagedDeptsInput = {
   id?: number
   email: string
   password: string
@@ -1032,6 +1467,7 @@ export type UserUncheckedCreateWithoutManagedDeptInput = {
   startDate?: Date | string | null
   nationalId?: string | null
   position?: string | null
+  avatarUrl?: string | null
   role?: $Enums.Role
   phone?: string | null
   createdAt?: Date | string
@@ -1043,31 +1479,46 @@ export type UserUncheckedCreateWithoutManagedDeptInput = {
   taskReports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutUserInput
   approvedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApprovedByInput
   approverTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutQcInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
   attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
   chatParticipants?: Prisma.ChatParticipantUncheckedCreateNestedManyWithoutUserInput
   chatMessages?: Prisma.ChatMessageUncheckedCreateNestedManyWithoutSenderInput
   createdWebhooks?: Prisma.WebhookUncheckedCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountUncheckedCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipUncheckedCreateNestedManyWithoutUserInput
 }
 
-export type UserCreateOrConnectWithoutManagedDeptInput = {
+export type UserCreateOrConnectWithoutManagedDeptsInput = {
   where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutManagedDeptInput, Prisma.UserUncheckedCreateWithoutManagedDeptInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutManagedDeptsInput, Prisma.UserUncheckedCreateWithoutManagedDeptsInput>
 }
 
-export type UserUpsertWithoutManagedDeptInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutManagedDeptInput, Prisma.UserUncheckedUpdateWithoutManagedDeptInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutManagedDeptInput, Prisma.UserUncheckedCreateWithoutManagedDeptInput>
+export type UserUpsertWithoutManagedDeptsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutManagedDeptsInput, Prisma.UserUncheckedUpdateWithoutManagedDeptsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutManagedDeptsInput, Prisma.UserUncheckedCreateWithoutManagedDeptsInput>
   where?: Prisma.UserWhereInput
 }
 
-export type UserUpdateToOneWithWhereWithoutManagedDeptInput = {
+export type UserUpdateToOneWithWhereWithoutManagedDeptsInput = {
   where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutManagedDeptInput, Prisma.UserUncheckedUpdateWithoutManagedDeptInput>
+  data: Prisma.XOR<Prisma.UserUpdateWithoutManagedDeptsInput, Prisma.UserUncheckedUpdateWithoutManagedDeptsInput>
 }
 
-export type UserUpdateWithoutManagedDeptInput = {
+export type UserUpdateWithoutManagedDeptsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1077,6 +1528,7 @@ export type UserUpdateWithoutManagedDeptInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1088,15 +1540,30 @@ export type UserUpdateWithoutManagedDeptInput = {
   taskReports?: Prisma.TaskReportUpdateManyWithoutUserNestedInput
   approvedTasks?: Prisma.TaskUpdateManyWithoutApprovedByNestedInput
   approverTasks?: Prisma.TaskUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUpdateManyWithoutQcNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
   attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
   chatParticipants?: Prisma.ChatParticipantUpdateManyWithoutUserNestedInput
   chatMessages?: Prisma.ChatMessageUpdateManyWithoutSenderNestedInput
   createdWebhooks?: Prisma.WebhookUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUpdateManyWithoutUserNestedInput
 }
 
-export type UserUncheckedUpdateWithoutManagedDeptInput = {
+export type UserUncheckedUpdateWithoutManagedDeptsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1107,6 +1574,7 @@ export type UserUncheckedUpdateWithoutManagedDeptInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1118,12 +1586,27 @@ export type UserUncheckedUpdateWithoutManagedDeptInput = {
   taskReports?: Prisma.TaskReportUncheckedUpdateManyWithoutUserNestedInput
   approvedTasks?: Prisma.TaskUncheckedUpdateManyWithoutApprovedByNestedInput
   approverTasks?: Prisma.TaskUncheckedUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUncheckedUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUncheckedUpdateManyWithoutQcNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
   attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
   chatParticipants?: Prisma.ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
   chatMessages?: Prisma.ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   createdWebhooks?: Prisma.WebhookUncheckedUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUncheckedUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutProjectsInput = {
@@ -1136,23 +1619,39 @@ export type UserCreateWithoutProjectsInput = {
   startDate?: Date | string | null
   nationalId?: string | null
   position?: string | null
+  avatarUrl?: string | null
   role?: $Enums.Role
   phone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  managedDept?: Prisma.DepartmentCreateNestedOneWithoutManagerInput
+  managedDepts?: Prisma.DepartmentCreateNestedManyWithoutManagerInput
   taskAssignments?: Prisma.TaskAssigneeCreateNestedManyWithoutUserInput
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
   projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
   taskReports?: Prisma.TaskReportCreateNestedManyWithoutUserInput
   approvedTasks?: Prisma.TaskCreateNestedManyWithoutApprovedByInput
   approverTasks?: Prisma.TaskCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectCreateNestedManyWithoutQcInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
   attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
   chatParticipants?: Prisma.ChatParticipantCreateNestedManyWithoutUserInput
   chatMessages?: Prisma.ChatMessageCreateNestedManyWithoutSenderInput
   createdWebhooks?: Prisma.WebhookCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutProjectsInput = {
@@ -1166,28 +1665,140 @@ export type UserUncheckedCreateWithoutProjectsInput = {
   startDate?: Date | string | null
   nationalId?: string | null
   position?: string | null
+  avatarUrl?: string | null
   role?: $Enums.Role
   phone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  managedDept?: Prisma.DepartmentUncheckedCreateNestedOneWithoutManagerInput
+  managedDepts?: Prisma.DepartmentUncheckedCreateNestedManyWithoutManagerInput
   taskAssignments?: Prisma.TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
   projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
   taskReports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutUserInput
   approvedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApprovedByInput
   approverTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutQcInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
   attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
   chatParticipants?: Prisma.ChatParticipantUncheckedCreateNestedManyWithoutUserInput
   chatMessages?: Prisma.ChatMessageUncheckedCreateNestedManyWithoutSenderInput
   createdWebhooks?: Prisma.WebhookUncheckedCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountUncheckedCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutProjectsInput = {
   where: Prisma.UserWhereUniqueInput
   create: Prisma.XOR<Prisma.UserCreateWithoutProjectsInput, Prisma.UserUncheckedCreateWithoutProjectsInput>
+}
+
+export type UserCreateWithoutQcProjectsInput = {
+  email: string
+  password: string
+  firstName: string
+  lastName: string
+  displayName?: string | null
+  birthDate?: Date | string | null
+  startDate?: Date | string | null
+  nationalId?: string | null
+  position?: string | null
+  avatarUrl?: string | null
+  role?: $Enums.Role
+  phone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  managedDepts?: Prisma.DepartmentCreateNestedManyWithoutManagerInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
+  taskAssignments?: Prisma.TaskAssigneeCreateNestedManyWithoutUserInput
+  createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
+  taskReports?: Prisma.TaskReportCreateNestedManyWithoutUserInput
+  approvedTasks?: Prisma.TaskCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskCreateNestedManyWithoutQcByInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutQcProjectsInput = {
+  id?: number
+  email: string
+  password: string
+  firstName: string
+  lastName: string
+  displayName?: string | null
+  birthDate?: Date | string | null
+  startDate?: Date | string | null
+  nationalId?: string | null
+  position?: string | null
+  avatarUrl?: string | null
+  role?: $Enums.Role
+  phone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  managedDepts?: Prisma.DepartmentUncheckedCreateNestedManyWithoutManagerInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  taskAssignments?: Prisma.TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
+  createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
+  taskReports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutUserInput
+  approvedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutQcByInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageUncheckedCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookUncheckedCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountUncheckedCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutQcProjectsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutQcProjectsInput, Prisma.UserUncheckedCreateWithoutQcProjectsInput>
 }
 
 export type UserUpsertWithoutProjectsInput = {
@@ -1211,23 +1822,39 @@ export type UserUpdateWithoutProjectsInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  managedDept?: Prisma.DepartmentUpdateOneWithoutManagerNestedInput
+  managedDepts?: Prisma.DepartmentUpdateManyWithoutManagerNestedInput
   taskAssignments?: Prisma.TaskAssigneeUpdateManyWithoutUserNestedInput
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
   projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
   taskReports?: Prisma.TaskReportUpdateManyWithoutUserNestedInput
   approvedTasks?: Prisma.TaskUpdateManyWithoutApprovedByNestedInput
   approverTasks?: Prisma.TaskUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUpdateManyWithoutQcNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
   attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
   chatParticipants?: Prisma.ChatParticipantUpdateManyWithoutUserNestedInput
   chatMessages?: Prisma.ChatMessageUpdateManyWithoutSenderNestedInput
   createdWebhooks?: Prisma.WebhookUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProjectsInput = {
@@ -1241,23 +1868,141 @@ export type UserUncheckedUpdateWithoutProjectsInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  managedDept?: Prisma.DepartmentUncheckedUpdateOneWithoutManagerNestedInput
+  managedDepts?: Prisma.DepartmentUncheckedUpdateManyWithoutManagerNestedInput
   taskAssignments?: Prisma.TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
   projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
   taskReports?: Prisma.TaskReportUncheckedUpdateManyWithoutUserNestedInput
   approvedTasks?: Prisma.TaskUncheckedUpdateManyWithoutApprovedByNestedInput
   approverTasks?: Prisma.TaskUncheckedUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUncheckedUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUncheckedUpdateManyWithoutQcNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
   attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
   chatParticipants?: Prisma.ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
   chatMessages?: Prisma.ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   createdWebhooks?: Prisma.WebhookUncheckedUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUncheckedUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserUpsertWithoutQcProjectsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutQcProjectsInput, Prisma.UserUncheckedUpdateWithoutQcProjectsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutQcProjectsInput, Prisma.UserUncheckedCreateWithoutQcProjectsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutQcProjectsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutQcProjectsInput, Prisma.UserUncheckedUpdateWithoutQcProjectsInput>
+}
+
+export type UserUpdateWithoutQcProjectsInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  managedDepts?: Prisma.DepartmentUpdateManyWithoutManagerNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
+  taskAssignments?: Prisma.TaskAssigneeUpdateManyWithoutUserNestedInput
+  createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
+  taskReports?: Prisma.TaskReportUpdateManyWithoutUserNestedInput
+  approvedTasks?: Prisma.TaskUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUpdateManyWithoutQcByNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutQcProjectsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  managedDepts?: Prisma.DepartmentUncheckedUpdateManyWithoutManagerNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  taskAssignments?: Prisma.TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
+  createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
+  taskReports?: Prisma.TaskReportUncheckedUpdateManyWithoutUserNestedInput
+  approvedTasks?: Prisma.TaskUncheckedUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUncheckedUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUncheckedUpdateManyWithoutQcByNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUncheckedUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUncheckedUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutProjectMembershipsInput = {
@@ -1270,23 +2015,39 @@ export type UserCreateWithoutProjectMembershipsInput = {
   startDate?: Date | string | null
   nationalId?: string | null
   position?: string | null
+  avatarUrl?: string | null
   role?: $Enums.Role
   phone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  managedDept?: Prisma.DepartmentCreateNestedOneWithoutManagerInput
+  managedDepts?: Prisma.DepartmentCreateNestedManyWithoutManagerInput
   projects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
   taskAssignments?: Prisma.TaskAssigneeCreateNestedManyWithoutUserInput
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
   taskReports?: Prisma.TaskReportCreateNestedManyWithoutUserInput
   approvedTasks?: Prisma.TaskCreateNestedManyWithoutApprovedByInput
   approverTasks?: Prisma.TaskCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectCreateNestedManyWithoutQcInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
   attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
   chatParticipants?: Prisma.ChatParticipantCreateNestedManyWithoutUserInput
   chatMessages?: Prisma.ChatMessageCreateNestedManyWithoutSenderInput
   createdWebhooks?: Prisma.WebhookCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutProjectMembershipsInput = {
@@ -1300,23 +2061,39 @@ export type UserUncheckedCreateWithoutProjectMembershipsInput = {
   startDate?: Date | string | null
   nationalId?: string | null
   position?: string | null
+  avatarUrl?: string | null
   role?: $Enums.Role
   phone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  managedDept?: Prisma.DepartmentUncheckedCreateNestedOneWithoutManagerInput
+  managedDepts?: Prisma.DepartmentUncheckedCreateNestedManyWithoutManagerInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskAssignments?: Prisma.TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
   taskReports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutUserInput
   approvedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApprovedByInput
   approverTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutQcInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
   attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
   chatParticipants?: Prisma.ChatParticipantUncheckedCreateNestedManyWithoutUserInput
   chatMessages?: Prisma.ChatMessageUncheckedCreateNestedManyWithoutSenderInput
   createdWebhooks?: Prisma.WebhookUncheckedCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountUncheckedCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutProjectMembershipsInput = {
@@ -1345,23 +2122,39 @@ export type UserUpdateWithoutProjectMembershipsInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  managedDept?: Prisma.DepartmentUpdateOneWithoutManagerNestedInput
+  managedDepts?: Prisma.DepartmentUpdateManyWithoutManagerNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
   taskAssignments?: Prisma.TaskAssigneeUpdateManyWithoutUserNestedInput
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
   taskReports?: Prisma.TaskReportUpdateManyWithoutUserNestedInput
   approvedTasks?: Prisma.TaskUpdateManyWithoutApprovedByNestedInput
   approverTasks?: Prisma.TaskUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUpdateManyWithoutQcNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
   attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
   chatParticipants?: Prisma.ChatParticipantUpdateManyWithoutUserNestedInput
   chatMessages?: Prisma.ChatMessageUpdateManyWithoutSenderNestedInput
   createdWebhooks?: Prisma.WebhookUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProjectMembershipsInput = {
@@ -1375,23 +2168,39 @@ export type UserUncheckedUpdateWithoutProjectMembershipsInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  managedDept?: Prisma.DepartmentUncheckedUpdateOneWithoutManagerNestedInput
+  managedDepts?: Prisma.DepartmentUncheckedUpdateManyWithoutManagerNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskAssignments?: Prisma.TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
   taskReports?: Prisma.TaskReportUncheckedUpdateManyWithoutUserNestedInput
   approvedTasks?: Prisma.TaskUncheckedUpdateManyWithoutApprovedByNestedInput
   approverTasks?: Prisma.TaskUncheckedUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUncheckedUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUncheckedUpdateManyWithoutQcNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
   attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
   chatParticipants?: Prisma.ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
   chatMessages?: Prisma.ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   createdWebhooks?: Prisma.WebhookUncheckedUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUncheckedUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutApprovedTasksInput = {
@@ -1404,23 +2213,39 @@ export type UserCreateWithoutApprovedTasksInput = {
   startDate?: Date | string | null
   nationalId?: string | null
   position?: string | null
+  avatarUrl?: string | null
   role?: $Enums.Role
   phone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  managedDept?: Prisma.DepartmentCreateNestedOneWithoutManagerInput
+  managedDepts?: Prisma.DepartmentCreateNestedManyWithoutManagerInput
   projects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
   taskAssignments?: Prisma.TaskAssigneeCreateNestedManyWithoutUserInput
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
   projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
   taskReports?: Prisma.TaskReportCreateNestedManyWithoutUserInput
   approverTasks?: Prisma.TaskCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectCreateNestedManyWithoutQcInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
   attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
   chatParticipants?: Prisma.ChatParticipantCreateNestedManyWithoutUserInput
   chatMessages?: Prisma.ChatMessageCreateNestedManyWithoutSenderInput
   createdWebhooks?: Prisma.WebhookCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutApprovedTasksInput = {
@@ -1434,23 +2259,39 @@ export type UserUncheckedCreateWithoutApprovedTasksInput = {
   startDate?: Date | string | null
   nationalId?: string | null
   position?: string | null
+  avatarUrl?: string | null
   role?: $Enums.Role
   phone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  managedDept?: Prisma.DepartmentUncheckedCreateNestedOneWithoutManagerInput
+  managedDepts?: Prisma.DepartmentUncheckedCreateNestedManyWithoutManagerInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskAssignments?: Prisma.TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
   projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
   taskReports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutUserInput
   approverTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutQcInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
   attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
   chatParticipants?: Prisma.ChatParticipantUncheckedCreateNestedManyWithoutUserInput
   chatMessages?: Prisma.ChatMessageUncheckedCreateNestedManyWithoutSenderInput
   createdWebhooks?: Prisma.WebhookUncheckedCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountUncheckedCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutApprovedTasksInput = {
@@ -1468,23 +2309,39 @@ export type UserCreateWithoutApproverTasksInput = {
   startDate?: Date | string | null
   nationalId?: string | null
   position?: string | null
+  avatarUrl?: string | null
   role?: $Enums.Role
   phone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  managedDept?: Prisma.DepartmentCreateNestedOneWithoutManagerInput
+  managedDepts?: Prisma.DepartmentCreateNestedManyWithoutManagerInput
   projects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
   taskAssignments?: Prisma.TaskAssigneeCreateNestedManyWithoutUserInput
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
   projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
   taskReports?: Prisma.TaskReportCreateNestedManyWithoutUserInput
   approvedTasks?: Prisma.TaskCreateNestedManyWithoutApprovedByInput
+  qcReviewedTasks?: Prisma.TaskCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectCreateNestedManyWithoutQcInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
   attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
   chatParticipants?: Prisma.ChatParticipantCreateNestedManyWithoutUserInput
   chatMessages?: Prisma.ChatMessageCreateNestedManyWithoutSenderInput
   createdWebhooks?: Prisma.WebhookCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutApproverTasksInput = {
@@ -1498,28 +2355,140 @@ export type UserUncheckedCreateWithoutApproverTasksInput = {
   startDate?: Date | string | null
   nationalId?: string | null
   position?: string | null
+  avatarUrl?: string | null
   role?: $Enums.Role
   phone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  managedDept?: Prisma.DepartmentUncheckedCreateNestedOneWithoutManagerInput
+  managedDepts?: Prisma.DepartmentUncheckedCreateNestedManyWithoutManagerInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskAssignments?: Prisma.TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
   projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
   taskReports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutUserInput
   approvedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApprovedByInput
+  qcReviewedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutQcInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
   attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
   chatParticipants?: Prisma.ChatParticipantUncheckedCreateNestedManyWithoutUserInput
   chatMessages?: Prisma.ChatMessageUncheckedCreateNestedManyWithoutSenderInput
   createdWebhooks?: Prisma.WebhookUncheckedCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountUncheckedCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutApproverTasksInput = {
   where: Prisma.UserWhereUniqueInput
   create: Prisma.XOR<Prisma.UserCreateWithoutApproverTasksInput, Prisma.UserUncheckedCreateWithoutApproverTasksInput>
+}
+
+export type UserCreateWithoutQcReviewedTasksInput = {
+  email: string
+  password: string
+  firstName: string
+  lastName: string
+  displayName?: string | null
+  birthDate?: Date | string | null
+  startDate?: Date | string | null
+  nationalId?: string | null
+  position?: string | null
+  avatarUrl?: string | null
+  role?: $Enums.Role
+  phone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  managedDepts?: Prisma.DepartmentCreateNestedManyWithoutManagerInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
+  taskAssignments?: Prisma.TaskAssigneeCreateNestedManyWithoutUserInput
+  createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
+  taskReports?: Prisma.TaskReportCreateNestedManyWithoutUserInput
+  approvedTasks?: Prisma.TaskCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskCreateNestedManyWithoutApproverInput
+  qcProjects?: Prisma.ProjectCreateNestedManyWithoutQcInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutQcReviewedTasksInput = {
+  id?: number
+  email: string
+  password: string
+  firstName: string
+  lastName: string
+  displayName?: string | null
+  birthDate?: Date | string | null
+  startDate?: Date | string | null
+  nationalId?: string | null
+  position?: string | null
+  avatarUrl?: string | null
+  role?: $Enums.Role
+  phone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  managedDepts?: Prisma.DepartmentUncheckedCreateNestedManyWithoutManagerInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  taskAssignments?: Prisma.TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
+  createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
+  taskReports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutUserInput
+  approvedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApproverInput
+  qcProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutQcInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageUncheckedCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookUncheckedCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountUncheckedCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutQcReviewedTasksInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutQcReviewedTasksInput, Prisma.UserUncheckedCreateWithoutQcReviewedTasksInput>
 }
 
 export type UserCreateWithoutCreatedTasksInput = {
@@ -1532,23 +2501,39 @@ export type UserCreateWithoutCreatedTasksInput = {
   startDate?: Date | string | null
   nationalId?: string | null
   position?: string | null
+  avatarUrl?: string | null
   role?: $Enums.Role
   phone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  managedDept?: Prisma.DepartmentCreateNestedOneWithoutManagerInput
+  managedDepts?: Prisma.DepartmentCreateNestedManyWithoutManagerInput
   projects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
   taskAssignments?: Prisma.TaskAssigneeCreateNestedManyWithoutUserInput
   projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
   taskReports?: Prisma.TaskReportCreateNestedManyWithoutUserInput
   approvedTasks?: Prisma.TaskCreateNestedManyWithoutApprovedByInput
   approverTasks?: Prisma.TaskCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectCreateNestedManyWithoutQcInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
   attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
   chatParticipants?: Prisma.ChatParticipantCreateNestedManyWithoutUserInput
   chatMessages?: Prisma.ChatMessageCreateNestedManyWithoutSenderInput
   createdWebhooks?: Prisma.WebhookCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCreatedTasksInput = {
@@ -1562,23 +2547,39 @@ export type UserUncheckedCreateWithoutCreatedTasksInput = {
   startDate?: Date | string | null
   nationalId?: string | null
   position?: string | null
+  avatarUrl?: string | null
   role?: $Enums.Role
   phone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  managedDept?: Prisma.DepartmentUncheckedCreateNestedOneWithoutManagerInput
+  managedDepts?: Prisma.DepartmentUncheckedCreateNestedManyWithoutManagerInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskAssignments?: Prisma.TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
   projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
   taskReports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutUserInput
   approvedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApprovedByInput
   approverTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutQcInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
   attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
   chatParticipants?: Prisma.ChatParticipantUncheckedCreateNestedManyWithoutUserInput
   chatMessages?: Prisma.ChatMessageUncheckedCreateNestedManyWithoutSenderInput
   createdWebhooks?: Prisma.WebhookUncheckedCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountUncheckedCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCreatedTasksInput = {
@@ -1607,23 +2608,39 @@ export type UserUpdateWithoutApprovedTasksInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  managedDept?: Prisma.DepartmentUpdateOneWithoutManagerNestedInput
+  managedDepts?: Prisma.DepartmentUpdateManyWithoutManagerNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
   taskAssignments?: Prisma.TaskAssigneeUpdateManyWithoutUserNestedInput
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
   projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
   taskReports?: Prisma.TaskReportUpdateManyWithoutUserNestedInput
   approverTasks?: Prisma.TaskUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUpdateManyWithoutQcNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
   attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
   chatParticipants?: Prisma.ChatParticipantUpdateManyWithoutUserNestedInput
   chatMessages?: Prisma.ChatMessageUpdateManyWithoutSenderNestedInput
   createdWebhooks?: Prisma.WebhookUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutApprovedTasksInput = {
@@ -1637,23 +2654,39 @@ export type UserUncheckedUpdateWithoutApprovedTasksInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  managedDept?: Prisma.DepartmentUncheckedUpdateOneWithoutManagerNestedInput
+  managedDepts?: Prisma.DepartmentUncheckedUpdateManyWithoutManagerNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskAssignments?: Prisma.TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
   projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
   taskReports?: Prisma.TaskReportUncheckedUpdateManyWithoutUserNestedInput
   approverTasks?: Prisma.TaskUncheckedUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUncheckedUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUncheckedUpdateManyWithoutQcNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
   attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
   chatParticipants?: Prisma.ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
   chatMessages?: Prisma.ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   createdWebhooks?: Prisma.WebhookUncheckedUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUncheckedUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutApproverTasksInput = {
@@ -1677,23 +2710,39 @@ export type UserUpdateWithoutApproverTasksInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  managedDept?: Prisma.DepartmentUpdateOneWithoutManagerNestedInput
+  managedDepts?: Prisma.DepartmentUpdateManyWithoutManagerNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
   taskAssignments?: Prisma.TaskAssigneeUpdateManyWithoutUserNestedInput
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
   projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
   taskReports?: Prisma.TaskReportUpdateManyWithoutUserNestedInput
   approvedTasks?: Prisma.TaskUpdateManyWithoutApprovedByNestedInput
+  qcReviewedTasks?: Prisma.TaskUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUpdateManyWithoutQcNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
   attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
   chatParticipants?: Prisma.ChatParticipantUpdateManyWithoutUserNestedInput
   chatMessages?: Prisma.ChatMessageUpdateManyWithoutSenderNestedInput
   createdWebhooks?: Prisma.WebhookUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutApproverTasksInput = {
@@ -1707,23 +2756,141 @@ export type UserUncheckedUpdateWithoutApproverTasksInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  managedDept?: Prisma.DepartmentUncheckedUpdateOneWithoutManagerNestedInput
+  managedDepts?: Prisma.DepartmentUncheckedUpdateManyWithoutManagerNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskAssignments?: Prisma.TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
   projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
   taskReports?: Prisma.TaskReportUncheckedUpdateManyWithoutUserNestedInput
   approvedTasks?: Prisma.TaskUncheckedUpdateManyWithoutApprovedByNestedInput
+  qcReviewedTasks?: Prisma.TaskUncheckedUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUncheckedUpdateManyWithoutQcNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
   attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
   chatParticipants?: Prisma.ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
   chatMessages?: Prisma.ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   createdWebhooks?: Prisma.WebhookUncheckedUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUncheckedUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserUpsertWithoutQcReviewedTasksInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutQcReviewedTasksInput, Prisma.UserUncheckedUpdateWithoutQcReviewedTasksInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutQcReviewedTasksInput, Prisma.UserUncheckedCreateWithoutQcReviewedTasksInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutQcReviewedTasksInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutQcReviewedTasksInput, Prisma.UserUncheckedUpdateWithoutQcReviewedTasksInput>
+}
+
+export type UserUpdateWithoutQcReviewedTasksInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  managedDepts?: Prisma.DepartmentUpdateManyWithoutManagerNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
+  taskAssignments?: Prisma.TaskAssigneeUpdateManyWithoutUserNestedInput
+  createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
+  taskReports?: Prisma.TaskReportUpdateManyWithoutUserNestedInput
+  approvedTasks?: Prisma.TaskUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUpdateManyWithoutApproverNestedInput
+  qcProjects?: Prisma.ProjectUpdateManyWithoutQcNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutQcReviewedTasksInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  managedDepts?: Prisma.DepartmentUncheckedUpdateManyWithoutManagerNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  taskAssignments?: Prisma.TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
+  createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
+  taskReports?: Prisma.TaskReportUncheckedUpdateManyWithoutUserNestedInput
+  approvedTasks?: Prisma.TaskUncheckedUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUncheckedUpdateManyWithoutApproverNestedInput
+  qcProjects?: Prisma.ProjectUncheckedUpdateManyWithoutQcNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUncheckedUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUncheckedUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutCreatedTasksInput = {
@@ -1747,23 +2914,39 @@ export type UserUpdateWithoutCreatedTasksInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  managedDept?: Prisma.DepartmentUpdateOneWithoutManagerNestedInput
+  managedDepts?: Prisma.DepartmentUpdateManyWithoutManagerNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
   taskAssignments?: Prisma.TaskAssigneeUpdateManyWithoutUserNestedInput
   projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
   taskReports?: Prisma.TaskReportUpdateManyWithoutUserNestedInput
   approvedTasks?: Prisma.TaskUpdateManyWithoutApprovedByNestedInput
   approverTasks?: Prisma.TaskUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUpdateManyWithoutQcNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
   attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
   chatParticipants?: Prisma.ChatParticipantUpdateManyWithoutUserNestedInput
   chatMessages?: Prisma.ChatMessageUpdateManyWithoutSenderNestedInput
   createdWebhooks?: Prisma.WebhookUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCreatedTasksInput = {
@@ -1777,23 +2960,39 @@ export type UserUncheckedUpdateWithoutCreatedTasksInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  managedDept?: Prisma.DepartmentUncheckedUpdateOneWithoutManagerNestedInput
+  managedDepts?: Prisma.DepartmentUncheckedUpdateManyWithoutManagerNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskAssignments?: Prisma.TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
   projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
   taskReports?: Prisma.TaskReportUncheckedUpdateManyWithoutUserNestedInput
   approvedTasks?: Prisma.TaskUncheckedUpdateManyWithoutApprovedByNestedInput
   approverTasks?: Prisma.TaskUncheckedUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUncheckedUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUncheckedUpdateManyWithoutQcNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
   attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
   chatParticipants?: Prisma.ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
   chatMessages?: Prisma.ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   createdWebhooks?: Prisma.WebhookUncheckedUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUncheckedUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutTaskAssignmentsInput = {
@@ -1806,23 +3005,39 @@ export type UserCreateWithoutTaskAssignmentsInput = {
   startDate?: Date | string | null
   nationalId?: string | null
   position?: string | null
+  avatarUrl?: string | null
   role?: $Enums.Role
   phone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  managedDept?: Prisma.DepartmentCreateNestedOneWithoutManagerInput
+  managedDepts?: Prisma.DepartmentCreateNestedManyWithoutManagerInput
   projects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
   projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
   taskReports?: Prisma.TaskReportCreateNestedManyWithoutUserInput
   approvedTasks?: Prisma.TaskCreateNestedManyWithoutApprovedByInput
   approverTasks?: Prisma.TaskCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectCreateNestedManyWithoutQcInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
   attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
   chatParticipants?: Prisma.ChatParticipantCreateNestedManyWithoutUserInput
   chatMessages?: Prisma.ChatMessageCreateNestedManyWithoutSenderInput
   createdWebhooks?: Prisma.WebhookCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTaskAssignmentsInput = {
@@ -1836,23 +3051,39 @@ export type UserUncheckedCreateWithoutTaskAssignmentsInput = {
   startDate?: Date | string | null
   nationalId?: string | null
   position?: string | null
+  avatarUrl?: string | null
   role?: $Enums.Role
   phone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  managedDept?: Prisma.DepartmentUncheckedCreateNestedOneWithoutManagerInput
+  managedDepts?: Prisma.DepartmentUncheckedCreateNestedManyWithoutManagerInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
   projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
   taskReports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutUserInput
   approvedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApprovedByInput
   approverTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutQcInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
   attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
   chatParticipants?: Prisma.ChatParticipantUncheckedCreateNestedManyWithoutUserInput
   chatMessages?: Prisma.ChatMessageUncheckedCreateNestedManyWithoutSenderInput
   createdWebhooks?: Prisma.WebhookUncheckedCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountUncheckedCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTaskAssignmentsInput = {
@@ -1881,23 +3112,39 @@ export type UserUpdateWithoutTaskAssignmentsInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  managedDept?: Prisma.DepartmentUpdateOneWithoutManagerNestedInput
+  managedDepts?: Prisma.DepartmentUpdateManyWithoutManagerNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
   projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
   taskReports?: Prisma.TaskReportUpdateManyWithoutUserNestedInput
   approvedTasks?: Prisma.TaskUpdateManyWithoutApprovedByNestedInput
   approverTasks?: Prisma.TaskUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUpdateManyWithoutQcNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
   attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
   chatParticipants?: Prisma.ChatParticipantUpdateManyWithoutUserNestedInput
   chatMessages?: Prisma.ChatMessageUpdateManyWithoutSenderNestedInput
   createdWebhooks?: Prisma.WebhookUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTaskAssignmentsInput = {
@@ -1911,23 +3158,435 @@ export type UserUncheckedUpdateWithoutTaskAssignmentsInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  managedDept?: Prisma.DepartmentUncheckedUpdateOneWithoutManagerNestedInput
+  managedDepts?: Prisma.DepartmentUncheckedUpdateManyWithoutManagerNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
   projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
   taskReports?: Prisma.TaskReportUncheckedUpdateManyWithoutUserNestedInput
   approvedTasks?: Prisma.TaskUncheckedUpdateManyWithoutApprovedByNestedInput
   approverTasks?: Prisma.TaskUncheckedUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUncheckedUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUncheckedUpdateManyWithoutQcNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
   attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
   chatParticipants?: Prisma.ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
   chatMessages?: Prisma.ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   createdWebhooks?: Prisma.WebhookUncheckedUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUncheckedUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutSubtasksAssignedInput = {
+  email: string
+  password: string
+  firstName: string
+  lastName: string
+  displayName?: string | null
+  birthDate?: Date | string | null
+  startDate?: Date | string | null
+  nationalId?: string | null
+  position?: string | null
+  avatarUrl?: string | null
+  role?: $Enums.Role
+  phone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  managedDepts?: Prisma.DepartmentCreateNestedManyWithoutManagerInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
+  taskAssignments?: Prisma.TaskAssigneeCreateNestedManyWithoutUserInput
+  createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
+  taskReports?: Prisma.TaskReportCreateNestedManyWithoutUserInput
+  approvedTasks?: Prisma.TaskCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectCreateNestedManyWithoutQcInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountCreateNestedManyWithoutConnectedByInput
+  subtasksCompleted?: Prisma.TaskSubtaskCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutSubtasksAssignedInput = {
+  id?: number
+  email: string
+  password: string
+  firstName: string
+  lastName: string
+  displayName?: string | null
+  birthDate?: Date | string | null
+  startDate?: Date | string | null
+  nationalId?: string | null
+  position?: string | null
+  avatarUrl?: string | null
+  role?: $Enums.Role
+  phone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  managedDepts?: Prisma.DepartmentUncheckedCreateNestedManyWithoutManagerInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  taskAssignments?: Prisma.TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
+  createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
+  taskReports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutUserInput
+  approvedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutQcInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageUncheckedCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookUncheckedCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountUncheckedCreateNestedManyWithoutConnectedByInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutSubtasksAssignedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutSubtasksAssignedInput, Prisma.UserUncheckedCreateWithoutSubtasksAssignedInput>
+}
+
+export type UserCreateWithoutSubtasksCompletedInput = {
+  email: string
+  password: string
+  firstName: string
+  lastName: string
+  displayName?: string | null
+  birthDate?: Date | string | null
+  startDate?: Date | string | null
+  nationalId?: string | null
+  position?: string | null
+  avatarUrl?: string | null
+  role?: $Enums.Role
+  phone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  managedDepts?: Prisma.DepartmentCreateNestedManyWithoutManagerInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
+  taskAssignments?: Prisma.TaskAssigneeCreateNestedManyWithoutUserInput
+  createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
+  taskReports?: Prisma.TaskReportCreateNestedManyWithoutUserInput
+  approvedTasks?: Prisma.TaskCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectCreateNestedManyWithoutQcInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskCreateNestedManyWithoutAssigneeInput
+  rejectionsReceived?: Prisma.TaskRejectionCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutSubtasksCompletedInput = {
+  id?: number
+  email: string
+  password: string
+  firstName: string
+  lastName: string
+  displayName?: string | null
+  birthDate?: Date | string | null
+  startDate?: Date | string | null
+  nationalId?: string | null
+  position?: string | null
+  avatarUrl?: string | null
+  role?: $Enums.Role
+  phone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  managedDepts?: Prisma.DepartmentUncheckedCreateNestedManyWithoutManagerInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  taskAssignments?: Prisma.TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
+  createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
+  taskReports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutUserInput
+  approvedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutQcInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageUncheckedCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookUncheckedCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountUncheckedCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutAssigneeInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutSubtasksCompletedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutSubtasksCompletedInput, Prisma.UserUncheckedCreateWithoutSubtasksCompletedInput>
+}
+
+export type UserUpsertWithoutSubtasksAssignedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutSubtasksAssignedInput, Prisma.UserUncheckedUpdateWithoutSubtasksAssignedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutSubtasksAssignedInput, Prisma.UserUncheckedCreateWithoutSubtasksAssignedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutSubtasksAssignedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutSubtasksAssignedInput, Prisma.UserUncheckedUpdateWithoutSubtasksAssignedInput>
+}
+
+export type UserUpdateWithoutSubtasksAssignedInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  managedDepts?: Prisma.DepartmentUpdateManyWithoutManagerNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
+  taskAssignments?: Prisma.TaskAssigneeUpdateManyWithoutUserNestedInput
+  createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
+  taskReports?: Prisma.TaskReportUpdateManyWithoutUserNestedInput
+  approvedTasks?: Prisma.TaskUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUpdateManyWithoutQcNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUpdateManyWithoutConnectedByNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutSubtasksAssignedInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  managedDepts?: Prisma.DepartmentUncheckedUpdateManyWithoutManagerNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  taskAssignments?: Prisma.TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
+  createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
+  taskReports?: Prisma.TaskReportUncheckedUpdateManyWithoutUserNestedInput
+  approvedTasks?: Prisma.TaskUncheckedUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUncheckedUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUncheckedUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUncheckedUpdateManyWithoutQcNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUncheckedUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUncheckedUpdateManyWithoutConnectedByNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserUpsertWithoutSubtasksCompletedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutSubtasksCompletedInput, Prisma.UserUncheckedUpdateWithoutSubtasksCompletedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutSubtasksCompletedInput, Prisma.UserUncheckedCreateWithoutSubtasksCompletedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutSubtasksCompletedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutSubtasksCompletedInput, Prisma.UserUncheckedUpdateWithoutSubtasksCompletedInput>
+}
+
+export type UserUpdateWithoutSubtasksCompletedInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  managedDepts?: Prisma.DepartmentUpdateManyWithoutManagerNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
+  taskAssignments?: Prisma.TaskAssigneeUpdateManyWithoutUserNestedInput
+  createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
+  taskReports?: Prisma.TaskReportUpdateManyWithoutUserNestedInput
+  approvedTasks?: Prisma.TaskUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUpdateManyWithoutQcNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUpdateManyWithoutAssigneeNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutSubtasksCompletedInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  managedDepts?: Prisma.DepartmentUncheckedUpdateManyWithoutManagerNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  taskAssignments?: Prisma.TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
+  createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
+  taskReports?: Prisma.TaskReportUncheckedUpdateManyWithoutUserNestedInput
+  approvedTasks?: Prisma.TaskUncheckedUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUncheckedUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUncheckedUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUncheckedUpdateManyWithoutQcNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUncheckedUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUncheckedUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutTaskReportsInput = {
@@ -1940,23 +3599,39 @@ export type UserCreateWithoutTaskReportsInput = {
   startDate?: Date | string | null
   nationalId?: string | null
   position?: string | null
+  avatarUrl?: string | null
   role?: $Enums.Role
   phone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  managedDept?: Prisma.DepartmentCreateNestedOneWithoutManagerInput
+  managedDepts?: Prisma.DepartmentCreateNestedManyWithoutManagerInput
   projects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
   taskAssignments?: Prisma.TaskAssigneeCreateNestedManyWithoutUserInput
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
   projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
   approvedTasks?: Prisma.TaskCreateNestedManyWithoutApprovedByInput
   approverTasks?: Prisma.TaskCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectCreateNestedManyWithoutQcInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
   attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
   chatParticipants?: Prisma.ChatParticipantCreateNestedManyWithoutUserInput
   chatMessages?: Prisma.ChatMessageCreateNestedManyWithoutSenderInput
   createdWebhooks?: Prisma.WebhookCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTaskReportsInput = {
@@ -1970,23 +3645,39 @@ export type UserUncheckedCreateWithoutTaskReportsInput = {
   startDate?: Date | string | null
   nationalId?: string | null
   position?: string | null
+  avatarUrl?: string | null
   role?: $Enums.Role
   phone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  managedDept?: Prisma.DepartmentUncheckedCreateNestedOneWithoutManagerInput
+  managedDepts?: Prisma.DepartmentUncheckedCreateNestedManyWithoutManagerInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskAssignments?: Prisma.TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
   projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
   approvedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApprovedByInput
   approverTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutQcInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
   attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
   chatParticipants?: Prisma.ChatParticipantUncheckedCreateNestedManyWithoutUserInput
   chatMessages?: Prisma.ChatMessageUncheckedCreateNestedManyWithoutSenderInput
   createdWebhooks?: Prisma.WebhookUncheckedCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountUncheckedCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTaskReportsInput = {
@@ -2015,23 +3706,39 @@ export type UserUpdateWithoutTaskReportsInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  managedDept?: Prisma.DepartmentUpdateOneWithoutManagerNestedInput
+  managedDepts?: Prisma.DepartmentUpdateManyWithoutManagerNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
   taskAssignments?: Prisma.TaskAssigneeUpdateManyWithoutUserNestedInput
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
   projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
   approvedTasks?: Prisma.TaskUpdateManyWithoutApprovedByNestedInput
   approverTasks?: Prisma.TaskUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUpdateManyWithoutQcNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
   attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
   chatParticipants?: Prisma.ChatParticipantUpdateManyWithoutUserNestedInput
   chatMessages?: Prisma.ChatMessageUpdateManyWithoutSenderNestedInput
   createdWebhooks?: Prisma.WebhookUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTaskReportsInput = {
@@ -2045,23 +3752,39 @@ export type UserUncheckedUpdateWithoutTaskReportsInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  managedDept?: Prisma.DepartmentUncheckedUpdateOneWithoutManagerNestedInput
+  managedDepts?: Prisma.DepartmentUncheckedUpdateManyWithoutManagerNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskAssignments?: Prisma.TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
   projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
   approvedTasks?: Prisma.TaskUncheckedUpdateManyWithoutApprovedByNestedInput
   approverTasks?: Prisma.TaskUncheckedUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUncheckedUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUncheckedUpdateManyWithoutQcNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
   attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
   chatParticipants?: Prisma.ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
   chatMessages?: Prisma.ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   createdWebhooks?: Prisma.WebhookUncheckedUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUncheckedUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutNotificationsInput = {
@@ -2074,11 +3797,12 @@ export type UserCreateWithoutNotificationsInput = {
   startDate?: Date | string | null
   nationalId?: string | null
   position?: string | null
+  avatarUrl?: string | null
   role?: $Enums.Role
   phone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  managedDept?: Prisma.DepartmentCreateNestedOneWithoutManagerInput
+  managedDepts?: Prisma.DepartmentCreateNestedManyWithoutManagerInput
   projects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
   taskAssignments?: Prisma.TaskAssigneeCreateNestedManyWithoutUserInput
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
@@ -2086,11 +3810,26 @@ export type UserCreateWithoutNotificationsInput = {
   taskReports?: Prisma.TaskReportCreateNestedManyWithoutUserInput
   approvedTasks?: Prisma.TaskCreateNestedManyWithoutApprovedByInput
   approverTasks?: Prisma.TaskCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectCreateNestedManyWithoutQcInput
   departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
   attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
   chatParticipants?: Prisma.ChatParticipantCreateNestedManyWithoutUserInput
   chatMessages?: Prisma.ChatMessageCreateNestedManyWithoutSenderInput
   createdWebhooks?: Prisma.WebhookCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -2104,11 +3843,12 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   startDate?: Date | string | null
   nationalId?: string | null
   position?: string | null
+  avatarUrl?: string | null
   role?: $Enums.Role
   phone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  managedDept?: Prisma.DepartmentUncheckedCreateNestedOneWithoutManagerInput
+  managedDepts?: Prisma.DepartmentUncheckedCreateNestedManyWithoutManagerInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskAssignments?: Prisma.TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
@@ -2116,11 +3856,26 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   taskReports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutUserInput
   approvedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApprovedByInput
   approverTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutQcInput
   departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
   attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
   chatParticipants?: Prisma.ChatParticipantUncheckedCreateNestedManyWithoutUserInput
   chatMessages?: Prisma.ChatMessageUncheckedCreateNestedManyWithoutSenderInput
   createdWebhooks?: Prisma.WebhookUncheckedCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountUncheckedCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -2149,11 +3904,12 @@ export type UserUpdateWithoutNotificationsInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  managedDept?: Prisma.DepartmentUpdateOneWithoutManagerNestedInput
+  managedDepts?: Prisma.DepartmentUpdateManyWithoutManagerNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
   taskAssignments?: Prisma.TaskAssigneeUpdateManyWithoutUserNestedInput
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
@@ -2161,11 +3917,26 @@ export type UserUpdateWithoutNotificationsInput = {
   taskReports?: Prisma.TaskReportUpdateManyWithoutUserNestedInput
   approvedTasks?: Prisma.TaskUpdateManyWithoutApprovedByNestedInput
   approverTasks?: Prisma.TaskUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUpdateManyWithoutQcNestedInput
   departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
   attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
   chatParticipants?: Prisma.ChatParticipantUpdateManyWithoutUserNestedInput
   chatMessages?: Prisma.ChatMessageUpdateManyWithoutSenderNestedInput
   createdWebhooks?: Prisma.WebhookUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -2179,11 +3950,12 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  managedDept?: Prisma.DepartmentUncheckedUpdateOneWithoutManagerNestedInput
+  managedDepts?: Prisma.DepartmentUncheckedUpdateManyWithoutManagerNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskAssignments?: Prisma.TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -2191,11 +3963,26 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   taskReports?: Prisma.TaskReportUncheckedUpdateManyWithoutUserNestedInput
   approvedTasks?: Prisma.TaskUncheckedUpdateManyWithoutApprovedByNestedInput
   approverTasks?: Prisma.TaskUncheckedUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUncheckedUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUncheckedUpdateManyWithoutQcNestedInput
   departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
   attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
   chatParticipants?: Prisma.ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
   chatMessages?: Prisma.ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   createdWebhooks?: Prisma.WebhookUncheckedUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUncheckedUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAttachmentsInput = {
@@ -2208,11 +3995,12 @@ export type UserCreateWithoutAttachmentsInput = {
   startDate?: Date | string | null
   nationalId?: string | null
   position?: string | null
+  avatarUrl?: string | null
   role?: $Enums.Role
   phone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  managedDept?: Prisma.DepartmentCreateNestedOneWithoutManagerInput
+  managedDepts?: Prisma.DepartmentCreateNestedManyWithoutManagerInput
   projects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
   taskAssignments?: Prisma.TaskAssigneeCreateNestedManyWithoutUserInput
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
@@ -2220,11 +4008,26 @@ export type UserCreateWithoutAttachmentsInput = {
   taskReports?: Prisma.TaskReportCreateNestedManyWithoutUserInput
   approvedTasks?: Prisma.TaskCreateNestedManyWithoutApprovedByInput
   approverTasks?: Prisma.TaskCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectCreateNestedManyWithoutQcInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
   chatParticipants?: Prisma.ChatParticipantCreateNestedManyWithoutUserInput
   chatMessages?: Prisma.ChatMessageCreateNestedManyWithoutSenderInput
   createdWebhooks?: Prisma.WebhookCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAttachmentsInput = {
@@ -2238,11 +4041,12 @@ export type UserUncheckedCreateWithoutAttachmentsInput = {
   startDate?: Date | string | null
   nationalId?: string | null
   position?: string | null
+  avatarUrl?: string | null
   role?: $Enums.Role
   phone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  managedDept?: Prisma.DepartmentUncheckedCreateNestedOneWithoutManagerInput
+  managedDepts?: Prisma.DepartmentUncheckedCreateNestedManyWithoutManagerInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskAssignments?: Prisma.TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
@@ -2250,11 +4054,26 @@ export type UserUncheckedCreateWithoutAttachmentsInput = {
   taskReports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutUserInput
   approvedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApprovedByInput
   approverTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutQcInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
   chatParticipants?: Prisma.ChatParticipantUncheckedCreateNestedManyWithoutUserInput
   chatMessages?: Prisma.ChatMessageUncheckedCreateNestedManyWithoutSenderInput
   createdWebhooks?: Prisma.WebhookUncheckedCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountUncheckedCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAttachmentsInput = {
@@ -2283,11 +4102,12 @@ export type UserUpdateWithoutAttachmentsInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  managedDept?: Prisma.DepartmentUpdateOneWithoutManagerNestedInput
+  managedDepts?: Prisma.DepartmentUpdateManyWithoutManagerNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
   taskAssignments?: Prisma.TaskAssigneeUpdateManyWithoutUserNestedInput
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
@@ -2295,11 +4115,26 @@ export type UserUpdateWithoutAttachmentsInput = {
   taskReports?: Prisma.TaskReportUpdateManyWithoutUserNestedInput
   approvedTasks?: Prisma.TaskUpdateManyWithoutApprovedByNestedInput
   approverTasks?: Prisma.TaskUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUpdateManyWithoutQcNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
   chatParticipants?: Prisma.ChatParticipantUpdateManyWithoutUserNestedInput
   chatMessages?: Prisma.ChatMessageUpdateManyWithoutSenderNestedInput
   createdWebhooks?: Prisma.WebhookUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAttachmentsInput = {
@@ -2313,11 +4148,12 @@ export type UserUncheckedUpdateWithoutAttachmentsInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  managedDept?: Prisma.DepartmentUncheckedUpdateOneWithoutManagerNestedInput
+  managedDepts?: Prisma.DepartmentUncheckedUpdateManyWithoutManagerNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskAssignments?: Prisma.TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -2325,11 +4161,818 @@ export type UserUncheckedUpdateWithoutAttachmentsInput = {
   taskReports?: Prisma.TaskReportUncheckedUpdateManyWithoutUserNestedInput
   approvedTasks?: Prisma.TaskUncheckedUpdateManyWithoutApprovedByNestedInput
   approverTasks?: Prisma.TaskUncheckedUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUncheckedUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUncheckedUpdateManyWithoutQcNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
   chatParticipants?: Prisma.ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
   chatMessages?: Prisma.ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   createdWebhooks?: Prisma.WebhookUncheckedUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUncheckedUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutRejectionsReceivedInput = {
+  email: string
+  password: string
+  firstName: string
+  lastName: string
+  displayName?: string | null
+  birthDate?: Date | string | null
+  startDate?: Date | string | null
+  nationalId?: string | null
+  position?: string | null
+  avatarUrl?: string | null
+  role?: $Enums.Role
+  phone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  managedDepts?: Prisma.DepartmentCreateNestedManyWithoutManagerInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
+  taskAssignments?: Prisma.TaskAssigneeCreateNestedManyWithoutUserInput
+  createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
+  taskReports?: Prisma.TaskReportCreateNestedManyWithoutUserInput
+  approvedTasks?: Prisma.TaskCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectCreateNestedManyWithoutQcInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskCreateNestedManyWithoutCompletedByInput
+  rejectionsMade?: Prisma.TaskRejectionCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutRejectionsReceivedInput = {
+  id?: number
+  email: string
+  password: string
+  firstName: string
+  lastName: string
+  displayName?: string | null
+  birthDate?: Date | string | null
+  startDate?: Date | string | null
+  nationalId?: string | null
+  position?: string | null
+  avatarUrl?: string | null
+  role?: $Enums.Role
+  phone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  managedDepts?: Prisma.DepartmentUncheckedCreateNestedManyWithoutManagerInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  taskAssignments?: Prisma.TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
+  createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
+  taskReports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutUserInput
+  approvedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutQcInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageUncheckedCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookUncheckedCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountUncheckedCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutCompletedByInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutRejectionsReceivedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutRejectionsReceivedInput, Prisma.UserUncheckedCreateWithoutRejectionsReceivedInput>
+}
+
+export type UserCreateWithoutRejectionsMadeInput = {
+  email: string
+  password: string
+  firstName: string
+  lastName: string
+  displayName?: string | null
+  birthDate?: Date | string | null
+  startDate?: Date | string | null
+  nationalId?: string | null
+  position?: string | null
+  avatarUrl?: string | null
+  role?: $Enums.Role
+  phone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  managedDepts?: Prisma.DepartmentCreateNestedManyWithoutManagerInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
+  taskAssignments?: Prisma.TaskAssigneeCreateNestedManyWithoutUserInput
+  createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
+  taskReports?: Prisma.TaskReportCreateNestedManyWithoutUserInput
+  approvedTasks?: Prisma.TaskCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectCreateNestedManyWithoutQcInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionCreateNestedManyWithoutUserInput
+  approvalsMade?: Prisma.TaskApprovalCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutRejectionsMadeInput = {
+  id?: number
+  email: string
+  password: string
+  firstName: string
+  lastName: string
+  displayName?: string | null
+  birthDate?: Date | string | null
+  startDate?: Date | string | null
+  nationalId?: string | null
+  position?: string | null
+  avatarUrl?: string | null
+  role?: $Enums.Role
+  phone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  managedDepts?: Prisma.DepartmentUncheckedCreateNestedManyWithoutManagerInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  taskAssignments?: Prisma.TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
+  createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
+  taskReports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutUserInput
+  approvedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutQcInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageUncheckedCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookUncheckedCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountUncheckedCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutUserInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutRejectionsMadeInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutRejectionsMadeInput, Prisma.UserUncheckedCreateWithoutRejectionsMadeInput>
+}
+
+export type UserUpsertWithoutRejectionsReceivedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutRejectionsReceivedInput, Prisma.UserUncheckedUpdateWithoutRejectionsReceivedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutRejectionsReceivedInput, Prisma.UserUncheckedCreateWithoutRejectionsReceivedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutRejectionsReceivedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutRejectionsReceivedInput, Prisma.UserUncheckedUpdateWithoutRejectionsReceivedInput>
+}
+
+export type UserUpdateWithoutRejectionsReceivedInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  managedDepts?: Prisma.DepartmentUpdateManyWithoutManagerNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
+  taskAssignments?: Prisma.TaskAssigneeUpdateManyWithoutUserNestedInput
+  createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
+  taskReports?: Prisma.TaskReportUpdateManyWithoutUserNestedInput
+  approvedTasks?: Prisma.TaskUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUpdateManyWithoutQcNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUpdateManyWithoutCompletedByNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutRejectionsReceivedInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  managedDepts?: Prisma.DepartmentUncheckedUpdateManyWithoutManagerNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  taskAssignments?: Prisma.TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
+  createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
+  taskReports?: Prisma.TaskReportUncheckedUpdateManyWithoutUserNestedInput
+  approvedTasks?: Prisma.TaskUncheckedUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUncheckedUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUncheckedUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUncheckedUpdateManyWithoutQcNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUncheckedUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUncheckedUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutCompletedByNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserUpsertWithoutRejectionsMadeInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutRejectionsMadeInput, Prisma.UserUncheckedUpdateWithoutRejectionsMadeInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutRejectionsMadeInput, Prisma.UserUncheckedCreateWithoutRejectionsMadeInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutRejectionsMadeInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutRejectionsMadeInput, Prisma.UserUncheckedUpdateWithoutRejectionsMadeInput>
+}
+
+export type UserUpdateWithoutRejectionsMadeInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  managedDepts?: Prisma.DepartmentUpdateManyWithoutManagerNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
+  taskAssignments?: Prisma.TaskAssigneeUpdateManyWithoutUserNestedInput
+  createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
+  taskReports?: Prisma.TaskReportUpdateManyWithoutUserNestedInput
+  approvedTasks?: Prisma.TaskUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUpdateManyWithoutQcNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUpdateManyWithoutUserNestedInput
+  approvalsMade?: Prisma.TaskApprovalUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutRejectionsMadeInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  managedDepts?: Prisma.DepartmentUncheckedUpdateManyWithoutManagerNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  taskAssignments?: Prisma.TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
+  createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
+  taskReports?: Prisma.TaskReportUncheckedUpdateManyWithoutUserNestedInput
+  approvedTasks?: Prisma.TaskUncheckedUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUncheckedUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUncheckedUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUncheckedUpdateManyWithoutQcNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUncheckedUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUncheckedUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedUpdateManyWithoutUserNestedInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutApprovalsMadeInput = {
+  email: string
+  password: string
+  firstName: string
+  lastName: string
+  displayName?: string | null
+  birthDate?: Date | string | null
+  startDate?: Date | string | null
+  nationalId?: string | null
+  position?: string | null
+  avatarUrl?: string | null
+  role?: $Enums.Role
+  phone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  managedDepts?: Prisma.DepartmentCreateNestedManyWithoutManagerInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
+  taskAssignments?: Prisma.TaskAssigneeCreateNestedManyWithoutUserInput
+  createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
+  taskReports?: Prisma.TaskReportCreateNestedManyWithoutUserInput
+  approvedTasks?: Prisma.TaskCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectCreateNestedManyWithoutQcInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutApprovalsMadeInput = {
+  id?: number
+  email: string
+  password: string
+  firstName: string
+  lastName: string
+  displayName?: string | null
+  birthDate?: Date | string | null
+  startDate?: Date | string | null
+  nationalId?: string | null
+  position?: string | null
+  avatarUrl?: string | null
+  role?: $Enums.Role
+  phone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  managedDepts?: Prisma.DepartmentUncheckedCreateNestedManyWithoutManagerInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  taskAssignments?: Prisma.TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
+  createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
+  taskReports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutUserInput
+  approvedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutQcInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageUncheckedCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookUncheckedCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountUncheckedCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutApprovalsMadeInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutApprovalsMadeInput, Prisma.UserUncheckedCreateWithoutApprovalsMadeInput>
+}
+
+export type UserUpsertWithoutApprovalsMadeInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutApprovalsMadeInput, Prisma.UserUncheckedUpdateWithoutApprovalsMadeInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutApprovalsMadeInput, Prisma.UserUncheckedCreateWithoutApprovalsMadeInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutApprovalsMadeInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutApprovalsMadeInput, Prisma.UserUncheckedUpdateWithoutApprovalsMadeInput>
+}
+
+export type UserUpdateWithoutApprovalsMadeInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  managedDepts?: Prisma.DepartmentUpdateManyWithoutManagerNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
+  taskAssignments?: Prisma.TaskAssigneeUpdateManyWithoutUserNestedInput
+  createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
+  taskReports?: Prisma.TaskReportUpdateManyWithoutUserNestedInput
+  approvedTasks?: Prisma.TaskUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUpdateManyWithoutQcNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutApprovalsMadeInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  managedDepts?: Prisma.DepartmentUncheckedUpdateManyWithoutManagerNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  taskAssignments?: Prisma.TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
+  createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
+  taskReports?: Prisma.TaskReportUncheckedUpdateManyWithoutUserNestedInput
+  approvedTasks?: Prisma.TaskUncheckedUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUncheckedUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUncheckedUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUncheckedUpdateManyWithoutQcNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUncheckedUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUncheckedUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutStorageAccountsInput = {
+  email: string
+  password: string
+  firstName: string
+  lastName: string
+  displayName?: string | null
+  birthDate?: Date | string | null
+  startDate?: Date | string | null
+  nationalId?: string | null
+  position?: string | null
+  avatarUrl?: string | null
+  role?: $Enums.Role
+  phone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  managedDepts?: Prisma.DepartmentCreateNestedManyWithoutManagerInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
+  taskAssignments?: Prisma.TaskAssigneeCreateNestedManyWithoutUserInput
+  createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
+  taskReports?: Prisma.TaskReportCreateNestedManyWithoutUserInput
+  approvedTasks?: Prisma.TaskCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectCreateNestedManyWithoutQcInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookCreateNestedManyWithoutCreatedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutStorageAccountsInput = {
+  id?: number
+  email: string
+  password: string
+  firstName: string
+  lastName: string
+  displayName?: string | null
+  birthDate?: Date | string | null
+  startDate?: Date | string | null
+  nationalId?: string | null
+  position?: string | null
+  avatarUrl?: string | null
+  role?: $Enums.Role
+  phone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  managedDepts?: Prisma.DepartmentUncheckedCreateNestedManyWithoutManagerInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  taskAssignments?: Prisma.TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
+  createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
+  taskReports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutUserInput
+  approvedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutQcInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageUncheckedCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookUncheckedCreateNestedManyWithoutCreatedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutStorageAccountsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutStorageAccountsInput, Prisma.UserUncheckedCreateWithoutStorageAccountsInput>
+}
+
+export type UserUpsertWithoutStorageAccountsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutStorageAccountsInput, Prisma.UserUncheckedUpdateWithoutStorageAccountsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutStorageAccountsInput, Prisma.UserUncheckedCreateWithoutStorageAccountsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutStorageAccountsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutStorageAccountsInput, Prisma.UserUncheckedUpdateWithoutStorageAccountsInput>
+}
+
+export type UserUpdateWithoutStorageAccountsInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  managedDepts?: Prisma.DepartmentUpdateManyWithoutManagerNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
+  taskAssignments?: Prisma.TaskAssigneeUpdateManyWithoutUserNestedInput
+  createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
+  taskReports?: Prisma.TaskReportUpdateManyWithoutUserNestedInput
+  approvedTasks?: Prisma.TaskUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUpdateManyWithoutQcNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUpdateManyWithoutCreatedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutStorageAccountsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  managedDepts?: Prisma.DepartmentUncheckedUpdateManyWithoutManagerNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  taskAssignments?: Prisma.TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
+  createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
+  taskReports?: Prisma.TaskReportUncheckedUpdateManyWithoutUserNestedInput
+  approvedTasks?: Prisma.TaskUncheckedUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUncheckedUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUncheckedUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUncheckedUpdateManyWithoutQcNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUncheckedUpdateManyWithoutCreatedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutChatParticipantsInput = {
@@ -2342,11 +4985,12 @@ export type UserCreateWithoutChatParticipantsInput = {
   startDate?: Date | string | null
   nationalId?: string | null
   position?: string | null
+  avatarUrl?: string | null
   role?: $Enums.Role
   phone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  managedDept?: Prisma.DepartmentCreateNestedOneWithoutManagerInput
+  managedDepts?: Prisma.DepartmentCreateNestedManyWithoutManagerInput
   projects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
   taskAssignments?: Prisma.TaskAssigneeCreateNestedManyWithoutUserInput
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
@@ -2354,11 +4998,26 @@ export type UserCreateWithoutChatParticipantsInput = {
   taskReports?: Prisma.TaskReportCreateNestedManyWithoutUserInput
   approvedTasks?: Prisma.TaskCreateNestedManyWithoutApprovedByInput
   approverTasks?: Prisma.TaskCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectCreateNestedManyWithoutQcInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
   attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
   chatMessages?: Prisma.ChatMessageCreateNestedManyWithoutSenderInput
   createdWebhooks?: Prisma.WebhookCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutChatParticipantsInput = {
@@ -2372,11 +5031,12 @@ export type UserUncheckedCreateWithoutChatParticipantsInput = {
   startDate?: Date | string | null
   nationalId?: string | null
   position?: string | null
+  avatarUrl?: string | null
   role?: $Enums.Role
   phone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  managedDept?: Prisma.DepartmentUncheckedCreateNestedOneWithoutManagerInput
+  managedDepts?: Prisma.DepartmentUncheckedCreateNestedManyWithoutManagerInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskAssignments?: Prisma.TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
@@ -2384,11 +5044,26 @@ export type UserUncheckedCreateWithoutChatParticipantsInput = {
   taskReports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutUserInput
   approvedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApprovedByInput
   approverTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutQcInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
   attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
   chatMessages?: Prisma.ChatMessageUncheckedCreateNestedManyWithoutSenderInput
   createdWebhooks?: Prisma.WebhookUncheckedCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountUncheckedCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutChatParticipantsInput = {
@@ -2417,11 +5092,12 @@ export type UserUpdateWithoutChatParticipantsInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  managedDept?: Prisma.DepartmentUpdateOneWithoutManagerNestedInput
+  managedDepts?: Prisma.DepartmentUpdateManyWithoutManagerNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
   taskAssignments?: Prisma.TaskAssigneeUpdateManyWithoutUserNestedInput
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
@@ -2429,11 +5105,26 @@ export type UserUpdateWithoutChatParticipantsInput = {
   taskReports?: Prisma.TaskReportUpdateManyWithoutUserNestedInput
   approvedTasks?: Prisma.TaskUpdateManyWithoutApprovedByNestedInput
   approverTasks?: Prisma.TaskUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUpdateManyWithoutQcNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
   attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
   chatMessages?: Prisma.ChatMessageUpdateManyWithoutSenderNestedInput
   createdWebhooks?: Prisma.WebhookUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutChatParticipantsInput = {
@@ -2447,11 +5138,12 @@ export type UserUncheckedUpdateWithoutChatParticipantsInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  managedDept?: Prisma.DepartmentUncheckedUpdateOneWithoutManagerNestedInput
+  managedDepts?: Prisma.DepartmentUncheckedUpdateManyWithoutManagerNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskAssignments?: Prisma.TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -2459,11 +5151,26 @@ export type UserUncheckedUpdateWithoutChatParticipantsInput = {
   taskReports?: Prisma.TaskReportUncheckedUpdateManyWithoutUserNestedInput
   approvedTasks?: Prisma.TaskUncheckedUpdateManyWithoutApprovedByNestedInput
   approverTasks?: Prisma.TaskUncheckedUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUncheckedUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUncheckedUpdateManyWithoutQcNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
   attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
   chatMessages?: Prisma.ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   createdWebhooks?: Prisma.WebhookUncheckedUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUncheckedUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutChatMessagesInput = {
@@ -2476,11 +5183,12 @@ export type UserCreateWithoutChatMessagesInput = {
   startDate?: Date | string | null
   nationalId?: string | null
   position?: string | null
+  avatarUrl?: string | null
   role?: $Enums.Role
   phone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  managedDept?: Prisma.DepartmentCreateNestedOneWithoutManagerInput
+  managedDepts?: Prisma.DepartmentCreateNestedManyWithoutManagerInput
   projects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
   taskAssignments?: Prisma.TaskAssigneeCreateNestedManyWithoutUserInput
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
@@ -2488,11 +5196,26 @@ export type UserCreateWithoutChatMessagesInput = {
   taskReports?: Prisma.TaskReportCreateNestedManyWithoutUserInput
   approvedTasks?: Prisma.TaskCreateNestedManyWithoutApprovedByInput
   approverTasks?: Prisma.TaskCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectCreateNestedManyWithoutQcInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
   attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
   chatParticipants?: Prisma.ChatParticipantCreateNestedManyWithoutUserInput
   createdWebhooks?: Prisma.WebhookCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutChatMessagesInput = {
@@ -2506,11 +5229,12 @@ export type UserUncheckedCreateWithoutChatMessagesInput = {
   startDate?: Date | string | null
   nationalId?: string | null
   position?: string | null
+  avatarUrl?: string | null
   role?: $Enums.Role
   phone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  managedDept?: Prisma.DepartmentUncheckedCreateNestedOneWithoutManagerInput
+  managedDepts?: Prisma.DepartmentUncheckedCreateNestedManyWithoutManagerInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskAssignments?: Prisma.TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
@@ -2518,11 +5242,26 @@ export type UserUncheckedCreateWithoutChatMessagesInput = {
   taskReports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutUserInput
   approvedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApprovedByInput
   approverTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutQcInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
   attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
   chatParticipants?: Prisma.ChatParticipantUncheckedCreateNestedManyWithoutUserInput
   createdWebhooks?: Prisma.WebhookUncheckedCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountUncheckedCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutChatMessagesInput = {
@@ -2551,11 +5290,12 @@ export type UserUpdateWithoutChatMessagesInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  managedDept?: Prisma.DepartmentUpdateOneWithoutManagerNestedInput
+  managedDepts?: Prisma.DepartmentUpdateManyWithoutManagerNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
   taskAssignments?: Prisma.TaskAssigneeUpdateManyWithoutUserNestedInput
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
@@ -2563,11 +5303,26 @@ export type UserUpdateWithoutChatMessagesInput = {
   taskReports?: Prisma.TaskReportUpdateManyWithoutUserNestedInput
   approvedTasks?: Prisma.TaskUpdateManyWithoutApprovedByNestedInput
   approverTasks?: Prisma.TaskUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUpdateManyWithoutQcNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
   attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
   chatParticipants?: Prisma.ChatParticipantUpdateManyWithoutUserNestedInput
   createdWebhooks?: Prisma.WebhookUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutChatMessagesInput = {
@@ -2581,11 +5336,12 @@ export type UserUncheckedUpdateWithoutChatMessagesInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  managedDept?: Prisma.DepartmentUncheckedUpdateOneWithoutManagerNestedInput
+  managedDepts?: Prisma.DepartmentUncheckedUpdateManyWithoutManagerNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskAssignments?: Prisma.TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -2593,11 +5349,26 @@ export type UserUncheckedUpdateWithoutChatMessagesInput = {
   taskReports?: Prisma.TaskReportUncheckedUpdateManyWithoutUserNestedInput
   approvedTasks?: Prisma.TaskUncheckedUpdateManyWithoutApprovedByNestedInput
   approverTasks?: Prisma.TaskUncheckedUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUncheckedUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUncheckedUpdateManyWithoutQcNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
   attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
   chatParticipants?: Prisma.ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
   createdWebhooks?: Prisma.WebhookUncheckedUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUncheckedUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCreatedWebhooksInput = {
@@ -2610,11 +5381,12 @@ export type UserCreateWithoutCreatedWebhooksInput = {
   startDate?: Date | string | null
   nationalId?: string | null
   position?: string | null
+  avatarUrl?: string | null
   role?: $Enums.Role
   phone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  managedDept?: Prisma.DepartmentCreateNestedOneWithoutManagerInput
+  managedDepts?: Prisma.DepartmentCreateNestedManyWithoutManagerInput
   projects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
   taskAssignments?: Prisma.TaskAssigneeCreateNestedManyWithoutUserInput
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
@@ -2622,11 +5394,26 @@ export type UserCreateWithoutCreatedWebhooksInput = {
   taskReports?: Prisma.TaskReportCreateNestedManyWithoutUserInput
   approvedTasks?: Prisma.TaskCreateNestedManyWithoutApprovedByInput
   approverTasks?: Prisma.TaskCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectCreateNestedManyWithoutQcInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
   attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
   chatParticipants?: Prisma.ChatParticipantCreateNestedManyWithoutUserInput
   chatMessages?: Prisma.ChatMessageCreateNestedManyWithoutSenderInput
+  storageAccounts?: Prisma.StorageAccountCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCreatedWebhooksInput = {
@@ -2640,11 +5427,12 @@ export type UserUncheckedCreateWithoutCreatedWebhooksInput = {
   startDate?: Date | string | null
   nationalId?: string | null
   position?: string | null
+  avatarUrl?: string | null
   role?: $Enums.Role
   phone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  managedDept?: Prisma.DepartmentUncheckedCreateNestedOneWithoutManagerInput
+  managedDepts?: Prisma.DepartmentUncheckedCreateNestedManyWithoutManagerInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskAssignments?: Prisma.TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
@@ -2652,11 +5440,26 @@ export type UserUncheckedCreateWithoutCreatedWebhooksInput = {
   taskReports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutUserInput
   approvedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApprovedByInput
   approverTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutQcInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
   attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
   chatParticipants?: Prisma.ChatParticipantUncheckedCreateNestedManyWithoutUserInput
   chatMessages?: Prisma.ChatMessageUncheckedCreateNestedManyWithoutSenderInput
+  storageAccounts?: Prisma.StorageAccountUncheckedCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCreatedWebhooksInput = {
@@ -2685,11 +5488,12 @@ export type UserUpdateWithoutCreatedWebhooksInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  managedDept?: Prisma.DepartmentUpdateOneWithoutManagerNestedInput
+  managedDepts?: Prisma.DepartmentUpdateManyWithoutManagerNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
   taskAssignments?: Prisma.TaskAssigneeUpdateManyWithoutUserNestedInput
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
@@ -2697,11 +5501,26 @@ export type UserUpdateWithoutCreatedWebhooksInput = {
   taskReports?: Prisma.TaskReportUpdateManyWithoutUserNestedInput
   approvedTasks?: Prisma.TaskUpdateManyWithoutApprovedByNestedInput
   approverTasks?: Prisma.TaskUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUpdateManyWithoutQcNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
   attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
   chatParticipants?: Prisma.ChatParticipantUpdateManyWithoutUserNestedInput
   chatMessages?: Prisma.ChatMessageUpdateManyWithoutSenderNestedInput
+  storageAccounts?: Prisma.StorageAccountUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCreatedWebhooksInput = {
@@ -2715,11 +5534,12 @@ export type UserUncheckedUpdateWithoutCreatedWebhooksInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  managedDept?: Prisma.DepartmentUncheckedUpdateOneWithoutManagerNestedInput
+  managedDepts?: Prisma.DepartmentUncheckedUpdateManyWithoutManagerNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskAssignments?: Prisma.TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -2727,11 +5547,1412 @@ export type UserUncheckedUpdateWithoutCreatedWebhooksInput = {
   taskReports?: Prisma.TaskReportUncheckedUpdateManyWithoutUserNestedInput
   approvedTasks?: Prisma.TaskUncheckedUpdateManyWithoutApprovedByNestedInput
   approverTasks?: Prisma.TaskUncheckedUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUncheckedUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUncheckedUpdateManyWithoutQcNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
   attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
   chatParticipants?: Prisma.ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
   chatMessages?: Prisma.ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
+  storageAccounts?: Prisma.StorageAccountUncheckedUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutTicketsInput = {
+  email: string
+  password: string
+  firstName: string
+  lastName: string
+  displayName?: string | null
+  birthDate?: Date | string | null
+  startDate?: Date | string | null
+  nationalId?: string | null
+  position?: string | null
+  avatarUrl?: string | null
+  role?: $Enums.Role
+  phone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  managedDepts?: Prisma.DepartmentCreateNestedManyWithoutManagerInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
+  taskAssignments?: Prisma.TaskAssigneeCreateNestedManyWithoutUserInput
+  createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
+  taskReports?: Prisma.TaskReportCreateNestedManyWithoutUserInput
+  approvedTasks?: Prisma.TaskCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectCreateNestedManyWithoutQcInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalCreateNestedManyWithoutByInput
+  createdInvoices?: Prisma.InvoiceCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutTicketsInput = {
+  id?: number
+  email: string
+  password: string
+  firstName: string
+  lastName: string
+  displayName?: string | null
+  birthDate?: Date | string | null
+  startDate?: Date | string | null
+  nationalId?: string | null
+  position?: string | null
+  avatarUrl?: string | null
+  role?: $Enums.Role
+  phone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  managedDepts?: Prisma.DepartmentUncheckedCreateNestedManyWithoutManagerInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  taskAssignments?: Prisma.TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
+  createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
+  taskReports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutUserInput
+  approvedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutQcInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageUncheckedCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookUncheckedCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountUncheckedCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedCreateNestedManyWithoutByInput
+  createdInvoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutTicketsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutTicketsInput, Prisma.UserUncheckedCreateWithoutTicketsInput>
+}
+
+export type UserUpsertWithoutTicketsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutTicketsInput, Prisma.UserUncheckedUpdateWithoutTicketsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutTicketsInput, Prisma.UserUncheckedCreateWithoutTicketsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutTicketsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutTicketsInput, Prisma.UserUncheckedUpdateWithoutTicketsInput>
+}
+
+export type UserUpdateWithoutTicketsInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  managedDepts?: Prisma.DepartmentUpdateManyWithoutManagerNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
+  taskAssignments?: Prisma.TaskAssigneeUpdateManyWithoutUserNestedInput
+  createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
+  taskReports?: Prisma.TaskReportUpdateManyWithoutUserNestedInput
+  approvedTasks?: Prisma.TaskUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUpdateManyWithoutQcNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUpdateManyWithoutByNestedInput
+  createdInvoices?: Prisma.InvoiceUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutTicketsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  managedDepts?: Prisma.DepartmentUncheckedUpdateManyWithoutManagerNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  taskAssignments?: Prisma.TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
+  createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
+  taskReports?: Prisma.TaskReportUncheckedUpdateManyWithoutUserNestedInput
+  approvedTasks?: Prisma.TaskUncheckedUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUncheckedUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUncheckedUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUncheckedUpdateManyWithoutQcNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUncheckedUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUncheckedUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedUpdateManyWithoutByNestedInput
+  createdInvoices?: Prisma.InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutCreatedInvoicesInput = {
+  email: string
+  password: string
+  firstName: string
+  lastName: string
+  displayName?: string | null
+  birthDate?: Date | string | null
+  startDate?: Date | string | null
+  nationalId?: string | null
+  position?: string | null
+  avatarUrl?: string | null
+  role?: $Enums.Role
+  phone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  managedDepts?: Prisma.DepartmentCreateNestedManyWithoutManagerInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
+  taskAssignments?: Prisma.TaskAssigneeCreateNestedManyWithoutUserInput
+  createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
+  taskReports?: Prisma.TaskReportCreateNestedManyWithoutUserInput
+  approvedTasks?: Prisma.TaskCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectCreateNestedManyWithoutQcInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  financialProfile?: Prisma.EmployeeFinancialProfileCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutCreatedInvoicesInput = {
+  id?: number
+  email: string
+  password: string
+  firstName: string
+  lastName: string
+  displayName?: string | null
+  birthDate?: Date | string | null
+  startDate?: Date | string | null
+  nationalId?: string | null
+  position?: string | null
+  avatarUrl?: string | null
+  role?: $Enums.Role
+  phone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  managedDepts?: Prisma.DepartmentUncheckedCreateNestedManyWithoutManagerInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  taskAssignments?: Prisma.TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
+  createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
+  taskReports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutUserInput
+  approvedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutQcInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageUncheckedCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookUncheckedCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountUncheckedCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutCreatedInvoicesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutCreatedInvoicesInput, Prisma.UserUncheckedCreateWithoutCreatedInvoicesInput>
+}
+
+export type UserUpsertWithoutCreatedInvoicesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutCreatedInvoicesInput, Prisma.UserUncheckedUpdateWithoutCreatedInvoicesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutCreatedInvoicesInput, Prisma.UserUncheckedCreateWithoutCreatedInvoicesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutCreatedInvoicesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutCreatedInvoicesInput, Prisma.UserUncheckedUpdateWithoutCreatedInvoicesInput>
+}
+
+export type UserUpdateWithoutCreatedInvoicesInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  managedDepts?: Prisma.DepartmentUpdateManyWithoutManagerNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
+  taskAssignments?: Prisma.TaskAssigneeUpdateManyWithoutUserNestedInput
+  createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
+  taskReports?: Prisma.TaskReportUpdateManyWithoutUserNestedInput
+  approvedTasks?: Prisma.TaskUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUpdateManyWithoutQcNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutCreatedInvoicesInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  managedDepts?: Prisma.DepartmentUncheckedUpdateManyWithoutManagerNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  taskAssignments?: Prisma.TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
+  createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
+  taskReports?: Prisma.TaskReportUncheckedUpdateManyWithoutUserNestedInput
+  approvedTasks?: Prisma.TaskUncheckedUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUncheckedUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUncheckedUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUncheckedUpdateManyWithoutQcNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUncheckedUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUncheckedUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutFinancialProfileInput = {
+  email: string
+  password: string
+  firstName: string
+  lastName: string
+  displayName?: string | null
+  birthDate?: Date | string | null
+  startDate?: Date | string | null
+  nationalId?: string | null
+  position?: string | null
+  avatarUrl?: string | null
+  role?: $Enums.Role
+  phone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  managedDepts?: Prisma.DepartmentCreateNestedManyWithoutManagerInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
+  taskAssignments?: Prisma.TaskAssigneeCreateNestedManyWithoutUserInput
+  createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
+  taskReports?: Prisma.TaskReportCreateNestedManyWithoutUserInput
+  approvedTasks?: Prisma.TaskCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectCreateNestedManyWithoutQcInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceCreateNestedManyWithoutCreatedByInput
+  userAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutFinancialProfileInput = {
+  id?: number
+  email: string
+  password: string
+  firstName: string
+  lastName: string
+  displayName?: string | null
+  birthDate?: Date | string | null
+  startDate?: Date | string | null
+  nationalId?: string | null
+  position?: string | null
+  avatarUrl?: string | null
+  role?: $Enums.Role
+  phone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  managedDepts?: Prisma.DepartmentUncheckedCreateNestedManyWithoutManagerInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  taskAssignments?: Prisma.TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
+  createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
+  taskReports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutUserInput
+  approvedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutQcInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageUncheckedCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookUncheckedCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountUncheckedCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutFinancialProfileInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutFinancialProfileInput, Prisma.UserUncheckedCreateWithoutFinancialProfileInput>
+}
+
+export type UserUpsertWithoutFinancialProfileInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutFinancialProfileInput, Prisma.UserUncheckedUpdateWithoutFinancialProfileInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutFinancialProfileInput, Prisma.UserUncheckedCreateWithoutFinancialProfileInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutFinancialProfileInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutFinancialProfileInput, Prisma.UserUncheckedUpdateWithoutFinancialProfileInput>
+}
+
+export type UserUpdateWithoutFinancialProfileInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  managedDepts?: Prisma.DepartmentUpdateManyWithoutManagerNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
+  taskAssignments?: Prisma.TaskAssigneeUpdateManyWithoutUserNestedInput
+  createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
+  taskReports?: Prisma.TaskReportUpdateManyWithoutUserNestedInput
+  approvedTasks?: Prisma.TaskUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUpdateManyWithoutQcNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUpdateManyWithoutCreatedByNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutFinancialProfileInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  managedDepts?: Prisma.DepartmentUncheckedUpdateManyWithoutManagerNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  taskAssignments?: Prisma.TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
+  createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
+  taskReports?: Prisma.TaskReportUncheckedUpdateManyWithoutUserNestedInput
+  approvedTasks?: Prisma.TaskUncheckedUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUncheckedUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUncheckedUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUncheckedUpdateManyWithoutQcNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUncheckedUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUncheckedUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutUserAdvancesInput = {
+  email: string
+  password: string
+  firstName: string
+  lastName: string
+  displayName?: string | null
+  birthDate?: Date | string | null
+  startDate?: Date | string | null
+  nationalId?: string | null
+  position?: string | null
+  avatarUrl?: string | null
+  role?: $Enums.Role
+  phone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  managedDepts?: Prisma.DepartmentCreateNestedManyWithoutManagerInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
+  taskAssignments?: Prisma.TaskAssigneeCreateNestedManyWithoutUserInput
+  createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
+  taskReports?: Prisma.TaskReportCreateNestedManyWithoutUserInput
+  approvedTasks?: Prisma.TaskCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectCreateNestedManyWithoutQcInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileCreateNestedOneWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutUserAdvancesInput = {
+  id?: number
+  email: string
+  password: string
+  firstName: string
+  lastName: string
+  displayName?: string | null
+  birthDate?: Date | string | null
+  startDate?: Date | string | null
+  nationalId?: string | null
+  position?: string | null
+  avatarUrl?: string | null
+  role?: $Enums.Role
+  phone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  managedDepts?: Prisma.DepartmentUncheckedCreateNestedManyWithoutManagerInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  taskAssignments?: Prisma.TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
+  createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
+  taskReports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutUserInput
+  approvedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutQcInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageUncheckedCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookUncheckedCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountUncheckedCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutUserAdvancesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutUserAdvancesInput, Prisma.UserUncheckedCreateWithoutUserAdvancesInput>
+}
+
+export type UserCreateWithoutApprovedAdvancesInput = {
+  email: string
+  password: string
+  firstName: string
+  lastName: string
+  displayName?: string | null
+  birthDate?: Date | string | null
+  startDate?: Date | string | null
+  nationalId?: string | null
+  position?: string | null
+  avatarUrl?: string | null
+  role?: $Enums.Role
+  phone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  managedDepts?: Prisma.DepartmentCreateNestedManyWithoutManagerInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
+  taskAssignments?: Prisma.TaskAssigneeCreateNestedManyWithoutUserInput
+  createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
+  taskReports?: Prisma.TaskReportCreateNestedManyWithoutUserInput
+  approvedTasks?: Prisma.TaskCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectCreateNestedManyWithoutQcInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutUserInput
+  approvedPayrolls?: Prisma.PayrollPeriodCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutApprovedAdvancesInput = {
+  id?: number
+  email: string
+  password: string
+  firstName: string
+  lastName: string
+  displayName?: string | null
+  birthDate?: Date | string | null
+  startDate?: Date | string | null
+  nationalId?: string | null
+  position?: string | null
+  avatarUrl?: string | null
+  role?: $Enums.Role
+  phone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  managedDepts?: Prisma.DepartmentUncheckedCreateNestedManyWithoutManagerInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  taskAssignments?: Prisma.TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
+  createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
+  taskReports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutUserInput
+  approvedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutQcInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageUncheckedCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookUncheckedCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountUncheckedCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutUserInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutApprovedAdvancesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutApprovedAdvancesInput, Prisma.UserUncheckedCreateWithoutApprovedAdvancesInput>
+}
+
+export type UserUpsertWithoutUserAdvancesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutUserAdvancesInput, Prisma.UserUncheckedUpdateWithoutUserAdvancesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutUserAdvancesInput, Prisma.UserUncheckedCreateWithoutUserAdvancesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutUserAdvancesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutUserAdvancesInput, Prisma.UserUncheckedUpdateWithoutUserAdvancesInput>
+}
+
+export type UserUpdateWithoutUserAdvancesInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  managedDepts?: Prisma.DepartmentUpdateManyWithoutManagerNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
+  taskAssignments?: Prisma.TaskAssigneeUpdateManyWithoutUserNestedInput
+  createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
+  taskReports?: Prisma.TaskReportUpdateManyWithoutUserNestedInput
+  approvedTasks?: Prisma.TaskUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUpdateManyWithoutQcNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUpdateOneWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutUserAdvancesInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  managedDepts?: Prisma.DepartmentUncheckedUpdateManyWithoutManagerNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  taskAssignments?: Prisma.TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
+  createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
+  taskReports?: Prisma.TaskReportUncheckedUpdateManyWithoutUserNestedInput
+  approvedTasks?: Prisma.TaskUncheckedUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUncheckedUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUncheckedUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUncheckedUpdateManyWithoutQcNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUncheckedUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUncheckedUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserUpsertWithoutApprovedAdvancesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutApprovedAdvancesInput, Prisma.UserUncheckedUpdateWithoutApprovedAdvancesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutApprovedAdvancesInput, Prisma.UserUncheckedCreateWithoutApprovedAdvancesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutApprovedAdvancesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutApprovedAdvancesInput, Prisma.UserUncheckedUpdateWithoutApprovedAdvancesInput>
+}
+
+export type UserUpdateWithoutApprovedAdvancesInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  managedDepts?: Prisma.DepartmentUpdateManyWithoutManagerNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
+  taskAssignments?: Prisma.TaskAssigneeUpdateManyWithoutUserNestedInput
+  createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
+  taskReports?: Prisma.TaskReportUpdateManyWithoutUserNestedInput
+  approvedTasks?: Prisma.TaskUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUpdateManyWithoutQcNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutUserNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutApprovedAdvancesInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  managedDepts?: Prisma.DepartmentUncheckedUpdateManyWithoutManagerNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  taskAssignments?: Prisma.TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
+  createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
+  taskReports?: Prisma.TaskReportUncheckedUpdateManyWithoutUserNestedInput
+  approvedTasks?: Prisma.TaskUncheckedUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUncheckedUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUncheckedUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUncheckedUpdateManyWithoutQcNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUncheckedUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUncheckedUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutUserNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutApprovedPayrollsInput = {
+  email: string
+  password: string
+  firstName: string
+  lastName: string
+  displayName?: string | null
+  birthDate?: Date | string | null
+  startDate?: Date | string | null
+  nationalId?: string | null
+  position?: string | null
+  avatarUrl?: string | null
+  role?: $Enums.Role
+  phone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  managedDepts?: Prisma.DepartmentCreateNestedManyWithoutManagerInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
+  taskAssignments?: Prisma.TaskAssigneeCreateNestedManyWithoutUserInput
+  createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
+  taskReports?: Prisma.TaskReportCreateNestedManyWithoutUserInput
+  approvedTasks?: Prisma.TaskCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectCreateNestedManyWithoutQcInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutApprovedPayrollsInput = {
+  id?: number
+  email: string
+  password: string
+  firstName: string
+  lastName: string
+  displayName?: string | null
+  birthDate?: Date | string | null
+  startDate?: Date | string | null
+  nationalId?: string | null
+  position?: string | null
+  avatarUrl?: string | null
+  role?: $Enums.Role
+  phone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  managedDepts?: Prisma.DepartmentUncheckedCreateNestedManyWithoutManagerInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  taskAssignments?: Prisma.TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
+  createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
+  taskReports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutUserInput
+  approvedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutQcInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageUncheckedCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookUncheckedCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountUncheckedCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutApprovedByInput
+  userPayslips?: Prisma.PayslipUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutApprovedPayrollsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutApprovedPayrollsInput, Prisma.UserUncheckedCreateWithoutApprovedPayrollsInput>
+}
+
+export type UserUpsertWithoutApprovedPayrollsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutApprovedPayrollsInput, Prisma.UserUncheckedUpdateWithoutApprovedPayrollsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutApprovedPayrollsInput, Prisma.UserUncheckedCreateWithoutApprovedPayrollsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutApprovedPayrollsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutApprovedPayrollsInput, Prisma.UserUncheckedUpdateWithoutApprovedPayrollsInput>
+}
+
+export type UserUpdateWithoutApprovedPayrollsInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  managedDepts?: Prisma.DepartmentUpdateManyWithoutManagerNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
+  taskAssignments?: Prisma.TaskAssigneeUpdateManyWithoutUserNestedInput
+  createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
+  taskReports?: Prisma.TaskReportUpdateManyWithoutUserNestedInput
+  approvedTasks?: Prisma.TaskUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUpdateManyWithoutQcNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutApprovedPayrollsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  managedDepts?: Prisma.DepartmentUncheckedUpdateManyWithoutManagerNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  taskAssignments?: Prisma.TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
+  createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
+  taskReports?: Prisma.TaskReportUncheckedUpdateManyWithoutUserNestedInput
+  approvedTasks?: Prisma.TaskUncheckedUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUncheckedUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUncheckedUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUncheckedUpdateManyWithoutQcNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUncheckedUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUncheckedUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutApprovedByNestedInput
+  userPayslips?: Prisma.PayslipUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutUserPayslipsInput = {
+  email: string
+  password: string
+  firstName: string
+  lastName: string
+  displayName?: string | null
+  birthDate?: Date | string | null
+  startDate?: Date | string | null
+  nationalId?: string | null
+  position?: string | null
+  avatarUrl?: string | null
+  role?: $Enums.Role
+  phone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  managedDepts?: Prisma.DepartmentCreateNestedManyWithoutManagerInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
+  taskAssignments?: Prisma.TaskAssigneeCreateNestedManyWithoutUserInput
+  createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
+  taskReports?: Prisma.TaskReportCreateNestedManyWithoutUserInput
+  approvedTasks?: Prisma.TaskCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectCreateNestedManyWithoutQcInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodCreateNestedManyWithoutApprovedByInput
+}
+
+export type UserUncheckedCreateWithoutUserPayslipsInput = {
+  id?: number
+  email: string
+  password: string
+  firstName: string
+  lastName: string
+  displayName?: string | null
+  birthDate?: Date | string | null
+  startDate?: Date | string | null
+  nationalId?: string | null
+  position?: string | null
+  avatarUrl?: string | null
+  role?: $Enums.Role
+  phone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  managedDepts?: Prisma.DepartmentUncheckedCreateNestedManyWithoutManagerInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  taskAssignments?: Prisma.TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
+  createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
+  taskReports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutUserInput
+  approvedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApprovedByInput
+  approverTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutApproverInput
+  qcReviewedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutQcByInput
+  qcProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutQcInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedCreateNestedManyWithoutUserInput
+  attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageUncheckedCreateNestedManyWithoutSenderInput
+  createdWebhooks?: Prisma.WebhookUncheckedCreateNestedManyWithoutCreatedByInput
+  storageAccounts?: Prisma.StorageAccountUncheckedCreateNestedManyWithoutConnectedByInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutAssigneeInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutCompletedByInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutUserInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutByInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedCreateNestedManyWithoutByInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  createdInvoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedCreateNestedOneWithoutUserInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutUserInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedCreateNestedManyWithoutApprovedByInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedCreateNestedManyWithoutApprovedByInput
+}
+
+export type UserCreateOrConnectWithoutUserPayslipsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutUserPayslipsInput, Prisma.UserUncheckedCreateWithoutUserPayslipsInput>
+}
+
+export type UserUpsertWithoutUserPayslipsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutUserPayslipsInput, Prisma.UserUncheckedUpdateWithoutUserPayslipsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutUserPayslipsInput, Prisma.UserUncheckedCreateWithoutUserPayslipsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutUserPayslipsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutUserPayslipsInput, Prisma.UserUncheckedUpdateWithoutUserPayslipsInput>
+}
+
+export type UserUpdateWithoutUserPayslipsInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  managedDepts?: Prisma.DepartmentUpdateManyWithoutManagerNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
+  taskAssignments?: Prisma.TaskAssigneeUpdateManyWithoutUserNestedInput
+  createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
+  taskReports?: Prisma.TaskReportUpdateManyWithoutUserNestedInput
+  approvedTasks?: Prisma.TaskUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUpdateManyWithoutQcNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUpdateManyWithoutApprovedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutUserPayslipsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  managedDepts?: Prisma.DepartmentUncheckedUpdateManyWithoutManagerNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  taskAssignments?: Prisma.TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
+  createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
+  taskReports?: Prisma.TaskReportUncheckedUpdateManyWithoutUserNestedInput
+  approvedTasks?: Prisma.TaskUncheckedUpdateManyWithoutApprovedByNestedInput
+  approverTasks?: Prisma.TaskUncheckedUpdateManyWithoutApproverNestedInput
+  qcReviewedTasks?: Prisma.TaskUncheckedUpdateManyWithoutQcByNestedInput
+  qcProjects?: Prisma.ProjectUncheckedUpdateManyWithoutQcNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  departmentMemberships?: Prisma.UserDepartmentUncheckedUpdateManyWithoutUserNestedInput
+  attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
+  createdWebhooks?: Prisma.WebhookUncheckedUpdateManyWithoutCreatedByNestedInput
+  storageAccounts?: Prisma.StorageAccountUncheckedUpdateManyWithoutConnectedByNestedInput
+  subtasksAssigned?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  subtasksCompleted?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutCompletedByNestedInput
+  rejectionsReceived?: Prisma.TaskRejectionUncheckedUpdateManyWithoutUserNestedInput
+  rejectionsMade?: Prisma.TaskRejectionUncheckedUpdateManyWithoutByNestedInput
+  approvalsMade?: Prisma.TaskApprovalUncheckedUpdateManyWithoutByNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  createdInvoices?: Prisma.InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  financialProfile?: Prisma.EmployeeFinancialProfileUncheckedUpdateOneWithoutUserNestedInput
+  userAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutUserNestedInput
+  approvedAdvances?: Prisma.PersonnelAdvanceUncheckedUpdateManyWithoutApprovedByNestedInput
+  approvedPayrolls?: Prisma.PayrollPeriodUncheckedUpdateManyWithoutApprovedByNestedInput
 }
 
 
@@ -2740,6 +6961,7 @@ export type UserUncheckedUpdateWithoutCreatedWebhooksInput = {
  */
 
 export type UserCountOutputType = {
+  managedDepts: number
   projects: number
   taskAssignments: number
   createdTasks: number
@@ -2747,15 +6969,30 @@ export type UserCountOutputType = {
   taskReports: number
   approvedTasks: number
   approverTasks: number
+  qcReviewedTasks: number
+  qcProjects: number
   notifications: number
   departmentMemberships: number
   attachments: number
   chatParticipants: number
   chatMessages: number
   createdWebhooks: number
+  storageAccounts: number
+  subtasksAssigned: number
+  subtasksCompleted: number
+  rejectionsReceived: number
+  rejectionsMade: number
+  approvalsMade: number
+  tickets: number
+  createdInvoices: number
+  userAdvances: number
+  approvedAdvances: number
+  approvedPayrolls: number
+  userPayslips: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  managedDepts?: boolean | UserCountOutputTypeCountManagedDeptsArgs
   projects?: boolean | UserCountOutputTypeCountProjectsArgs
   taskAssignments?: boolean | UserCountOutputTypeCountTaskAssignmentsArgs
   createdTasks?: boolean | UserCountOutputTypeCountCreatedTasksArgs
@@ -2763,12 +7000,26 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   taskReports?: boolean | UserCountOutputTypeCountTaskReportsArgs
   approvedTasks?: boolean | UserCountOutputTypeCountApprovedTasksArgs
   approverTasks?: boolean | UserCountOutputTypeCountApproverTasksArgs
+  qcReviewedTasks?: boolean | UserCountOutputTypeCountQcReviewedTasksArgs
+  qcProjects?: boolean | UserCountOutputTypeCountQcProjectsArgs
   notifications?: boolean | UserCountOutputTypeCountNotificationsArgs
   departmentMemberships?: boolean | UserCountOutputTypeCountDepartmentMembershipsArgs
   attachments?: boolean | UserCountOutputTypeCountAttachmentsArgs
   chatParticipants?: boolean | UserCountOutputTypeCountChatParticipantsArgs
   chatMessages?: boolean | UserCountOutputTypeCountChatMessagesArgs
   createdWebhooks?: boolean | UserCountOutputTypeCountCreatedWebhooksArgs
+  storageAccounts?: boolean | UserCountOutputTypeCountStorageAccountsArgs
+  subtasksAssigned?: boolean | UserCountOutputTypeCountSubtasksAssignedArgs
+  subtasksCompleted?: boolean | UserCountOutputTypeCountSubtasksCompletedArgs
+  rejectionsReceived?: boolean | UserCountOutputTypeCountRejectionsReceivedArgs
+  rejectionsMade?: boolean | UserCountOutputTypeCountRejectionsMadeArgs
+  approvalsMade?: boolean | UserCountOutputTypeCountApprovalsMadeArgs
+  tickets?: boolean | UserCountOutputTypeCountTicketsArgs
+  createdInvoices?: boolean | UserCountOutputTypeCountCreatedInvoicesArgs
+  userAdvances?: boolean | UserCountOutputTypeCountUserAdvancesArgs
+  approvedAdvances?: boolean | UserCountOutputTypeCountApprovedAdvancesArgs
+  approvedPayrolls?: boolean | UserCountOutputTypeCountApprovedPayrollsArgs
+  userPayslips?: boolean | UserCountOutputTypeCountUserPayslipsArgs
 }
 
 /**
@@ -2779,6 +7030,13 @@ export type UserCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensi
    * Select specific fields to fetch from the UserCountOutputType
    */
   select?: Prisma.UserCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountManagedDeptsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DepartmentWhereInput
 }
 
 /**
@@ -2833,6 +7091,20 @@ export type UserCountOutputTypeCountApproverTasksArgs<ExtArgs extends runtime.Ty
 /**
  * UserCountOutputType without action
  */
+export type UserCountOutputTypeCountQcReviewedTasksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TaskWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountQcProjectsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProjectWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
 export type UserCountOutputTypeCountNotificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.NotificationWhereInput
 }
@@ -2872,6 +7144,90 @@ export type UserCountOutputTypeCountCreatedWebhooksArgs<ExtArgs extends runtime.
   where?: Prisma.WebhookWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountStorageAccountsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StorageAccountWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountSubtasksAssignedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TaskSubtaskWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountSubtasksCompletedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TaskSubtaskWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountRejectionsReceivedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TaskRejectionWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountRejectionsMadeArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TaskRejectionWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountApprovalsMadeArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TaskApprovalWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountTicketsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TicketWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountCreatedInvoicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.InvoiceWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountUserAdvancesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PersonnelAdvanceWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountApprovedAdvancesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PersonnelAdvanceWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountApprovedPayrollsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PayrollPeriodWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountUserPayslipsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PayslipWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2884,11 +7240,12 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   startDate?: boolean
   nationalId?: boolean
   position?: boolean
+  avatarUrl?: boolean
   role?: boolean
   phone?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  managedDept?: boolean | Prisma.User$managedDeptArgs<ExtArgs>
+  managedDepts?: boolean | Prisma.User$managedDeptsArgs<ExtArgs>
   projects?: boolean | Prisma.User$projectsArgs<ExtArgs>
   taskAssignments?: boolean | Prisma.User$taskAssignmentsArgs<ExtArgs>
   createdTasks?: boolean | Prisma.User$createdTasksArgs<ExtArgs>
@@ -2896,12 +7253,27 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   taskReports?: boolean | Prisma.User$taskReportsArgs<ExtArgs>
   approvedTasks?: boolean | Prisma.User$approvedTasksArgs<ExtArgs>
   approverTasks?: boolean | Prisma.User$approverTasksArgs<ExtArgs>
+  qcReviewedTasks?: boolean | Prisma.User$qcReviewedTasksArgs<ExtArgs>
+  qcProjects?: boolean | Prisma.User$qcProjectsArgs<ExtArgs>
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
   departmentMemberships?: boolean | Prisma.User$departmentMembershipsArgs<ExtArgs>
   attachments?: boolean | Prisma.User$attachmentsArgs<ExtArgs>
   chatParticipants?: boolean | Prisma.User$chatParticipantsArgs<ExtArgs>
   chatMessages?: boolean | Prisma.User$chatMessagesArgs<ExtArgs>
   createdWebhooks?: boolean | Prisma.User$createdWebhooksArgs<ExtArgs>
+  storageAccounts?: boolean | Prisma.User$storageAccountsArgs<ExtArgs>
+  subtasksAssigned?: boolean | Prisma.User$subtasksAssignedArgs<ExtArgs>
+  subtasksCompleted?: boolean | Prisma.User$subtasksCompletedArgs<ExtArgs>
+  rejectionsReceived?: boolean | Prisma.User$rejectionsReceivedArgs<ExtArgs>
+  rejectionsMade?: boolean | Prisma.User$rejectionsMadeArgs<ExtArgs>
+  approvalsMade?: boolean | Prisma.User$approvalsMadeArgs<ExtArgs>
+  tickets?: boolean | Prisma.User$ticketsArgs<ExtArgs>
+  createdInvoices?: boolean | Prisma.User$createdInvoicesArgs<ExtArgs>
+  financialProfile?: boolean | Prisma.User$financialProfileArgs<ExtArgs>
+  userAdvances?: boolean | Prisma.User$userAdvancesArgs<ExtArgs>
+  approvedAdvances?: boolean | Prisma.User$approvedAdvancesArgs<ExtArgs>
+  approvedPayrolls?: boolean | Prisma.User$approvedPayrollsArgs<ExtArgs>
+  userPayslips?: boolean | Prisma.User$userPayslipsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -2916,6 +7288,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   startDate?: boolean
   nationalId?: boolean
   position?: boolean
+  avatarUrl?: boolean
   role?: boolean
   phone?: boolean
   createdAt?: boolean
@@ -2933,6 +7306,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   startDate?: boolean
   nationalId?: boolean
   position?: boolean
+  avatarUrl?: boolean
   role?: boolean
   phone?: boolean
   createdAt?: boolean
@@ -2950,15 +7324,16 @@ export type UserSelectScalar = {
   startDate?: boolean
   nationalId?: boolean
   position?: boolean
+  avatarUrl?: boolean
   role?: boolean
   phone?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "password" | "firstName" | "lastName" | "displayName" | "birthDate" | "startDate" | "nationalId" | "position" | "role" | "phone" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "password" | "firstName" | "lastName" | "displayName" | "birthDate" | "startDate" | "nationalId" | "position" | "avatarUrl" | "role" | "phone" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  managedDept?: boolean | Prisma.User$managedDeptArgs<ExtArgs>
+  managedDepts?: boolean | Prisma.User$managedDeptsArgs<ExtArgs>
   projects?: boolean | Prisma.User$projectsArgs<ExtArgs>
   taskAssignments?: boolean | Prisma.User$taskAssignmentsArgs<ExtArgs>
   createdTasks?: boolean | Prisma.User$createdTasksArgs<ExtArgs>
@@ -2966,12 +7341,27 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   taskReports?: boolean | Prisma.User$taskReportsArgs<ExtArgs>
   approvedTasks?: boolean | Prisma.User$approvedTasksArgs<ExtArgs>
   approverTasks?: boolean | Prisma.User$approverTasksArgs<ExtArgs>
+  qcReviewedTasks?: boolean | Prisma.User$qcReviewedTasksArgs<ExtArgs>
+  qcProjects?: boolean | Prisma.User$qcProjectsArgs<ExtArgs>
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
   departmentMemberships?: boolean | Prisma.User$departmentMembershipsArgs<ExtArgs>
   attachments?: boolean | Prisma.User$attachmentsArgs<ExtArgs>
   chatParticipants?: boolean | Prisma.User$chatParticipantsArgs<ExtArgs>
   chatMessages?: boolean | Prisma.User$chatMessagesArgs<ExtArgs>
   createdWebhooks?: boolean | Prisma.User$createdWebhooksArgs<ExtArgs>
+  storageAccounts?: boolean | Prisma.User$storageAccountsArgs<ExtArgs>
+  subtasksAssigned?: boolean | Prisma.User$subtasksAssignedArgs<ExtArgs>
+  subtasksCompleted?: boolean | Prisma.User$subtasksCompletedArgs<ExtArgs>
+  rejectionsReceived?: boolean | Prisma.User$rejectionsReceivedArgs<ExtArgs>
+  rejectionsMade?: boolean | Prisma.User$rejectionsMadeArgs<ExtArgs>
+  approvalsMade?: boolean | Prisma.User$approvalsMadeArgs<ExtArgs>
+  tickets?: boolean | Prisma.User$ticketsArgs<ExtArgs>
+  createdInvoices?: boolean | Prisma.User$createdInvoicesArgs<ExtArgs>
+  financialProfile?: boolean | Prisma.User$financialProfileArgs<ExtArgs>
+  userAdvances?: boolean | Prisma.User$userAdvancesArgs<ExtArgs>
+  approvedAdvances?: boolean | Prisma.User$approvedAdvancesArgs<ExtArgs>
+  approvedPayrolls?: boolean | Prisma.User$approvedPayrollsArgs<ExtArgs>
+  userPayslips?: boolean | Prisma.User$userPayslipsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -2980,7 +7370,12 @@ export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "User"
   objects: {
-    managedDept: Prisma.$DepartmentPayload<ExtArgs> | null
+    /**
+     * Departments this user manages — a list, because one person can run
+     * several. Declaring it as a single Department is what forced the unique
+     * index on the other side.
+     */
+    managedDepts: Prisma.$DepartmentPayload<ExtArgs>[]
     projects: Prisma.$ProjectPayload<ExtArgs>[]
     taskAssignments: Prisma.$TaskAssigneePayload<ExtArgs>[]
     createdTasks: Prisma.$TaskPayload<ExtArgs>[]
@@ -2988,12 +7383,27 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     taskReports: Prisma.$TaskReportPayload<ExtArgs>[]
     approvedTasks: Prisma.$TaskPayload<ExtArgs>[]
     approverTasks: Prisma.$TaskPayload<ExtArgs>[]
+    qcReviewedTasks: Prisma.$TaskPayload<ExtArgs>[]
+    qcProjects: Prisma.$ProjectPayload<ExtArgs>[]
     notifications: Prisma.$NotificationPayload<ExtArgs>[]
     departmentMemberships: Prisma.$UserDepartmentPayload<ExtArgs>[]
     attachments: Prisma.$TaskAttachmentPayload<ExtArgs>[]
     chatParticipants: Prisma.$ChatParticipantPayload<ExtArgs>[]
     chatMessages: Prisma.$ChatMessagePayload<ExtArgs>[]
     createdWebhooks: Prisma.$WebhookPayload<ExtArgs>[]
+    storageAccounts: Prisma.$StorageAccountPayload<ExtArgs>[]
+    subtasksAssigned: Prisma.$TaskSubtaskPayload<ExtArgs>[]
+    subtasksCompleted: Prisma.$TaskSubtaskPayload<ExtArgs>[]
+    rejectionsReceived: Prisma.$TaskRejectionPayload<ExtArgs>[]
+    rejectionsMade: Prisma.$TaskRejectionPayload<ExtArgs>[]
+    approvalsMade: Prisma.$TaskApprovalPayload<ExtArgs>[]
+    tickets: Prisma.$TicketPayload<ExtArgs>[]
+    createdInvoices: Prisma.$InvoicePayload<ExtArgs>[]
+    financialProfile: Prisma.$EmployeeFinancialProfilePayload<ExtArgs> | null
+    userAdvances: Prisma.$PersonnelAdvancePayload<ExtArgs>[]
+    approvedAdvances: Prisma.$PersonnelAdvancePayload<ExtArgs>[]
+    approvedPayrolls: Prisma.$PayrollPeriodPayload<ExtArgs>[]
+    userPayslips: Prisma.$PayslipPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -3006,6 +7416,11 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     startDate: Date | null
     nationalId: string | null
     position: string | null
+    /**
+     * Profile photo, served from the uploads folder. Null means the initials
+     * avatar, which stays the fallback everywhere.
+     */
+    avatarUrl: string | null
     role: $Enums.Role
     phone: string | null
     createdAt: Date
@@ -3404,7 +7819,7 @@ readonly fields: UserFieldRefs;
  */
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  managedDept<T extends Prisma.User$managedDeptArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$managedDeptArgs<ExtArgs>>): Prisma.Prisma__DepartmentClient<runtime.Types.Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  managedDepts<T extends Prisma.User$managedDeptsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$managedDeptsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   projects<T extends Prisma.User$projectsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$projectsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   taskAssignments<T extends Prisma.User$taskAssignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$taskAssignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskAssigneePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   createdTasks<T extends Prisma.User$createdTasksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$createdTasksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -3412,12 +7827,27 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   taskReports<T extends Prisma.User$taskReportsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$taskReportsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   approvedTasks<T extends Prisma.User$approvedTasksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$approvedTasksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   approverTasks<T extends Prisma.User$approverTasksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$approverTasksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  qcReviewedTasks<T extends Prisma.User$qcReviewedTasksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$qcReviewedTasksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  qcProjects<T extends Prisma.User$qcProjectsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$qcProjectsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   notifications<T extends Prisma.User$notificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   departmentMemberships<T extends Prisma.User$departmentMembershipsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$departmentMembershipsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserDepartmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   attachments<T extends Prisma.User$attachmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$attachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskAttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   chatParticipants<T extends Prisma.User$chatParticipantsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$chatParticipantsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ChatParticipantPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   chatMessages<T extends Prisma.User$chatMessagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$chatMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ChatMessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   createdWebhooks<T extends Prisma.User$createdWebhooksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$createdWebhooksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WebhookPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  storageAccounts<T extends Prisma.User$storageAccountsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$storageAccountsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StorageAccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  subtasksAssigned<T extends Prisma.User$subtasksAssignedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$subtasksAssignedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskSubtaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  subtasksCompleted<T extends Prisma.User$subtasksCompletedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$subtasksCompletedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskSubtaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  rejectionsReceived<T extends Prisma.User$rejectionsReceivedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$rejectionsReceivedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskRejectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  rejectionsMade<T extends Prisma.User$rejectionsMadeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$rejectionsMadeArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskRejectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  approvalsMade<T extends Prisma.User$approvalsMadeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$approvalsMadeArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskApprovalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  tickets<T extends Prisma.User$ticketsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$ticketsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  createdInvoices<T extends Prisma.User$createdInvoicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$createdInvoicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  financialProfile<T extends Prisma.User$financialProfileArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$financialProfileArgs<ExtArgs>>): Prisma.Prisma__EmployeeFinancialProfileClient<runtime.Types.Result.GetResult<Prisma.$EmployeeFinancialProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  userAdvances<T extends Prisma.User$userAdvancesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$userAdvancesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PersonnelAdvancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  approvedAdvances<T extends Prisma.User$approvedAdvancesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$approvedAdvancesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PersonnelAdvancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  approvedPayrolls<T extends Prisma.User$approvedPayrollsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$approvedPayrollsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PayrollPeriodPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  userPayslips<T extends Prisma.User$userPayslipsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$userPayslipsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PayslipPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3457,6 +7887,7 @@ export interface UserFieldRefs {
   readonly startDate: Prisma.FieldRef<"User", 'DateTime'>
   readonly nationalId: Prisma.FieldRef<"User", 'String'>
   readonly position: Prisma.FieldRef<"User", 'String'>
+  readonly avatarUrl: Prisma.FieldRef<"User", 'String'>
   readonly role: Prisma.FieldRef<"User", 'Role'>
   readonly phone: Prisma.FieldRef<"User", 'String'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
@@ -3854,9 +8285,9 @@ export type UserDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 /**
- * User.managedDept
+ * User.managedDepts
  */
-export type User$managedDeptArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type User$managedDeptsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the Department
    */
@@ -3870,6 +8301,11 @@ export type User$managedDeptArgs<ExtArgs extends runtime.Types.Extensions.Intern
    */
   include?: Prisma.DepartmentInclude<ExtArgs> | null
   where?: Prisma.DepartmentWhereInput
+  orderBy?: Prisma.DepartmentOrderByWithRelationInput | Prisma.DepartmentOrderByWithRelationInput[]
+  cursor?: Prisma.DepartmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DepartmentScalarFieldEnum | Prisma.DepartmentScalarFieldEnum[]
 }
 
 /**
@@ -4041,6 +8477,54 @@ export type User$approverTasksArgs<ExtArgs extends runtime.Types.Extensions.Inte
 }
 
 /**
+ * User.qcReviewedTasks
+ */
+export type User$qcReviewedTasksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Task
+   */
+  select?: Prisma.TaskSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Task
+   */
+  omit?: Prisma.TaskOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TaskInclude<ExtArgs> | null
+  where?: Prisma.TaskWhereInput
+  orderBy?: Prisma.TaskOrderByWithRelationInput | Prisma.TaskOrderByWithRelationInput[]
+  cursor?: Prisma.TaskWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TaskScalarFieldEnum | Prisma.TaskScalarFieldEnum[]
+}
+
+/**
+ * User.qcProjects
+ */
+export type User$qcProjectsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Project
+   */
+  select?: Prisma.ProjectSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Project
+   */
+  omit?: Prisma.ProjectOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProjectInclude<ExtArgs> | null
+  where?: Prisma.ProjectWhereInput
+  orderBy?: Prisma.ProjectOrderByWithRelationInput | Prisma.ProjectOrderByWithRelationInput[]
+  cursor?: Prisma.ProjectWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProjectScalarFieldEnum | Prisma.ProjectScalarFieldEnum[]
+}
+
+/**
  * User.notifications
  */
 export type User$notificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -4182,6 +8666,313 @@ export type User$createdWebhooksArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   distinct?: Prisma.WebhookScalarFieldEnum | Prisma.WebhookScalarFieldEnum[]
+}
+
+/**
+ * User.storageAccounts
+ */
+export type User$storageAccountsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StorageAccount
+   */
+  select?: Prisma.StorageAccountSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StorageAccount
+   */
+  omit?: Prisma.StorageAccountOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StorageAccountInclude<ExtArgs> | null
+  where?: Prisma.StorageAccountWhereInput
+  orderBy?: Prisma.StorageAccountOrderByWithRelationInput | Prisma.StorageAccountOrderByWithRelationInput[]
+  cursor?: Prisma.StorageAccountWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StorageAccountScalarFieldEnum | Prisma.StorageAccountScalarFieldEnum[]
+}
+
+/**
+ * User.subtasksAssigned
+ */
+export type User$subtasksAssignedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TaskSubtask
+   */
+  select?: Prisma.TaskSubtaskSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TaskSubtask
+   */
+  omit?: Prisma.TaskSubtaskOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TaskSubtaskInclude<ExtArgs> | null
+  where?: Prisma.TaskSubtaskWhereInput
+  orderBy?: Prisma.TaskSubtaskOrderByWithRelationInput | Prisma.TaskSubtaskOrderByWithRelationInput[]
+  cursor?: Prisma.TaskSubtaskWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TaskSubtaskScalarFieldEnum | Prisma.TaskSubtaskScalarFieldEnum[]
+}
+
+/**
+ * User.subtasksCompleted
+ */
+export type User$subtasksCompletedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TaskSubtask
+   */
+  select?: Prisma.TaskSubtaskSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TaskSubtask
+   */
+  omit?: Prisma.TaskSubtaskOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TaskSubtaskInclude<ExtArgs> | null
+  where?: Prisma.TaskSubtaskWhereInput
+  orderBy?: Prisma.TaskSubtaskOrderByWithRelationInput | Prisma.TaskSubtaskOrderByWithRelationInput[]
+  cursor?: Prisma.TaskSubtaskWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TaskSubtaskScalarFieldEnum | Prisma.TaskSubtaskScalarFieldEnum[]
+}
+
+/**
+ * User.rejectionsReceived
+ */
+export type User$rejectionsReceivedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TaskRejection
+   */
+  select?: Prisma.TaskRejectionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TaskRejection
+   */
+  omit?: Prisma.TaskRejectionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TaskRejectionInclude<ExtArgs> | null
+  where?: Prisma.TaskRejectionWhereInput
+  orderBy?: Prisma.TaskRejectionOrderByWithRelationInput | Prisma.TaskRejectionOrderByWithRelationInput[]
+  cursor?: Prisma.TaskRejectionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TaskRejectionScalarFieldEnum | Prisma.TaskRejectionScalarFieldEnum[]
+}
+
+/**
+ * User.rejectionsMade
+ */
+export type User$rejectionsMadeArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TaskRejection
+   */
+  select?: Prisma.TaskRejectionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TaskRejection
+   */
+  omit?: Prisma.TaskRejectionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TaskRejectionInclude<ExtArgs> | null
+  where?: Prisma.TaskRejectionWhereInput
+  orderBy?: Prisma.TaskRejectionOrderByWithRelationInput | Prisma.TaskRejectionOrderByWithRelationInput[]
+  cursor?: Prisma.TaskRejectionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TaskRejectionScalarFieldEnum | Prisma.TaskRejectionScalarFieldEnum[]
+}
+
+/**
+ * User.approvalsMade
+ */
+export type User$approvalsMadeArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TaskApproval
+   */
+  select?: Prisma.TaskApprovalSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TaskApproval
+   */
+  omit?: Prisma.TaskApprovalOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TaskApprovalInclude<ExtArgs> | null
+  where?: Prisma.TaskApprovalWhereInput
+  orderBy?: Prisma.TaskApprovalOrderByWithRelationInput | Prisma.TaskApprovalOrderByWithRelationInput[]
+  cursor?: Prisma.TaskApprovalWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TaskApprovalScalarFieldEnum | Prisma.TaskApprovalScalarFieldEnum[]
+}
+
+/**
+ * User.tickets
+ */
+export type User$ticketsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Ticket
+   */
+  select?: Prisma.TicketSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Ticket
+   */
+  omit?: Prisma.TicketOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TicketInclude<ExtArgs> | null
+  where?: Prisma.TicketWhereInput
+  orderBy?: Prisma.TicketOrderByWithRelationInput | Prisma.TicketOrderByWithRelationInput[]
+  cursor?: Prisma.TicketWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TicketScalarFieldEnum | Prisma.TicketScalarFieldEnum[]
+}
+
+/**
+ * User.createdInvoices
+ */
+export type User$createdInvoicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Invoice
+   */
+  select?: Prisma.InvoiceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Invoice
+   */
+  omit?: Prisma.InvoiceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InvoiceInclude<ExtArgs> | null
+  where?: Prisma.InvoiceWhereInput
+  orderBy?: Prisma.InvoiceOrderByWithRelationInput | Prisma.InvoiceOrderByWithRelationInput[]
+  cursor?: Prisma.InvoiceWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.InvoiceScalarFieldEnum | Prisma.InvoiceScalarFieldEnum[]
+}
+
+/**
+ * User.financialProfile
+ */
+export type User$financialProfileArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EmployeeFinancialProfile
+   */
+  select?: Prisma.EmployeeFinancialProfileSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the EmployeeFinancialProfile
+   */
+  omit?: Prisma.EmployeeFinancialProfileOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EmployeeFinancialProfileInclude<ExtArgs> | null
+  where?: Prisma.EmployeeFinancialProfileWhereInput
+}
+
+/**
+ * User.userAdvances
+ */
+export type User$userAdvancesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PersonnelAdvance
+   */
+  select?: Prisma.PersonnelAdvanceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PersonnelAdvance
+   */
+  omit?: Prisma.PersonnelAdvanceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PersonnelAdvanceInclude<ExtArgs> | null
+  where?: Prisma.PersonnelAdvanceWhereInput
+  orderBy?: Prisma.PersonnelAdvanceOrderByWithRelationInput | Prisma.PersonnelAdvanceOrderByWithRelationInput[]
+  cursor?: Prisma.PersonnelAdvanceWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PersonnelAdvanceScalarFieldEnum | Prisma.PersonnelAdvanceScalarFieldEnum[]
+}
+
+/**
+ * User.approvedAdvances
+ */
+export type User$approvedAdvancesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PersonnelAdvance
+   */
+  select?: Prisma.PersonnelAdvanceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PersonnelAdvance
+   */
+  omit?: Prisma.PersonnelAdvanceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PersonnelAdvanceInclude<ExtArgs> | null
+  where?: Prisma.PersonnelAdvanceWhereInput
+  orderBy?: Prisma.PersonnelAdvanceOrderByWithRelationInput | Prisma.PersonnelAdvanceOrderByWithRelationInput[]
+  cursor?: Prisma.PersonnelAdvanceWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PersonnelAdvanceScalarFieldEnum | Prisma.PersonnelAdvanceScalarFieldEnum[]
+}
+
+/**
+ * User.approvedPayrolls
+ */
+export type User$approvedPayrollsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PayrollPeriod
+   */
+  select?: Prisma.PayrollPeriodSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PayrollPeriod
+   */
+  omit?: Prisma.PayrollPeriodOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PayrollPeriodInclude<ExtArgs> | null
+  where?: Prisma.PayrollPeriodWhereInput
+  orderBy?: Prisma.PayrollPeriodOrderByWithRelationInput | Prisma.PayrollPeriodOrderByWithRelationInput[]
+  cursor?: Prisma.PayrollPeriodWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PayrollPeriodScalarFieldEnum | Prisma.PayrollPeriodScalarFieldEnum[]
+}
+
+/**
+ * User.userPayslips
+ */
+export type User$userPayslipsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Payslip
+   */
+  select?: Prisma.PayslipSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Payslip
+   */
+  omit?: Prisma.PayslipOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PayslipInclude<ExtArgs> | null
+  where?: Prisma.PayslipWhereInput
+  orderBy?: Prisma.PayslipOrderByWithRelationInput | Prisma.PayslipOrderByWithRelationInput[]
+  cursor?: Prisma.PayslipWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PayslipScalarFieldEnum | Prisma.PayslipScalarFieldEnum[]
 }
 
 /**

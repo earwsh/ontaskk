@@ -2,7 +2,16 @@ node_modules/
 .next/
 *.log
 .env
+.env*.local
 dist/
 pgdata/
 __pycache__/
 *.pyc
+target/
+analysis-rs/target/
+uploads/
+backend-previous/
+frontend-build/
+*.prev*
+*.tsbuildinfo
+.DS_Store

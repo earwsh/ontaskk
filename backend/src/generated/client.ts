@@ -95,6 +95,34 @@ export type User = Prisma.UserModel
  */
 export type TaskAttachment = Prisma.TaskAttachmentModel
 /**
+ * Model TaskRejection
+ * One row per assignee per time a task was sent back for rework.
+ * 
+ * The task's own qcPassed/qcNote fields only hold the *latest* decision and
+ * are cleared on resubmission, so counting rejections from them loses every
+ * earlier one. This table is the history those numbers need.
+ */
+export type TaskRejection = Prisma.TaskRejectionModel
+/**
+ * Model TaskApproval
+ * One approval, kept forever.
+ * 
+ * The task's own qc* and approvedBy* fields hold only the latest decision, so
+ * a task approved, sent back, then approved again remembered just the last
+ * pass — and a reviewer's history could not show what they had waved through.
+ * Rejections already had this table; approvals were the missing half.
+ */
+export type TaskApproval = Prisma.TaskApprovalModel
+/**
+ * Model StorageAccount
+ * The organisation's single connected cloud drive.
+ * 
+ * Deliberately one shared account rather than per-user connections: files
+ * outlive the person who uploaded them, and a departing employee must not
+ * take the project's deliverables with them.
+ */
+export type StorageAccount = Prisma.StorageAccountModel
+/**
  * Model Conversation
  * 
  */
@@ -114,3 +142,47 @@ export type ChatMessage = Prisma.ChatMessageModel
  * 
  */
 export type Webhook = Prisma.WebhookModel
+/**
+ * Model FormSubmission
+ * A form submission posted from an external website.
+ * 
+ * The ingest endpoint is public and unauthenticated by design, so nothing
+ * here is trusted: `site` and `pageUrl` are self-reported by the page, and
+ * `fields` is arbitrary user input. Treat every value as untrusted text.
+ */
+export type FormSubmission = Prisma.FormSubmissionModel
+/**
+ * Model Ticket
+ * 
+ */
+export type Ticket = Prisma.TicketModel
+/**
+ * Model Invoice
+ * 
+ */
+export type Invoice = Prisma.InvoiceModel
+/**
+ * Model InvoiceItem
+ * 
+ */
+export type InvoiceItem = Prisma.InvoiceItemModel
+/**
+ * Model EmployeeFinancialProfile
+ * 
+ */
+export type EmployeeFinancialProfile = Prisma.EmployeeFinancialProfileModel
+/**
+ * Model PersonnelAdvance
+ * 
+ */
+export type PersonnelAdvance = Prisma.PersonnelAdvanceModel
+/**
+ * Model PayrollPeriod
+ * 
+ */
+export type PayrollPeriod = Prisma.PayrollPeriodModel
+/**
+ * Model Payslip
+ * 
+ */
+export type Payslip = Prisma.PayslipModel

@@ -62,10 +62,21 @@ export const ModelName = {
   Notification: 'Notification',
   User: 'User',
   TaskAttachment: 'TaskAttachment',
+  TaskRejection: 'TaskRejection',
+  TaskApproval: 'TaskApproval',
+  StorageAccount: 'StorageAccount',
   Conversation: 'Conversation',
   ChatParticipant: 'ChatParticipant',
   ChatMessage: 'ChatMessage',
-  Webhook: 'Webhook'
+  Webhook: 'Webhook',
+  FormSubmission: 'FormSubmission',
+  Ticket: 'Ticket',
+  Invoice: 'Invoice',
+  InvoiceItem: 'InvoiceItem',
+  EmployeeFinancialProfile: 'EmployeeFinancialProfile',
+  PersonnelAdvance: 'PersonnelAdvance',
+  PayrollPeriod: 'PayrollPeriod',
+  Payslip: 'Payslip'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -106,12 +117,14 @@ export type DepartmentScalarFieldEnum = (typeof DepartmentScalarFieldEnum)[keyof
 
 
 export const ProjectScalarFieldEnum = {
+  driveFolderId: 'driveFolderId',
   id: 'id',
   name: 'name',
   description: 'description',
   client: 'client',
   departmentId: 'departmentId',
   createdById: 'createdById',
+  qcId: 'qcId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -130,6 +143,7 @@ export type ProjectMemberScalarFieldEnum = (typeof ProjectMemberScalarFieldEnum)
 
 
 export const TaskScalarFieldEnum = {
+  driveFolderId: 'driveFolderId',
   id: 'id',
   title: 'title',
   description: 'description',
@@ -142,6 +156,11 @@ export const TaskScalarFieldEnum = {
   approvedById: 'approvedById',
   approvedAt: 'approvedAt',
   approverId: 'approverId',
+  qcById: 'qcById',
+  qcAt: 'qcAt',
+  qcNote: 'qcNote',
+  qcPassed: 'qcPassed',
+  submittedForReviewAt: 'submittedForReviewAt',
   projectId: 'projectId',
   createdById: 'createdById',
   isRecurring: 'isRecurring',
@@ -175,7 +194,10 @@ export const TaskSubtaskScalarFieldEnum = {
   isDone: 'isDone',
   completedAt: 'completedAt',
   taskId: 'taskId',
-  createdAt: 'createdAt'
+  assigneeId: 'assigneeId',
+  completedById: 'completedById',
+  createdAt: 'createdAt',
+  position: 'position'
 } as const
 
 export type TaskSubtaskScalarFieldEnum = (typeof TaskSubtaskScalarFieldEnum)[keyof typeof TaskSubtaskScalarFieldEnum]
@@ -217,6 +239,7 @@ export const UserScalarFieldEnum = {
   startDate: 'startDate',
   nationalId: 'nationalId',
   position: 'position',
+  avatarUrl: 'avatarUrl',
   role: 'role',
   phone: 'phone',
   createdAt: 'createdAt',
@@ -233,10 +256,55 @@ export const TaskAttachmentScalarFieldEnum = {
   mimeType: 'mimeType',
   taskId: 'taskId',
   userId: 'userId',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  provider: 'provider',
+  externalId: 'externalId',
+  thumbnailUrl: 'thumbnailUrl',
+  sizeBytes: 'sizeBytes'
 } as const
 
 export type TaskAttachmentScalarFieldEnum = (typeof TaskAttachmentScalarFieldEnum)[keyof typeof TaskAttachmentScalarFieldEnum]
+
+
+export const TaskRejectionScalarFieldEnum = {
+  id: 'id',
+  taskId: 'taskId',
+  userId: 'userId',
+  byId: 'byId',
+  stage: 'stage',
+  categories: 'categories',
+  reworkMinutes: 'reworkMinutes',
+  reason: 'reason',
+  createdAt: 'createdAt'
+} as const
+
+export type TaskRejectionScalarFieldEnum = (typeof TaskRejectionScalarFieldEnum)[keyof typeof TaskRejectionScalarFieldEnum]
+
+
+export const TaskApprovalScalarFieldEnum = {
+  id: 'id',
+  taskId: 'taskId',
+  byId: 'byId',
+  stage: 'stage',
+  note: 'note',
+  createdAt: 'createdAt'
+} as const
+
+export type TaskApprovalScalarFieldEnum = (typeof TaskApprovalScalarFieldEnum)[keyof typeof TaskApprovalScalarFieldEnum]
+
+
+export const StorageAccountScalarFieldEnum = {
+  id: 'id',
+  provider: 'provider',
+  refreshTokenEnc: 'refreshTokenEnc',
+  accountEmail: 'accountEmail',
+  rootFolderId: 'rootFolderId',
+  connectedById: 'connectedById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type StorageAccountScalarFieldEnum = (typeof StorageAccountScalarFieldEnum)[keyof typeof StorageAccountScalarFieldEnum]
 
 
 export const ConversationScalarFieldEnum = {
@@ -293,12 +361,196 @@ export const WebhookScalarFieldEnum = {
 export type WebhookScalarFieldEnum = (typeof WebhookScalarFieldEnum)[keyof typeof WebhookScalarFieldEnum]
 
 
+export const FormSubmissionScalarFieldEnum = {
+  id: 'id',
+  site: 'site',
+  formName: 'formName',
+  pageUrl: 'pageUrl',
+  fields: 'fields',
+  ip: 'ip',
+  userAgent: 'userAgent',
+  read: 'read',
+  archived: 'archived',
+  createdAt: 'createdAt'
+} as const
+
+export type FormSubmissionScalarFieldEnum = (typeof FormSubmissionScalarFieldEnum)[keyof typeof FormSubmissionScalarFieldEnum]
+
+
+export const TicketScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  department: 'department',
+  priority: 'priority',
+  status: 'status',
+  userId: 'userId',
+  response: 'response',
+  resolvedAt: 'resolvedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TicketScalarFieldEnum = (typeof TicketScalarFieldEnum)[keyof typeof TicketScalarFieldEnum]
+
+
+export const InvoiceScalarFieldEnum = {
+  id: 'id',
+  invoiceNumber: 'invoiceNumber',
+  title: 'title',
+  projectId: 'projectId',
+  sellerName: 'sellerName',
+  sellerPhone: 'sellerPhone',
+  sellerAddress: 'sellerAddress',
+  sellerTaxId: 'sellerTaxId',
+  clientName: 'clientName',
+  clientPhone: 'clientPhone',
+  clientAddress: 'clientAddress',
+  clientTaxId: 'clientTaxId',
+  issueDate: 'issueDate',
+  dueDate: 'dueDate',
+  paidAt: 'paidAt',
+  status: 'status',
+  subtotal: 'subtotal',
+  discount: 'discount',
+  taxRate: 'taxRate',
+  taxAmount: 'taxAmount',
+  totalAmount: 'totalAmount',
+  previousDebt: 'previousDebt',
+  paidAmount: 'paidAmount',
+  finalAmount: 'finalAmount',
+  currency: 'currency',
+  notes: 'notes',
+  iban1: 'iban1',
+  iban2: 'iban2',
+  paymentAccounts: 'paymentAccounts',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type InvoiceScalarFieldEnum = (typeof InvoiceScalarFieldEnum)[keyof typeof InvoiceScalarFieldEnum]
+
+
+export const InvoiceItemScalarFieldEnum = {
+  id: 'id',
+  invoiceId: 'invoiceId',
+  description: 'description',
+  quantity: 'quantity',
+  unit: 'unit',
+  unitPrice: 'unitPrice',
+  totalPrice: 'totalPrice',
+  taskId: 'taskId',
+  createdAt: 'createdAt'
+} as const
+
+export type InvoiceItemScalarFieldEnum = (typeof InvoiceItemScalarFieldEnum)[keyof typeof InvoiceItemScalarFieldEnum]
+
+
+export const EmployeeFinancialProfileScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  baseSalary: 'baseSalary',
+  hourlyRate: 'hourlyRate',
+  bankIban: 'bankIban',
+  bankCardNumber: 'bankCardNumber',
+  bankName: 'bankName',
+  maxAdvanceLimit: 'maxAdvanceLimit',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EmployeeFinancialProfileScalarFieldEnum = (typeof EmployeeFinancialProfileScalarFieldEnum)[keyof typeof EmployeeFinancialProfileScalarFieldEnum]
+
+
+export const PersonnelAdvanceScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  amount: 'amount',
+  reason: 'reason',
+  installments: 'installments',
+  attachmentUrl: 'attachmentUrl',
+  status: 'status',
+  requestedAt: 'requestedAt',
+  approvedById: 'approvedById',
+  approvedAt: 'approvedAt',
+  rejectionReason: 'rejectionReason',
+  paidAt: 'paidAt',
+  recoveryPeriod: 'recoveryPeriod',
+  payslipId: 'payslipId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PersonnelAdvanceScalarFieldEnum = (typeof PersonnelAdvanceScalarFieldEnum)[keyof typeof PersonnelAdvanceScalarFieldEnum]
+
+
+export const PayrollPeriodScalarFieldEnum = {
+  id: 'id',
+  periodKey: 'periodKey',
+  title: 'title',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  status: 'status',
+  totalGross: 'totalGross',
+  totalDeductions: 'totalDeductions',
+  totalNet: 'totalNet',
+  approvedById: 'approvedById',
+  approvedAt: 'approvedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PayrollPeriodScalarFieldEnum = (typeof PayrollPeriodScalarFieldEnum)[keyof typeof PayrollPeriodScalarFieldEnum]
+
+
+export const PayslipScalarFieldEnum = {
+  id: 'id',
+  payrollPeriodId: 'payrollPeriodId',
+  userId: 'userId',
+  status: 'status',
+  workedMinutes: 'workedMinutes',
+  overtimeMinutes: 'overtimeMinutes',
+  tasksCompleted: 'tasksCompleted',
+  baseSalary: 'baseSalary',
+  overtimeAmount: 'overtimeAmount',
+  bonusesAmount: 'bonusesAmount',
+  advancesDeduction: 'advancesDeduction',
+  penaltiesAmount: 'penaltiesAmount',
+  grossPayable: 'grossPayable',
+  netPayable: 'netPayable',
+  bankIban: 'bankIban',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PayslipScalarFieldEnum = (typeof PayslipScalarFieldEnum)[keyof typeof PayslipScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
 export const QueryMode = {
@@ -315,4 +567,13 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 

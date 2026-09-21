@@ -1,7 +1,14 @@
 import { Router, Response } from 'express';
-import { authenticate, AuthRequest } from '../middleware/auth';
+import { authenticate, authorize, AuthRequest } from '../middleware/auth';
 import prisma from '../lib/prisma';
 import { callPython, callRust, microservicesHealth } from '../services/analysisClient';
+import { isTaskOverdue, isAwaitingReview } from '../lib/deadline';
+import { buildDeliveryView } from '../services/deliveryView';
+import { NOT_TEMPLATE } from '../services/recurringTasks';
+import { managedDepartmentIds } from '../lib/departments';
+import { employeeMonthlyStats } from '../services/employeeStats';
+import { dailyRate, rejectionAnalytics, capacityByDay, latenessAnalytics, monthlyScorecard, personScorecard, currentJalaliMonthKey, ScorecardInputError } from '../services/rateAnalytics';
+import { WORKING_MINUTES_PER_DAY, workingDays } from '../lib/capacity';
 
 const router = Router();
 
@@ -14,20 +21,22 @@ router.get('/health-check', authenticate, async (_req, res) => {
    Helpers: microservice-first, JS fallback
    ──────────────────────────────────────────────────────────────── */
 
-type AnyTask = { id: number; status: string; deadline: Date | null; assignees: { userId: number }[]; projectId?: number | null; project?: { id: number; name: string } | null; weight?: number | null; estimatedMinutes?: number | null };
+type AnyTask = { id: number; status: string; deadline: Date | null; submittedForReviewAt?: Date | null; assignees: { userId: number }[]; projectId?: number | null; project?: { id: number; name: string } | null; weight?: number | null; estimatedMinutes?: number | null };
 
-function isTaskOverdue(deadline: Date | string | null | undefined, status: string): boolean {
-  if (status === 'DONE' || !deadline) return false;
-  const d = new Date(deadline);
-  const deadlineEnd = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 23, 59, 59, 999);
-  return deadlineEnd.getTime() < Date.now();
-}
+
 
 function toRustTask(t: AnyTask) {
-  return { status: t.status, deadline: t.deadline ? t.deadline.toISOString() : null, assignee_ids: t.assignees.map((a) => a.userId) };
+  return {
+    status: t.status,
+    deadline: t.deadline ? t.deadline.toISOString() : null,
+    // Rust decides the project's risk label from its own overdue count, so it
+    // needs the handover moment or it re-introduces the rule we just fixed.
+    submitted_for_review_at: t.submittedForReviewAt ? t.submittedForReviewAt.toISOString() : null,
+    assignee_ids: t.assignees.map((a) => a.userId),
+  };
 }
 
-async function counts(tasks: AnyTask[]): Promise<{ total: number; todo: number; inProgress: number; pendingApproval: number; done: number; completionRate: number; overdue: number; computedBy?: string }> {
+async function counts(tasks: AnyTask[]): Promise<{ total: number; todo: number; inProgress: number; pendingApproval: number; done: number; completionRate: number; overdue: number; awaitingReview: number; computedBy?: string }> {
   const r = await callRust('/aggregate/tasks', { tasks: tasks.map(toRustTask) });
   const sc = r?.statusCounts || {};
   const total = r?.total ?? tasks.length;
@@ -39,7 +48,10 @@ async function counts(tasks: AnyTask[]): Promise<{ total: number; todo: number; 
     pendingApproval: tasks.filter((t) => t.status === 'PENDING_APPROVAL').length,
     done,
     completionRate: total > 0 ? Math.round((done / total) * 100) : 0,
-    overdue: tasks.filter((t) => isTaskOverdue(t.deadline, t.status)).length,
+    overdue: tasks.filter((t) => isTaskOverdue(t.deadline, t.status, t.submittedForReviewAt)).length,
+    // Work handed over and waiting on a reviewer: not lateness, but not
+    // finished either — and it used to be counted as the assignee's delay.
+    awaitingReview: tasks.filter((t) => isAwaitingReview(t.status)).length,
   };
   if (!r) return fallback;
   return {
@@ -50,6 +62,7 @@ async function counts(tasks: AnyTask[]): Promise<{ total: number; todo: number; 
     done,
     completionRate: r.completionRate !== undefined ? Math.round(r.completionRate) : fallback.completionRate,
     overdue: r.overdue ?? fallback.overdue,
+    awaitingReview: fallback.awaitingReview,
     computedBy: r.computedBy,
   };
 }
@@ -95,7 +108,7 @@ async function computeMemberPerformance(tasks: AnyTask[], names: Map<number, str
   for (const [uid, name] of names) map.set(uid, { name, total: 0, done: 0, overdue: 0 });
   for (const t of tasks) {
     const done = t.status === 'DONE';
-    const overdue = isTaskOverdue(t.deadline, t.status);
+    const overdue = isTaskOverdue(t.deadline, t.status, t.submittedForReviewAt);
     for (const a of t.assignees) {
       const entry = map.get(a.userId);
       if (!entry) continue;
@@ -147,12 +160,17 @@ async function resolveScope(user: { id: number; role: string }): Promise<Scope> 
   let scopeLabel = 'کل سازمان';
 
   if (user.role === 'DEPARTMENT_MANAGER') {
-    const managed = await prisma.department.findFirst({ where: { managerId: user.id } });
-    if (!managed) {
+    const managed = await prisma.department.findMany({
+      where: { managerId: user.id },
+      select: { id: true, name: true },
+    });
+    if (managed.length === 0) {
       return { scopeLabel: '—', departments: [], allProjects: [], allTasks: [], memberNames: new Map(), memberDept: new Map() };
     }
-    scopeLabel = managed.name;
-    where = { id: { in: [managed.id] } };
+    scopeLabel = managed.length === 1
+      ? managed[0]!.name
+      : `${managed.length} دپارتمان: ${managed.map((d) => d.name).join('، ')}`;
+    where = { id: { in: managed.map((d) => d.id) } };
   }
 
   const departments = await prisma.department.findMany({
@@ -162,8 +180,9 @@ async function resolveScope(user: { id: number; role: string }): Promise<Scope> 
       projects: {
         include: {
           tasks: {
+            where: NOT_TEMPLATE,
             select: {
-              id: true, title: true, description: true, status: true, deadline: true,
+              id: true, title: true, description: true, status: true, deadline: true, submittedForReviewAt: true,
               estimatedHours: true, weight: true, estimatedMinutes: true, createdAt: true, updatedAt: true, approvedAt: true,
               projectId: true, assignees: { select: { userId: true } },
             },
@@ -257,7 +276,10 @@ function healthPayload(scope: Scope) {
   }
   for (const t of scope.allTasks) {
     const done = t.status === 'DONE';
-    const overdue = isTaskOverdue(t.deadline, t.status);
+    const overdue = isTaskOverdue(t.deadline, t.status, t.submittedForReviewAt);
+    // Weight is minutes now, kept in step with the estimate on every write.
+    // The fallback is for the handful of tasks nobody estimated, where the
+    // alternative is counting them as no work at all.
     const weight = t.weight || t.estimatedMinutes || 120;
     for (const a of t.assignees) {
       const entry = totals.get(a.userId) || { total: 0, done: 0, overdue: 0 };
@@ -275,7 +297,13 @@ function healthPayload(scope: Scope) {
       total: s.total,
       done: s.done,
       overdue: s.overdue,
+      // The same weight said in the unit a manager plans in. Minutes are the
+      // stored truth; days are what tells you whether a queue is survivable.
+      totalDays: workingDays(s.total),
+      openDays: workingDays(s.total - s.done),
+      overdueDays: workingDays(s.overdue),
     })),
+    minutesPerWorkingDay: WORKING_MINUTES_PER_DAY,
   };
 }
 
@@ -295,7 +323,7 @@ function fallbackCounts(tasks: ScopedTask[]) {
   return {
     total,
     done,
-    overdue: tasks.filter((t) => isTaskOverdue(t.deadline, t.status)).length,
+    overdue: tasks.filter((t) => isTaskOverdue(t.deadline, t.status, t.submittedForReviewAt)).length,
     pending: tasks.filter((t) => t.status === 'PENDING_APPROVAL').length,
     completionRate: total > 0 ? Math.round((done / total) * 100) : 0,
   };
@@ -315,7 +343,7 @@ function computeHealthScore(counts: { completionRate: number; overdue: number; t
   return Math.max(0, Math.min(100, score));
 }
 
-const ANALYTICS_MANAGER_ROLES = ['CEO', 'HR_MANAGER', 'TECHNICAL_MANAGER', 'STRATEGY_MANAGER', 'DEPARTMENT_MANAGER'];
+const ANALYTICS_MANAGER_ROLES = ['CEO', 'INTERNAL_MANAGER', 'TECHNICAL_MANAGER', 'STRATEGY_MANAGER', 'DEPARTMENT_MANAGER'];
 
 /* ────────────────────────────────────────────────────────────────
    Routes
@@ -391,169 +419,6 @@ router.get('/me', authenticate, async (req: AuthRequest, res: Response) => {
     });
   } catch (err) {
     console.error('analytics/me error:', err);
-    res.status(500).json({ error: 'Server error' });
-  }
-});
-
-router.get('/department/:deptId', authenticate, async (req: AuthRequest, res: Response) => {
-  try {
-    const deptId = parseInt(Array.isArray(req.params.deptId) ? req.params.deptId[0] : req.params.deptId, 10);
-    const userRole = req.user!.role;
-
-    if (!['DEPARTMENT_MANAGER', 'TECHNICAL_MANAGER', 'STRATEGY_MANAGER', 'CEO', 'HR_MANAGER'].includes(userRole)) {
-      return res.status(403).json({ error: 'Access denied' });
-    }
-
-    if (userRole === 'DEPARTMENT_MANAGER') {
-      const managed = await prisma.department.findFirst({ where: { managerId: req.user!.id } });
-      if (!managed || managed.id !== deptId) {
-        return res.status(403).json({ error: 'Access denied' });
-      }
-    }
-
-    const dept = await prisma.department.findUnique({ where: { id: deptId } });
-    if (!dept) return res.status(404).json({ error: 'Department not found' });
-
-    const projects = await prisma.project.findMany({
-      where: { departmentId: deptId },
-      include: { tasks: { select: { id: true, status: true, deadline: true, projectId: true, assignees: { select: { userId: true } } } } },
-    });
-
-    const allTasks: AnyTask[] = projects.flatMap((p) => p.tasks);
-    const c = await counts(allTasks);
-    
-    // Group tasks by project for the Rust microservice
-    const projectMap = new Map<number, { name: string; tasks: { status: string }[] }>();
-    for (const proj of projects) {
-      for (const task of proj.tasks) {
-        const pid = task.projectId;
-        if (pid === null || pid === undefined) continue;
-        const existing = projectMap.get(pid);
-        if (existing) {
-          existing.tasks.push({ status: task.status });
-        } else {
-          projectMap.set(pid, {
-            name: proj.name,
-            tasks: [{ status: task.status }],
-          });
-        }
-      }
-    }
-    const projectsForRust = Array.from(projectMap.entries()).map(([projectId, data]) => ({
-      id: projectId,
-      name: data.name,
-      tasks: data.tasks,
-    }));
-
-    // Try to use the Rust microservice for project breakdown
-    const rustProjectBreakdown = await callRust('/aggregate/projects', {
-      projects: projectsForRust,
-    });
-    let pBreakdown: any[] = [];
-    if (rustProjectBreakdown?.projects) {
-      pBreakdown = rustProjectBreakdown.projects.map((p: any) => ({
-        projectId: p.projectId,
-        projectName: p.projectName,
-        total: p.total,
-        done: p.done,
-        completionRate: Math.round(p.completionRate),
-      }));
-    } else {
-      // Fallback to JS
-      pBreakdown = projects.map((p) => {
-        const pDone = p.tasks.filter((t) => t.status === 'DONE').length;
-        return {
-          projectId: p.id,
-          projectName: p.name,
-          total: p.tasks.length,
-          done: pDone,
-          completionRate: p.tasks.length > 0 ? Math.round((pDone / p.tasks.length) * 100) : 0,
-        };
-      });
-    }
-
-    const memberNames = new Map<number, string>();
-    for (const proj of projects) {
-      const members = await prisma.projectMember.findMany({ where: { projectId: proj.id }, include: { user: { select: { id: true, firstName: true, lastName: true } } } });
-      for (const m of members) {
-        if (!memberNames.has(m.userId)) {
-          memberNames.set(m.userId, `${m.user.firstName} ${m.user.lastName}`);
-        }
-      }
-    }
-
-    const memberPerformance = await computeMemberPerformance(allTasks, memberNames);
-
-    res.json({
-      total: c.total,
-      todo: c.todo,
-      inProgress: c.inProgress,
-      pendingApproval: c.pendingApproval,
-      done: c.done,
-      completionRate: c.completionRate,
-      pendingApprovals: c.pendingApproval,
-      projectBreakdown: pBreakdown,
-      memberPerformance,
-      computedBy: c.computedBy || 'js',
-    });
-  } catch (err) {
-    console.error('analytics/department error:', err);
-    res.status(500).json({ error: 'Server error' });
-  }
-});
-
-router.get('/technical', authenticate, async (req: AuthRequest, res: Response) => {
-  try {
-    const userRole = req.user!.role;
-    if (!ANALYTICS_MANAGER_ROLES.includes(userRole)) {
-      return res.status(403).json({ error: 'Access denied' });
-    }
-
-    const scope = await resolveScope(req.user!);
-    const [insights, health, projAgg, memberPerf] = await Promise.all([
-      callPython('/analyze/insights', pythonPayload(scope)),
-      callRust('/aggregate/health', healthPayload(scope)),
-      callRust('/aggregate/projects', projectsPayload(scope)),
-      computeMemberPerformance(scope.allTasks as AnyTask[], scope.memberNames),
-    ]);
-
-    const c = await counts(scope.allTasks as AnyTask[]);
-
-    const pBreakdown = (projAgg?.projects || []).map((p: any) => ({
-      projectId: p.projectId,
-      projectName: p.projectName,
-      total: p.total,
-      done: p.done,
-      completionRate: Math.round(p.completionRate),
-    }));
-
-    const deptBreakdown = scope.departments.map((dept) => ({
-      deptId: dept.id,
-      deptName: dept.name,
-      total: dept.projects.flatMap((p) => p.tasks).length,
-      projectCount: dept.projects.length,
-    }));
-
-    res.json({
-      total: c.total,
-      todo: c.todo,
-      inProgress: c.inProgress,
-      pendingApproval: c.pendingApproval,
-      done: c.done,
-      completionRate: c.completionRate,
-      pendingApprovals: c.pendingApproval,
-      deptBreakdown,
-      projectBreakdown: pBreakdown,
-      memberPerformance: memberPerf,
-      counts: insights?.counts || fallbackCounts(scope.allTasks),
-      insights: insights?.insights || { findings: [], risks: [], recommendations: [] },
-      rankings: insights?.rankings || { departments: [], projects: [], members: [], averages: null },
-      workloadHealth: health || { available: false },
-      scopeLabel: scope.scopeLabel,
-      computedBy: { py: Boolean(insights), rs: Boolean(health || projAgg), counts: c.computedBy || 'js' },
-    });
-  } catch (err) {
-    console.error('analytics/technical error:', err);
     res.status(500).json({ error: 'Server error' });
   }
 });
@@ -662,513 +527,233 @@ router.get('/smart', authenticate, async (req: AuthRequest, res: Response) => {
   }
 });
 
-router.get('/overview', authenticate, async (req: AuthRequest, res: Response) => {
-  try {
-    const userRole = req.user!.role;
-    if (!['CEO', 'HR_MANAGER'].includes(userRole)) {
-      return res.status(403).json({ error: 'Access denied' });
-    }
-
-    const departments = await prisma.department.findMany({
-      include: { projects: { include: { tasks: { select: { id: true, status: true, deadline: true, projectId: true, assignees: true } } } }, manager: { select: { firstName: true, lastName: true } } },
-    });
-
-    const allProjects = departments.flatMap((d) => d.projects);
-    const allTasks: AnyTask[] = allProjects.flatMap((p) => p.tasks);
-    const c = await counts(allTasks);
-    
-    // Group tasks by project for the Rust microservice
-    const projectMap = new Map<number, { name: string; tasks: { status: string }[] }>();
-    for (const proj of allProjects) {
-      for (const task of proj.tasks) {
-        const pid = task.projectId;
-        if (pid === null || pid === undefined) continue;
-        const existing = projectMap.get(pid);
-        if (existing) {
-          existing.tasks.push({ status: task.status });
-        } else {
-          projectMap.set(pid, {
-            name: proj.name,
-            tasks: [{ status: task.status }],
-          });
-        }
-      }
-    }
-    const projectsForRust = Array.from(projectMap.entries()).map(([projectId, data]) => ({
-      id: projectId,
-      name: data.name,
-      tasks: data.tasks,
-    }));
-
-    // Try to use the Rust microservice for project breakdown
-    const rustProjectBreakdown = await callRust('/aggregate/projects', {
-      projects: projectsForRust,
-    });
-    let pBreakdown: any[] = [];
-    if (rustProjectBreakdown?.projects) {
-      pBreakdown = rustProjectBreakdown.projects.map((p: any) => ({
-        projectId: p.projectId,
-        projectName: p.projectName,
-        total: p.total,
-        done: p.done,
-        completionRate: Math.round(p.completionRate),
-      }));
-    } else {
-      // Fallback to JS
-      pBreakdown = allProjects.map((p) => {
-        const pDone = p.tasks.filter((t) => t.status === 'DONE').length;
-        return {
-          projectId: p.id,
-          projectName: p.name,
-          total: p.tasks.length,
-          done: pDone,
-          completionRate: p.tasks.length > 0 ? Math.round((pDone / p.tasks.length) * 100) : 0,
-        };
-      });
-    }
-
-    // Try to use Python microservice for statistics and trends (like in advanced analysis)
-    const [pyStats, pyTrends] = await Promise.all([
-      callPython('/analyze/stats', {
-        series: [
-          { name: 'تسک هر دپارتمان', values: departments.map((d) => d.projects.flatMap((p) => p.tasks).length) },
-          { name: 'نرخ تکمیل دپارتمان‌ها', values: departments.map((d) => {
-            const dt = d.projects.flatMap((p) => p.tasks);
-            const done = dt.filter((t) => t.status === 'DONE').length;
-            return dt.length > 0 ? Math.round((done / dt.length) * 100) : 0;
-          }) },
-        ],
-      }),
-      callPython('/analyze/trends', {
-        tasks: allTasks.map((t: any) => ({
-          projectId: t.projectId,
-          status: t.status,
-          deadline: t.deadline ? t.deadline.toISOString() : null,
-          estimatedHours: t.estimatedHours,
-          createdAt: t.createdAt ? t.createdAt.toISOString() : null,
-          updatedAt: t.updatedAt ? t.updatedAt.toISOString() : null,
-        })),
-        projects: allProjects.map((p) => ({ id: p.id, name: p.name })),
-      }),
-    ]);
-
-    // Try to use Rust microservice for workload health
-    const health = await callRust('/aggregate/health', {
-      members: allProjects.flatMap((p) => p.tasks).reduce((acc: { id: number; total: number; done: number; overdue: number }[], t) => {
-        const done = t.status === 'DONE';
-        const overdue = isTaskOverdue(t.deadline, t.status);
-        for (const a of t.assignees) {
-          let m = acc.find((x) => x.id === a.userId);
-          if (!m) {
-            m = { id: a.userId, total: 0, done: 0, overdue: 0 };
-            acc.push(m);
-          }
-          m.total++;
-          if (done) m.done++;
-          if (overdue) m.overdue++;
-        }
-        return acc;
-      }, []),
-    });
-
-    const nameMap = new Map<number, string>();
-    for (const proj of allProjects) {
-      const members = await prisma.projectMember.findMany({ where: { projectId: proj.id }, include: { user: { select: { id: true, firstName: true, lastName: true } } } });
-      for (const m of members) {
-        if (!nameMap.has(m.userId)) nameMap.set(m.userId, `${m.user.firstName} ${m.user.lastName}`);
-      }
-    }
-    const memberPerformance = await computeMemberPerformance(allTasks, nameMap);
-
-    const deptBreakdown = departments.map((dept) => ({
-      deptId: dept.id,
-      deptName: dept.name,
-      manager: dept.manager ? `${dept.manager.firstName} ${dept.manager.lastName}` : null,
-      projectCount: dept.projects.length,
-    }));
-
-    res.json({
-      total: c.total,
-      todo: c.todo,
-      inProgress: c.inProgress,
-      pendingApproval: c.pendingApproval,
-      done: c.done,
-      completionRate: c.completionRate,
-      pendingApprovals: c.pendingApproval,
-      memberPerformance,
-      deptBreakdown,
-      projectBreakdown: pBreakdown,
-      computedBy: c.computedBy || 'js',
-    });
-  } catch (err) {
-    console.error('analytics/overview error:', err);
-    res.status(500).json({ error: 'Server error' });
-  }
-});
-
-router.get('/text-analysis', authenticate, async (req: AuthRequest, res: Response) => {
-  try {
-    const userRole = req.user!.role;
-    const userId = req.user!.id;
-
-    if (!['CEO', 'HR_MANAGER', 'TECHNICAL_MANAGER', 'STRATEGY_MANAGER', 'DEPARTMENT_MANAGER'].includes(userRole)) {
-      return res.status(403).json({ error: 'Access denied' });
-    }
-
-    let tasks;
-    if (userRole === 'DEPARTMENT_MANAGER') {
-      const managed = await prisma.department.findFirst({ where: { managerId: userId } });
-      if (!managed) return res.json({ tasksCount: 0, topWords: [], categoryDistribution: [], reportSummary: [], descriptionQuality: { withDescription: 0, withoutDescription: 0, avgDescriptionLength: 0 } });
-      const projects = await prisma.project.findMany({ where: { departmentId: managed.id }, select: { id: true } });
-      const projectIds = projects.map((p) => p.id);
-      tasks = await prisma.task.findMany({
-        where: { projectId: { in: projectIds } },
-        include: { project: { select: { name: true } }, reports: { include: { user: { select: { firstName: true, lastName: true } } } } },
-      });
-    } else {
-      tasks = await prisma.task.findMany({
-        include: { project: { select: { name: true } }, reports: { include: { user: { select: { firstName: true, lastName: true } } } } },
-      });
-    }
-
-    // ── Try Python microservice ──
-    const pyResult = await callPython('/analyze/text', {
-      tasks: tasks.map((t) => ({
-        title: t.title,
-        description: t.description,
-        reports: t.reports.map((r) => ({ content: r.content, user: { firstName: r.user.firstName, lastName: r.user.lastName } })),
-      })),
-    });
-    if (pyResult && pyResult.topWords) {
-      return res.json({ ...pyResult, computedBy: 'python' });
-    }
-
-    // ── JS fallback ──
-    const stopWords = new Set([
-      'و','به','از','در','با','که','را','این','آن','برای','یک','دو','تا','شده','نیز','شد','است','می','های','شود','شوند','کرد','کنید',
-      'دهید','گیرد','کردن','گرفتن','باید','باشد','اما','اگر','یا','نه','هیچ','هم','خواهد','دادن','داد','دارد','دارند','کرده','باشند',
-      'باشه','نخواهد','نمی','ممکن','نیست','شامل','جهت','منظور','قبل','بعد','حین','طی','طول','زمان','the','a','an','in','on','at','to',
-      'for','of','and','or','is','are','was','were','be','been','being','have','has','had','do','does','did','will','would','can','could',
-      'may','might','shall','should','it','its','this','that','these','those','i','you','we','they','he','she','my','your','our','their',
-      'his','her','not','no','but','if','so','as','تسک','task','فقط','مقدار','لطفا','لطفاً','وجود','شما','نام','ادرس','آدرس','قرار',
-    ]);
-
-    const wordCounts: Record<string, number> = {};
-    for (const task of tasks) {
-      const text = `${task.title} ${task.description || ''}`.toLowerCase();
-      const words = text.split(/[\s،,;:.!؟?\-_()\[\]{}"\'«»\n\r\t]+/).filter((w) => w.length > 1 && !stopWords.has(w));
-      for (const word of words) {
-        wordCounts[word] = (wordCounts[word] || 0) + 1;
-      }
-    }
-
-    const topWords = Object.entries(wordCounts)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 50)
-      .map(([word, count]) => ({ word, count }));
-
-    const categoryKeywords: Record<string, string[]> = {
-      'باگ/اشکال': ['باگ','اشکال','مشکل','خطا','error','bug','خراب','عدم','نقص','اشتباه','نمایش','غلط'],
-      'قابلیت جدید': ['افزودن','ساخت','ایجاد','اضافه','جدید','feature','add','create','new','طراحی','ساختن','نوشتن','صفحه','بخش'],
-      'بهبود/اصلاح': ['اصلاح','بهبود','رفع','بهینه','بروزرسانی','update','تغییر','توسعه'],
-      'مستندات': ['مستند','documentation','راهنما','آموزش','doc'],
-      'طراحی/UI': ['طراحی','design','ui','ux','ظاهری','رنگ','فونت','چیدمان'],
-      'تست/اعتبارسنجی': ['تست','test','آزمایش','اعتبارسنجی','validation'],
-    };
-
-    const categoryCounts: Record<string, number> = {};
-    for (const cat of Object.keys(categoryKeywords)) categoryCounts[cat] = 0;
-    categoryCounts['سایر'] = 0;
-
-    for (const task of tasks) {
-      const text = `${task.title} ${task.description || ''}`.toLowerCase();
-      let matched = false;
-      for (const [cat, keywords] of Object.entries(categoryKeywords)) {
-        if (keywords.some((kw) => text.includes(kw))) {
-          categoryCounts[cat]++;
-          matched = true;
-          break;
-        }
-      }
-      if (!matched) categoryCounts['سایر']++;
-    }
-
-    const categoryDistribution = Object.entries(categoryCounts).map(([category, count]) => ({ category, count })).filter((c) => c.count > 0);
-
-    const allReports = tasks.flatMap((t) => t.reports);
-    const reportsByUser: Record<string, { count: number; totalLength: number }> = {};
-    for (const report of allReports) {
-      const name = `${report.user.firstName} ${report.user.lastName}`;
-      if (!reportsByUser[name]) reportsByUser[name] = { count: 0, totalLength: 0 };
-      reportsByUser[name].count++;
-      reportsByUser[name].totalLength += (report.content || '').length;
-    }
-    const reportSummary = Object.entries(reportsByUser).map(([name, data]) => ({
-      name,
-      reportCount: data.count,
-      avgLength: Math.round(data.totalLength / data.count),
-    })).sort((a, b) => b.reportCount - a.reportCount);
-
-    const withDescription = tasks.filter((t) => t.description && t.description.length > 10).length;
-    const withoutDescription = tasks.length - withDescription;
-    const descriptionLengths = tasks.filter((t) => t.description).map((t) => t.description!.length);
-    const avgDescriptionLength = descriptionLengths.length > 0
-      ? Math.round(descriptionLengths.reduce((a, b) => a + b, 0) / descriptionLengths.length)
-      : 0;
-
-    res.json({
-      tasksCount: tasks.length,
-      reportsCount: allReports.length,
-      topWords,
-      categoryDistribution,
-      reportSummary,
-      descriptionQuality: { withDescription, withoutDescription, avgDescriptionLength },
-      computedBy: 'js',
-    });
-  } catch (err) {
-    console.error('analytics/text-analysis error:', err);
-    res.status(500).json({ error: 'Server error' });
-  }
-});
-
 /* ────────────────────────────────────────────────────────────────
    Advanced analysis (polyglot fan-out): Python stats/trends + Rust health
-   ──────────────────────────────────────────────────────────────── */
 
-router.get('/advanced', authenticate, async (req: AuthRequest, res: Response) => {
+
+
+
+/* ──────────────────────────────────────────────────────────────────────────
+   Delivery command view — the rebuilt analytics.
+
+   Facts from Postgres, statistics from Python, forecasting from Rust. The
+   risk label comes out of the simulation, so it reflects "will this land on
+   time" rather than a threshold someone picked.
+   ────────────────────────────────────────────────────────────────────────── */
+router.get('/delivery', authenticate, authorize('CEO', 'TECHNICAL_MANAGER', 'STRATEGY_MANAGER', 'INTERNAL_MANAGER', 'DEPARTMENT_MANAGER'), async (_req: AuthRequest, res: Response) => {
   try {
-    const userRole = req.user!.role;
-    if (!['CEO', 'HR_MANAGER', 'TECHNICAL_MANAGER', 'STRATEGY_MANAGER', 'DEPARTMENT_MANAGER'].includes(userRole)) {
-      return res.status(403).json({ error: 'Access denied' });
-    }
+    res.json(await buildDeliveryView());
+  } catch (err: any) {
+    console.error('analytics/delivery error:', err);
+    res.status(500).json({ error: 'خطا در محاسبه تحلیل تحویل' });
+  }
+});
 
-    const departments = await prisma.department.findMany({
-      include: { projects: { include: { tasks: { select: { id: true, status: true, deadline: true, estimatedHours: true, weight: true, estimatedMinutes: true, createdAt: true, updatedAt: true, assignees: true } } } } },
-    });
+/* ──────────────────────────────────────────────────────────────────────────
+   Employee review — one row per person per Jalali month.
 
-    const allProjects = departments.flatMap((d) => d.projects);
-    const allTasks: AnyTask[] = allProjects.flatMap((p) => p.tasks);
+   Delivered tasks, times sent back, busiest project and planned time. The
+   month is Jalali because that is the calendar the reviews run on.
+   ────────────────────────────────────────────────────────────────────────── */
+router.get(
+  '/employees',
+  authenticate,
+  authorize('CEO', 'TECHNICAL_MANAGER', 'STRATEGY_MANAGER', 'INTERNAL_MANAGER', 'DEPARTMENT_MANAGER'),
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const user = req.user!;
+      const monthCount = Math.min(12, Math.max(1, parseInt(String(req.query.months || '6')) || 6));
 
-    // Rust: workload health + member perf
-    const memberNames = new Map<number, string>();
-    for (const proj of allProjects) {
-      const members = await prisma.projectMember.findMany({ where: { projectId: proj.id }, include: { user: { select: { id: true, firstName: true, lastName: true } } } });
-      for (const m of members) {
-        if (!memberNames.has(m.userId)) memberNames.set(m.userId, `${m.user.firstName} ${m.user.lastName}`);
+      // The scope comes from the token, never from the query string: a
+      // department manager reviews their own people and no one else's.
+      let userIds: number[];
+      if (user.role === 'DEPARTMENT_MANAGER') {
+        const deptIds = await managedDepartmentIds(user.id);
+        const members = await prisma.userDepartment.findMany({
+          where: { departmentId: { in: deptIds } },
+          select: { userId: true },
+        });
+        userIds = [...new Set(members.map((m) => m.userId))];
+      } else {
+        const all = await prisma.user.findMany({ where: { role: { not: 'CUSTOMER' } }, select: { id: true } });
+        userIds = all.map((u) => u.id);
       }
-    }
-    const [memberPerf, health, pyStats, pyTrends] = await Promise.all([
-      computeMemberPerformance(allTasks, memberNames),
-      callRust('/aggregate/health', {
-        members: allProjects.flatMap((p) => p.tasks).reduce((acc: { id: number; total: number; done: number; overdue: number }[], t: any) => {
-          const done = t.status === 'DONE';
-          const overdue = isTaskOverdue(t.deadline, t.status);
-          const weight = t.weight || t.estimatedMinutes || 120;
-          for (const a of t.assignees) {
-            let m = acc.find((x) => x.id === a.userId);
-            if (!m) {
-              m = { id: a.userId, total: 0, done: 0, overdue: 0 };
-              acc.push(m);
-            }
-            m.total += weight;
-            if (done) m.done += weight;
-            if (overdue) m.overdue += weight;
-          }
-          return acc;
-        }, []),
-      }),
-      callPython('/analyze/stats', {
-        series: [
-          { name: 'تسک هر دپارتمان', values: departments.map((d) => d.projects.flatMap((p) => p.tasks).length) },
-          { name: 'نرخ تکمیل دپارتمان‌ها', values: departments.map((d) => {
-            const dt = d.projects.flatMap((p) => p.tasks);
-            const done = dt.filter((t) => t.status === 'DONE').length;
-            return dt.length > 0 ? Math.round((done / dt.length) * 100) : 0;
-          }) },
-        ],
-      }),
-      callPython('/analyze/trends', {
-        tasks: allTasks.map((t: any) => ({
-          projectId: t.projectId,
-          status: t.status,
-          deadline: t.deadline ? t.deadline.toISOString() : null,
-          estimatedHours: t.estimatedHours,
-          createdAt: t.createdAt ? t.createdAt.toISOString() : null,
-          updatedAt: t.updatedAt ? t.updatedAt.toISOString() : null,
-        })),
-        projects: allProjects.map((p) => ({ id: p.id, name: p.name })),
-      }),
-    ]);
 
+      const data = await employeeMonthlyStats(userIds, monthCount);
+      // Someone with nothing at all in the window is noise in a review table.
+      const employees = data.employees.filter((e) =>
+        Object.values(e.months).some((m) => m.done > 0 || m.rejected > 0)
+      );
+      res.json({
+        months: data.months,
+        employees,
+        scope: user.role === 'DEPARTMENT_MANAGER' ? 'department' : 'organisation',
+      });
+    } catch (err) {
+      console.error('analytics/employees error:', err);
+      res.status(500).json({ error: 'خطا در محاسبه تحلیل کارمندان' });
+    }
+  }
+);
+
+/* ──────────────────────────────────────────────────────────────────────────
+   Project risk, for anyone who shows a project.
+
+   The same label the delivery tab uses, so a project reads the same on its
+   card, on a dashboard and in the analytics. Before this there were four
+   independent definitions of «بحرانی» — two thresholds in TypeScript, one in
+   Rust and one in Python — and on live data they disagreed about 15 of 45
+   projects, including three the card called «سالم» while the forecast put
+   them at risk.
+
+   Names are deliberately not returned: the caller already has the projects it
+   is allowed to see, and joins on id.
+   ────────────────────────────────────────────────────────────────────────── */
+/**
+ * Completion rate per day, with Fridays marked so averages can skip them.
+ */
+router.get(
+  '/daily-rate',
+  authenticate,
+  authorize('CEO', 'TECHNICAL_MANAGER', 'STRATEGY_MANAGER', 'INTERNAL_MANAGER', 'DEPARTMENT_MANAGER'),
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const days = Math.min(180, Math.max(7, parseInt(String(req.query.days || '30')) || 30));
+      const userIds = String(req.query.userIds || '')
+        .split(',')
+        .map((x) => parseInt(x))
+        .filter((n) => !Number.isNaN(n));
+      res.json(await dailyRate(days, userIds));
+    } catch (err) {
+      console.error('daily rate error:', err);
+      res.status(500).json({ error: 'خطا در محاسبه نرخ روزانه' });
+    }
+  }
+);
+
+/**
+ * A month's scorecard, generated on request. Limited to the two roles that
+ * decide on it; department managers see the underlying pages, not this.
+ */
+/** One person's scorecard for a month, with the items behind every number. */
+router.get(
+  '/scorecard/:userId',
+  authenticate,
+  authorize('CEO', 'TECHNICAL_MANAGER'),
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const month = String(req.query.month || currentJalaliMonthKey());
+      const userId = parseInt(req.params.userId as string);
+      if (Number.isNaN(userId)) return res.status(400).json({ error: 'شناسه کاربر معتبر نیست.' });
+      res.json(await personScorecard(month, userId));
+    } catch (err) {
+      if (err instanceof ScorecardInputError) return res.status(400).json({ error: err.message });
+      console.error('person scorecard error:', err);
+      res.status(500).json({ error: 'خطا در تولید کارنامه' });
+    }
+  }
+);
+
+router.get(
+  '/scorecard',
+  authenticate,
+  authorize('CEO', 'TECHNICAL_MANAGER'),
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const month = String(req.query.month || currentJalaliMonthKey());
+      res.json(await monthlyScorecard(month));
+    } catch (err) {
+      if (err instanceof ScorecardInputError) return res.status(400).json({ error: err.message });
+      console.error('scorecard error:', err);
+      res.status(500).json({ error: 'خطا در تولید کارنامه' });
+    }
+  }
+);
+
+/**
+ * How often, and by how many days, each person delivers after the deadline.
+ */
+router.get(
+  '/lateness',
+  authenticate,
+  authorize('CEO', 'TECHNICAL_MANAGER', 'STRATEGY_MANAGER', 'INTERNAL_MANAGER', 'DEPARTMENT_MANAGER'),
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const days = Math.min(365, Math.max(7, parseInt(String(req.query.days || '30')) || 30));
+      res.json(await latenessAnalytics(days));
+    } catch (err) {
+      console.error('lateness error:', err);
+      res.status(500).json({ error: 'خطا در محاسبه نرخ تأخیر' });
+    }
+  }
+);
+
+/**
+ * Each person's committed minutes per day, for planning ahead.
+ */
+router.get(
+  '/capacity',
+  authenticate,
+  authorize('CEO', 'TECHNICAL_MANAGER', 'STRATEGY_MANAGER', 'INTERNAL_MANAGER', 'DEPARTMENT_MANAGER'),
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const days = Math.min(60, Math.max(7, parseInt(String(req.query.days || '14')) || 14));
+      // Negative looks back, so a manager can see the days just gone as well.
+      const offset = Math.min(30, Math.max(-60, parseInt(String(req.query.offset || '0')) || 0));
+      res.json(await capacityByDay(days, offset));
+    } catch (err) {
+      console.error('capacity error:', err);
+      res.status(500).json({ error: 'خطا در محاسبه ظرفیت روزانه' });
+    }
+  }
+);
+
+/**
+ * Rejections broken down by person, project and recorded category.
+ */
+router.get(
+  '/rejections',
+  authenticate,
+  authorize('CEO', 'TECHNICAL_MANAGER', 'STRATEGY_MANAGER', 'INTERNAL_MANAGER', 'DEPARTMENT_MANAGER'),
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const days = Math.min(365, Math.max(7, parseInt(String(req.query.days || '90')) || 90));
+      res.json(await rejectionAnalytics(days));
+    } catch (err) {
+      console.error('rejection analytics error:', err);
+      res.status(500).json({ error: 'خطا در تحلیل ردها' });
+    }
+  }
+);
+
+router.get('/project-status', authenticate, async (_req: AuthRequest, res: Response) => {
+  try {
+    const view = await buildDeliveryView();
     res.json({
-      memberPerformance: memberPerf,
-      workloadHealth: health || { available: false },
-      statistics: pyStats || { available: false },
-      trends: pyTrends || { available: false },
-      services: {
-        py: Boolean(pyStats || pyTrends),
-        rs: Boolean(health),
-      },
+      generatedAt: view.generatedAt,
+      degraded: view.degraded,
+      projects: view.projects.map((p: any) => ({
+        projectId: p.projectId,
+        status: p.status,
+        statusLabel: p.statusLabel,
+        headline: p.headline,
+        total: p.total,
+        done: p.done,
+        open: p.open,
+        scheduled: p.scheduled,
+        overdue: p.overdue,
+        awaitingReview: p.awaitingReview,
+        // Completion measured against work that is actually due. Dividing by
+        // every materialised future occurrence is what pinned the recurring
+        // projects at 9–17% and made them permanently «بحرانی».
+        completionRate: p.done + p.open + p.awaitingReview > 0
+          ? Math.round((p.done / (p.done + p.open + p.awaitingReview)) * 100)
+          : null,
+      })),
     });
   } catch (err) {
-    console.error('analytics/advanced error:', err);
-    res.status(500).json({ error: 'Server error' });
-  }
-});
-
-router.get('/gantt', authenticate, async (req: AuthRequest, res: Response) => {
-  try {
-    const { projectId, userId } = req.query;
-
-    const where: any = {};
-    if (projectId) {
-      where.projectId = parseInt(projectId as string);
-    }
-    if (userId) {
-      where.assignees = {
-        some: { userId: parseInt(userId as string) },
-      };
-    }
-
-    const tasks = await prisma.task.findMany({
-      where,
-      select: {
-        id: true,
-        title: true,
-        status: true,
-        startDate: true,
-        deadline: true,
-        weight: true,
-        estimatedMinutes: true,
-        createdAt: true,
-        project: { select: { id: true, name: true } },
-        assignees: {
-          include: { user: { select: { id: true, firstName: true, lastName: true } } },
-        },
-      },
-      orderBy: [
-        { startDate: 'asc' },
-        { id: 'asc' }
-      ],
-    });
-
-    // Fetch users for daily load aggregation
-    const users = await prisma.user.findMany({
-      select: { id: true, firstName: true, lastName: true },
-    });
-
-    const payload = {
-      tasks: tasks.map((t) => ({
-        id: t.id,
-        title: t.title,
-        status: t.status,
-        start_date: t.startDate ? t.startDate.toISOString() : null,
-        deadline: t.deadline ? t.deadline.toISOString() : null,
-        created_at: t.createdAt.toISOString(),
-        weight: t.weight,
-        estimated_minutes: t.estimatedMinutes,
-        assignee_ids: t.assignees.map((a) => a.userId),
-      })),
-      users: users.map((u) => ({
-        id: u.id,
-        name: `${u.firstName} ${u.lastName}`,
-      })),
-    };
-
-    const rustResult = await callRust('/aggregate/gantt', payload);
-
-    if (rustResult) {
-      const clashingIds = new Set<number>(rustResult.clashes.flatMap((c: any) => c.taskIds));
-      
-      const mappedTasks = tasks.map((t) => ({
-        ...t,
-        hasClash: clashingIds.has(t.id),
-      }));
-
-      res.json({
-        tasks: mappedTasks,
-        clashes: rustResult.clashes,
-      });
-    } else {
-      res.json({
-        tasks: tasks.map((t) => ({ ...t, hasClash: false })),
-        clashes: [],
-      });
-    }
-  } catch (err) {
-    console.error('analytics/gantt error:', err);
-    res.status(500).json({ error: 'Failed to fetch Gantt data' });
-  }
-});
-
-router.get('/scrum', authenticate, async (req: AuthRequest, res: Response) => {
-  try {
-    const { projectId } = req.query;
-    const projectFilter: any = {};
-    if (projectId) {
-      projectFilter.projectId = parseInt(projectId as string);
-    }
-
-    const [allTasks, users] = await Promise.all([
-      prisma.task.findMany({
-        where: projectFilter,
-        select: {
-          id: true,
-          status: true,
-          createdAt: true,
-          startDate: true,
-          approvedAt: true,
-          updatedAt: true,
-          weight: true,
-          estimatedMinutes: true,
-          assignees: { select: { userId: true } },
-        },
-      }),
-      prisma.user.findMany({
-        select: {
-          id: true,
-          firstName: true,
-          lastName: true,
-          role: true,
-        },
-      }),
-    ]);
-
-    const payload = {
-      tasks: allTasks.map((t) => ({
-        id: t.id,
-        status: t.status,
-        created_at: t.createdAt.toISOString(),
-        start_date: t.startDate ? t.startDate.toISOString() : null,
-        approved_at: t.approvedAt ? t.approvedAt.toISOString() : null,
-        updated_at: t.updatedAt ? t.updatedAt.toISOString() : null,
-        weight: t.weight ?? null,
-        estimated_minutes: t.estimatedMinutes ?? null,
-        assignee_ids: t.assignees.map((a) => a.userId),
-      })),
-      users: users.map((u) => ({
-        id: u.id,
-        name: `${u.firstName} ${u.lastName}`,
-        role: u.role,
-      })),
-    };
-
-    const rustResult = await callRust('/aggregate/scrum', payload);
-    
-    if (rustResult) {
-      res.json(rustResult);
-    } else {
-      res.json({
-        capacity: [],
-        velocity: [],
-        metrics: { avgLeadTimeDays: 0, avgCycleTimeDays: 0, completedCount: 0, pendingApprovalCount: 0, activeCount: 0 },
-        bottlenecks: [],
-        burndown: [],
-      });
-    }
-  } catch (err) {
-    console.error('analytics/scrum error:', err);
-    res.status(500).json({ error: 'Failed to process Scrum analytics' });
+    console.error('analytics/project-status error:', err);
+    res.status(500).json({ error: 'خطا در محاسبه وضعیت پروژه‌ها' });
   }
 });
 

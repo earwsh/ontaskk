@@ -65,7 +65,7 @@ router.post('/summary', authenticate, async (req: AuthRequest, res: Response) =>
   try {
     const userRole = req.user!.role;
 
-    if (!['CEO', 'HR_MANAGER', 'TECHNICAL_MANAGER', 'STRATEGY_MANAGER', 'DEPARTMENT_MANAGER'].includes(userRole)) {
+    if (!['CEO', 'INTERNAL_MANAGER', 'TECHNICAL_MANAGER', 'STRATEGY_MANAGER', 'DEPARTMENT_MANAGER'].includes(userRole)) {
       return res.status(403).json({ error: 'Access denied' });
     }
 
@@ -131,7 +131,7 @@ router.post('/recommendations', authenticate, async (req: AuthRequest, res: Resp
   try {
     const userRole = req.user!.role;
 
-    if (!['CEO', 'HR_MANAGER', 'TECHNICAL_MANAGER', 'STRATEGY_MANAGER', 'DEPARTMENT_MANAGER'].includes(userRole)) {
+    if (!['CEO', 'INTERNAL_MANAGER', 'TECHNICAL_MANAGER', 'STRATEGY_MANAGER', 'DEPARTMENT_MANAGER'].includes(userRole)) {
       return res.status(403).json({ error: 'Access denied' });
     }
 
@@ -159,7 +159,7 @@ router.get('/dashboard', authenticate, async (req: AuthRequest, res: Response) =
   try {
     const userRole = req.user!.role;
 
-    if (!['CEO', 'HR_MANAGER', 'TECHNICAL_MANAGER', 'STRATEGY_MANAGER', 'DEPARTMENT_MANAGER'].includes(userRole)) {
+    if (!['CEO', 'INTERNAL_MANAGER', 'TECHNICAL_MANAGER', 'STRATEGY_MANAGER', 'DEPARTMENT_MANAGER'].includes(userRole)) {
       return res.status(403).json({ error: 'Access denied' });
     }
 

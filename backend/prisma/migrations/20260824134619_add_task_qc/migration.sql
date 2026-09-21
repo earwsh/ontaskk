@@ -1,0 +1,17 @@
+-- AlterEnum
+ALTER TYPE "TaskStatus" ADD VALUE 'PENDING_QC';
+
+-- AlterTable
+ALTER TABLE "Project" ADD COLUMN     "qcId" INTEGER;
+
+-- AlterTable
+ALTER TABLE "Task" ADD COLUMN     "qcAt" TIMESTAMP(3),
+ADD COLUMN     "qcById" INTEGER,
+ADD COLUMN     "qcNote" TEXT,
+ADD COLUMN     "qcPassed" BOOLEAN;
+
+-- AddForeignKey
+ALTER TABLE "Project" ADD CONSTRAINT "Project_qcId_fkey" FOREIGN KEY ("qcId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Task" ADD CONSTRAINT "Task_qcById_fkey" FOREIGN KEY ("qcById") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;

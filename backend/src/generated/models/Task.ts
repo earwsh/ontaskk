@@ -33,6 +33,7 @@ export type TaskAvgAggregateOutputType = {
   weight: number | null
   approvedById: number | null
   approverId: number | null
+  qcById: number | null
   projectId: number | null
   createdById: number | null
   recurringParentId: number | null
@@ -45,12 +46,14 @@ export type TaskSumAggregateOutputType = {
   weight: number | null
   approvedById: number | null
   approverId: number | null
+  qcById: number | null
   projectId: number | null
   createdById: number | null
   recurringParentId: number | null
 }
 
 export type TaskMinAggregateOutputType = {
+  driveFolderId: string | null
   id: number | null
   title: string | null
   description: string | null
@@ -63,6 +66,11 @@ export type TaskMinAggregateOutputType = {
   approvedById: number | null
   approvedAt: Date | null
   approverId: number | null
+  qcById: number | null
+  qcAt: Date | null
+  qcNote: string | null
+  qcPassed: boolean | null
+  submittedForReviewAt: Date | null
   projectId: number | null
   createdById: number | null
   isRecurring: boolean | null
@@ -76,6 +84,7 @@ export type TaskMinAggregateOutputType = {
 }
 
 export type TaskMaxAggregateOutputType = {
+  driveFolderId: string | null
   id: number | null
   title: string | null
   description: string | null
@@ -88,6 +97,11 @@ export type TaskMaxAggregateOutputType = {
   approvedById: number | null
   approvedAt: Date | null
   approverId: number | null
+  qcById: number | null
+  qcAt: Date | null
+  qcNote: string | null
+  qcPassed: boolean | null
+  submittedForReviewAt: Date | null
   projectId: number | null
   createdById: number | null
   isRecurring: boolean | null
@@ -101,6 +115,7 @@ export type TaskMaxAggregateOutputType = {
 }
 
 export type TaskCountAggregateOutputType = {
+  driveFolderId: number
   id: number
   title: number
   description: number
@@ -113,6 +128,11 @@ export type TaskCountAggregateOutputType = {
   approvedById: number
   approvedAt: number
   approverId: number
+  qcById: number
+  qcAt: number
+  qcNote: number
+  qcPassed: number
+  submittedForReviewAt: number
   projectId: number
   createdById: number
   isRecurring: number
@@ -134,6 +154,7 @@ export type TaskAvgAggregateInputType = {
   weight?: true
   approvedById?: true
   approverId?: true
+  qcById?: true
   projectId?: true
   createdById?: true
   recurringParentId?: true
@@ -146,12 +167,14 @@ export type TaskSumAggregateInputType = {
   weight?: true
   approvedById?: true
   approverId?: true
+  qcById?: true
   projectId?: true
   createdById?: true
   recurringParentId?: true
 }
 
 export type TaskMinAggregateInputType = {
+  driveFolderId?: true
   id?: true
   title?: true
   description?: true
@@ -164,6 +187,11 @@ export type TaskMinAggregateInputType = {
   approvedById?: true
   approvedAt?: true
   approverId?: true
+  qcById?: true
+  qcAt?: true
+  qcNote?: true
+  qcPassed?: true
+  submittedForReviewAt?: true
   projectId?: true
   createdById?: true
   isRecurring?: true
@@ -177,6 +205,7 @@ export type TaskMinAggregateInputType = {
 }
 
 export type TaskMaxAggregateInputType = {
+  driveFolderId?: true
   id?: true
   title?: true
   description?: true
@@ -189,6 +218,11 @@ export type TaskMaxAggregateInputType = {
   approvedById?: true
   approvedAt?: true
   approverId?: true
+  qcById?: true
+  qcAt?: true
+  qcNote?: true
+  qcPassed?: true
+  submittedForReviewAt?: true
   projectId?: true
   createdById?: true
   isRecurring?: true
@@ -202,6 +236,7 @@ export type TaskMaxAggregateInputType = {
 }
 
 export type TaskCountAggregateInputType = {
+  driveFolderId?: true
   id?: true
   title?: true
   description?: true
@@ -214,6 +249,11 @@ export type TaskCountAggregateInputType = {
   approvedById?: true
   approvedAt?: true
   approverId?: true
+  qcById?: true
+  qcAt?: true
+  qcNote?: true
+  qcPassed?: true
+  submittedForReviewAt?: true
   projectId?: true
   createdById?: true
   isRecurring?: true
@@ -314,6 +354,7 @@ export type TaskGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 }
 
 export type TaskGroupByOutputType = {
+  driveFolderId: string | null
   id: number
   title: string
   description: string | null
@@ -326,6 +367,11 @@ export type TaskGroupByOutputType = {
   approvedById: number | null
   approvedAt: Date | null
   approverId: number | null
+  qcById: number | null
+  qcAt: Date | null
+  qcNote: string | null
+  qcPassed: boolean | null
+  submittedForReviewAt: Date | null
   projectId: number
   createdById: number
   isRecurring: boolean
@@ -362,6 +408,7 @@ export type TaskWhereInput = {
   AND?: Prisma.TaskWhereInput | Prisma.TaskWhereInput[]
   OR?: Prisma.TaskWhereInput[]
   NOT?: Prisma.TaskWhereInput | Prisma.TaskWhereInput[]
+  driveFolderId?: Prisma.StringNullableFilter<"Task"> | string | null
   id?: Prisma.IntFilter<"Task"> | number
   title?: Prisma.StringFilter<"Task"> | string
   description?: Prisma.StringNullableFilter<"Task"> | string | null
@@ -374,6 +421,11 @@ export type TaskWhereInput = {
   approvedById?: Prisma.IntNullableFilter<"Task"> | number | null
   approvedAt?: Prisma.DateTimeNullableFilter<"Task"> | Date | string | null
   approverId?: Prisma.IntNullableFilter<"Task"> | number | null
+  qcById?: Prisma.IntNullableFilter<"Task"> | number | null
+  qcAt?: Prisma.DateTimeNullableFilter<"Task"> | Date | string | null
+  qcNote?: Prisma.StringNullableFilter<"Task"> | string | null
+  qcPassed?: Prisma.BoolNullableFilter<"Task"> | boolean | null
+  submittedForReviewAt?: Prisma.DateTimeNullableFilter<"Task"> | Date | string | null
   projectId?: Prisma.IntFilter<"Task"> | number
   createdById?: Prisma.IntFilter<"Task"> | number
   isRecurring?: Prisma.BoolFilter<"Task"> | boolean
@@ -386,6 +438,7 @@ export type TaskWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Task"> | Date | string
   approvedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   approver?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  qcBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
   createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   assignees?: Prisma.TaskAssigneeListRelationFilter
@@ -393,11 +446,14 @@ export type TaskWhereInput = {
   reports?: Prisma.TaskReportListRelationFilter
   attachments?: Prisma.TaskAttachmentListRelationFilter
   notifications?: Prisma.NotificationListRelationFilter
+  rejections?: Prisma.TaskRejectionListRelationFilter
+  approvals?: Prisma.TaskApprovalListRelationFilter
   recurringParent?: Prisma.XOR<Prisma.TaskNullableScalarRelationFilter, Prisma.TaskWhereInput> | null
   recurringInstances?: Prisma.TaskListRelationFilter
 }
 
 export type TaskOrderByWithRelationInput = {
+  driveFolderId?: Prisma.SortOrderInput | Prisma.SortOrder
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -410,6 +466,11 @@ export type TaskOrderByWithRelationInput = {
   approvedById?: Prisma.SortOrderInput | Prisma.SortOrder
   approvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   approverId?: Prisma.SortOrderInput | Prisma.SortOrder
+  qcById?: Prisma.SortOrderInput | Prisma.SortOrder
+  qcAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  qcNote?: Prisma.SortOrderInput | Prisma.SortOrder
+  qcPassed?: Prisma.SortOrderInput | Prisma.SortOrder
+  submittedForReviewAt?: Prisma.SortOrderInput | Prisma.SortOrder
   projectId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   isRecurring?: Prisma.SortOrder
@@ -422,6 +483,7 @@ export type TaskOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   approvedBy?: Prisma.UserOrderByWithRelationInput
   approver?: Prisma.UserOrderByWithRelationInput
+  qcBy?: Prisma.UserOrderByWithRelationInput
   project?: Prisma.ProjectOrderByWithRelationInput
   createdBy?: Prisma.UserOrderByWithRelationInput
   assignees?: Prisma.TaskAssigneeOrderByRelationAggregateInput
@@ -429,6 +491,8 @@ export type TaskOrderByWithRelationInput = {
   reports?: Prisma.TaskReportOrderByRelationAggregateInput
   attachments?: Prisma.TaskAttachmentOrderByRelationAggregateInput
   notifications?: Prisma.NotificationOrderByRelationAggregateInput
+  rejections?: Prisma.TaskRejectionOrderByRelationAggregateInput
+  approvals?: Prisma.TaskApprovalOrderByRelationAggregateInput
   recurringParent?: Prisma.TaskOrderByWithRelationInput
   recurringInstances?: Prisma.TaskOrderByRelationAggregateInput
 }
@@ -438,6 +502,7 @@ export type TaskWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.TaskWhereInput | Prisma.TaskWhereInput[]
   OR?: Prisma.TaskWhereInput[]
   NOT?: Prisma.TaskWhereInput | Prisma.TaskWhereInput[]
+  driveFolderId?: Prisma.StringNullableFilter<"Task"> | string | null
   title?: Prisma.StringFilter<"Task"> | string
   description?: Prisma.StringNullableFilter<"Task"> | string | null
   status?: Prisma.EnumTaskStatusFilter<"Task"> | $Enums.TaskStatus
@@ -449,6 +514,11 @@ export type TaskWhereUniqueInput = Prisma.AtLeast<{
   approvedById?: Prisma.IntNullableFilter<"Task"> | number | null
   approvedAt?: Prisma.DateTimeNullableFilter<"Task"> | Date | string | null
   approverId?: Prisma.IntNullableFilter<"Task"> | number | null
+  qcById?: Prisma.IntNullableFilter<"Task"> | number | null
+  qcAt?: Prisma.DateTimeNullableFilter<"Task"> | Date | string | null
+  qcNote?: Prisma.StringNullableFilter<"Task"> | string | null
+  qcPassed?: Prisma.BoolNullableFilter<"Task"> | boolean | null
+  submittedForReviewAt?: Prisma.DateTimeNullableFilter<"Task"> | Date | string | null
   projectId?: Prisma.IntFilter<"Task"> | number
   createdById?: Prisma.IntFilter<"Task"> | number
   isRecurring?: Prisma.BoolFilter<"Task"> | boolean
@@ -461,6 +531,7 @@ export type TaskWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Task"> | Date | string
   approvedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   approver?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  qcBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
   createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   assignees?: Prisma.TaskAssigneeListRelationFilter
@@ -468,11 +539,14 @@ export type TaskWhereUniqueInput = Prisma.AtLeast<{
   reports?: Prisma.TaskReportListRelationFilter
   attachments?: Prisma.TaskAttachmentListRelationFilter
   notifications?: Prisma.NotificationListRelationFilter
+  rejections?: Prisma.TaskRejectionListRelationFilter
+  approvals?: Prisma.TaskApprovalListRelationFilter
   recurringParent?: Prisma.XOR<Prisma.TaskNullableScalarRelationFilter, Prisma.TaskWhereInput> | null
   recurringInstances?: Prisma.TaskListRelationFilter
 }, "id">
 
 export type TaskOrderByWithAggregationInput = {
+  driveFolderId?: Prisma.SortOrderInput | Prisma.SortOrder
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -485,6 +559,11 @@ export type TaskOrderByWithAggregationInput = {
   approvedById?: Prisma.SortOrderInput | Prisma.SortOrder
   approvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   approverId?: Prisma.SortOrderInput | Prisma.SortOrder
+  qcById?: Prisma.SortOrderInput | Prisma.SortOrder
+  qcAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  qcNote?: Prisma.SortOrderInput | Prisma.SortOrder
+  qcPassed?: Prisma.SortOrderInput | Prisma.SortOrder
+  submittedForReviewAt?: Prisma.SortOrderInput | Prisma.SortOrder
   projectId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   isRecurring?: Prisma.SortOrder
@@ -506,6 +585,7 @@ export type TaskScalarWhereWithAggregatesInput = {
   AND?: Prisma.TaskScalarWhereWithAggregatesInput | Prisma.TaskScalarWhereWithAggregatesInput[]
   OR?: Prisma.TaskScalarWhereWithAggregatesInput[]
   NOT?: Prisma.TaskScalarWhereWithAggregatesInput | Prisma.TaskScalarWhereWithAggregatesInput[]
+  driveFolderId?: Prisma.StringNullableWithAggregatesFilter<"Task"> | string | null
   id?: Prisma.IntWithAggregatesFilter<"Task"> | number
   title?: Prisma.StringWithAggregatesFilter<"Task"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"Task"> | string | null
@@ -518,6 +598,11 @@ export type TaskScalarWhereWithAggregatesInput = {
   approvedById?: Prisma.IntNullableWithAggregatesFilter<"Task"> | number | null
   approvedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Task"> | Date | string | null
   approverId?: Prisma.IntNullableWithAggregatesFilter<"Task"> | number | null
+  qcById?: Prisma.IntNullableWithAggregatesFilter<"Task"> | number | null
+  qcAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Task"> | Date | string | null
+  qcNote?: Prisma.StringNullableWithAggregatesFilter<"Task"> | string | null
+  qcPassed?: Prisma.BoolNullableWithAggregatesFilter<"Task"> | boolean | null
+  submittedForReviewAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Task"> | Date | string | null
   projectId?: Prisma.IntWithAggregatesFilter<"Task"> | number
   createdById?: Prisma.IntWithAggregatesFilter<"Task"> | number
   isRecurring?: Prisma.BoolWithAggregatesFilter<"Task"> | boolean
@@ -531,6 +616,7 @@ export type TaskScalarWhereWithAggregatesInput = {
 }
 
 export type TaskCreateInput = {
+  driveFolderId?: string | null
   title: string
   description?: string | null
   status?: $Enums.TaskStatus
@@ -540,6 +626,10 @@ export type TaskCreateInput = {
   estimatedMinutes?: number | null
   weight?: number | null
   approvedAt?: Date | string | null
+  qcAt?: Date | string | null
+  qcNote?: string | null
+  qcPassed?: boolean | null
+  submittedForReviewAt?: Date | string | null
   isRecurring?: boolean
   recurrencePattern?: string | null
   recurrenceDays?: string | null
@@ -549,6 +639,7 @@ export type TaskCreateInput = {
   updatedAt?: Date | string
   approvedBy?: Prisma.UserCreateNestedOneWithoutApprovedTasksInput
   approver?: Prisma.UserCreateNestedOneWithoutApproverTasksInput
+  qcBy?: Prisma.UserCreateNestedOneWithoutQcReviewedTasksInput
   project: Prisma.ProjectCreateNestedOneWithoutTasksInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedTasksInput
   assignees?: Prisma.TaskAssigneeCreateNestedManyWithoutTaskInput
@@ -556,11 +647,14 @@ export type TaskCreateInput = {
   reports?: Prisma.TaskReportCreateNestedManyWithoutTaskInput
   attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutTaskInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutTaskInput
+  rejections?: Prisma.TaskRejectionCreateNestedManyWithoutTaskInput
+  approvals?: Prisma.TaskApprovalCreateNestedManyWithoutTaskInput
   recurringParent?: Prisma.TaskCreateNestedOneWithoutRecurringInstancesInput
   recurringInstances?: Prisma.TaskCreateNestedManyWithoutRecurringParentInput
 }
 
 export type TaskUncheckedCreateInput = {
+  driveFolderId?: string | null
   id?: number
   title: string
   description?: string | null
@@ -573,6 +667,11 @@ export type TaskUncheckedCreateInput = {
   approvedById?: number | null
   approvedAt?: Date | string | null
   approverId?: number | null
+  qcById?: number | null
+  qcAt?: Date | string | null
+  qcNote?: string | null
+  qcPassed?: boolean | null
+  submittedForReviewAt?: Date | string | null
   projectId: number
   createdById: number
   isRecurring?: boolean
@@ -588,10 +687,13 @@ export type TaskUncheckedCreateInput = {
   reports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutTaskInput
   attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutTaskInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTaskInput
+  rejections?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutTaskInput
+  approvals?: Prisma.TaskApprovalUncheckedCreateNestedManyWithoutTaskInput
   recurringInstances?: Prisma.TaskUncheckedCreateNestedManyWithoutRecurringParentInput
 }
 
 export type TaskUpdateInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
@@ -601,6 +703,10 @@ export type TaskUpdateInput = {
   estimatedMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   weight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qcPassed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  submittedForReviewAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isRecurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
   recurrencePattern?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recurrenceDays?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -610,6 +716,7 @@ export type TaskUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   approvedBy?: Prisma.UserUpdateOneWithoutApprovedTasksNestedInput
   approver?: Prisma.UserUpdateOneWithoutApproverTasksNestedInput
+  qcBy?: Prisma.UserUpdateOneWithoutQcReviewedTasksNestedInput
   project?: Prisma.ProjectUpdateOneRequiredWithoutTasksNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedTasksNestedInput
   assignees?: Prisma.TaskAssigneeUpdateManyWithoutTaskNestedInput
@@ -617,11 +724,14 @@ export type TaskUpdateInput = {
   reports?: Prisma.TaskReportUpdateManyWithoutTaskNestedInput
   attachments?: Prisma.TaskAttachmentUpdateManyWithoutTaskNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutTaskNestedInput
+  rejections?: Prisma.TaskRejectionUpdateManyWithoutTaskNestedInput
+  approvals?: Prisma.TaskApprovalUpdateManyWithoutTaskNestedInput
   recurringParent?: Prisma.TaskUpdateOneWithoutRecurringInstancesNestedInput
   recurringInstances?: Prisma.TaskUpdateManyWithoutRecurringParentNestedInput
 }
 
 export type TaskUncheckedUpdateInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -634,6 +744,11 @@ export type TaskUncheckedUpdateInput = {
   approvedById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approverId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qcById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qcAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qcPassed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  submittedForReviewAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   projectId?: Prisma.IntFieldUpdateOperationsInput | number
   createdById?: Prisma.IntFieldUpdateOperationsInput | number
   isRecurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -649,10 +764,13 @@ export type TaskUncheckedUpdateInput = {
   reports?: Prisma.TaskReportUncheckedUpdateManyWithoutTaskNestedInput
   attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutTaskNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutTaskNestedInput
+  rejections?: Prisma.TaskRejectionUncheckedUpdateManyWithoutTaskNestedInput
+  approvals?: Prisma.TaskApprovalUncheckedUpdateManyWithoutTaskNestedInput
   recurringInstances?: Prisma.TaskUncheckedUpdateManyWithoutRecurringParentNestedInput
 }
 
 export type TaskCreateManyInput = {
+  driveFolderId?: string | null
   id?: number
   title: string
   description?: string | null
@@ -665,6 +783,11 @@ export type TaskCreateManyInput = {
   approvedById?: number | null
   approvedAt?: Date | string | null
   approverId?: number | null
+  qcById?: number | null
+  qcAt?: Date | string | null
+  qcNote?: string | null
+  qcPassed?: boolean | null
+  submittedForReviewAt?: Date | string | null
   projectId: number
   createdById: number
   isRecurring?: boolean
@@ -678,6 +801,7 @@ export type TaskCreateManyInput = {
 }
 
 export type TaskUpdateManyMutationInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
@@ -687,6 +811,10 @@ export type TaskUpdateManyMutationInput = {
   estimatedMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   weight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qcPassed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  submittedForReviewAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isRecurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
   recurrencePattern?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recurrenceDays?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -697,6 +825,7 @@ export type TaskUpdateManyMutationInput = {
 }
 
 export type TaskUncheckedUpdateManyInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -709,6 +838,11 @@ export type TaskUncheckedUpdateManyInput = {
   approvedById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approverId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qcById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qcAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qcPassed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  submittedForReviewAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   projectId?: Prisma.IntFieldUpdateOperationsInput | number
   createdById?: Prisma.IntFieldUpdateOperationsInput | number
   isRecurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -737,6 +871,7 @@ export type TaskNullableScalarRelationFilter = {
 }
 
 export type TaskCountOrderByAggregateInput = {
+  driveFolderId?: Prisma.SortOrder
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
@@ -749,6 +884,11 @@ export type TaskCountOrderByAggregateInput = {
   approvedById?: Prisma.SortOrder
   approvedAt?: Prisma.SortOrder
   approverId?: Prisma.SortOrder
+  qcById?: Prisma.SortOrder
+  qcAt?: Prisma.SortOrder
+  qcNote?: Prisma.SortOrder
+  qcPassed?: Prisma.SortOrder
+  submittedForReviewAt?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   isRecurring?: Prisma.SortOrder
@@ -768,12 +908,14 @@ export type TaskAvgOrderByAggregateInput = {
   weight?: Prisma.SortOrder
   approvedById?: Prisma.SortOrder
   approverId?: Prisma.SortOrder
+  qcById?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   recurringParentId?: Prisma.SortOrder
 }
 
 export type TaskMaxOrderByAggregateInput = {
+  driveFolderId?: Prisma.SortOrder
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
@@ -786,6 +928,11 @@ export type TaskMaxOrderByAggregateInput = {
   approvedById?: Prisma.SortOrder
   approvedAt?: Prisma.SortOrder
   approverId?: Prisma.SortOrder
+  qcById?: Prisma.SortOrder
+  qcAt?: Prisma.SortOrder
+  qcNote?: Prisma.SortOrder
+  qcPassed?: Prisma.SortOrder
+  submittedForReviewAt?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   isRecurring?: Prisma.SortOrder
@@ -799,6 +946,7 @@ export type TaskMaxOrderByAggregateInput = {
 }
 
 export type TaskMinOrderByAggregateInput = {
+  driveFolderId?: Prisma.SortOrder
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
@@ -811,6 +959,11 @@ export type TaskMinOrderByAggregateInput = {
   approvedById?: Prisma.SortOrder
   approvedAt?: Prisma.SortOrder
   approverId?: Prisma.SortOrder
+  qcById?: Prisma.SortOrder
+  qcAt?: Prisma.SortOrder
+  qcNote?: Prisma.SortOrder
+  qcPassed?: Prisma.SortOrder
+  submittedForReviewAt?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   isRecurring?: Prisma.SortOrder
@@ -830,6 +983,7 @@ export type TaskSumOrderByAggregateInput = {
   weight?: Prisma.SortOrder
   approvedById?: Prisma.SortOrder
   approverId?: Prisma.SortOrder
+  qcById?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   recurringParentId?: Prisma.SortOrder
@@ -916,6 +1070,10 @@ export type NullableFloatFieldUpdateOperationsInput = {
   decrement?: number
   multiply?: number
   divide?: number
+}
+
+export type NullableBoolFieldUpdateOperationsInput = {
+  set?: boolean | null
 }
 
 export type BoolFieldUpdateOperationsInput = {
@@ -1039,6 +1197,13 @@ export type TaskCreateNestedManyWithoutApproverInput = {
   connect?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
 }
 
+export type TaskCreateNestedManyWithoutQcByInput = {
+  create?: Prisma.XOR<Prisma.TaskCreateWithoutQcByInput, Prisma.TaskUncheckedCreateWithoutQcByInput> | Prisma.TaskCreateWithoutQcByInput[] | Prisma.TaskUncheckedCreateWithoutQcByInput[]
+  connectOrCreate?: Prisma.TaskCreateOrConnectWithoutQcByInput | Prisma.TaskCreateOrConnectWithoutQcByInput[]
+  createMany?: Prisma.TaskCreateManyQcByInputEnvelope
+  connect?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+}
+
 export type TaskUncheckedCreateNestedManyWithoutCreatedByInput = {
   create?: Prisma.XOR<Prisma.TaskCreateWithoutCreatedByInput, Prisma.TaskUncheckedCreateWithoutCreatedByInput> | Prisma.TaskCreateWithoutCreatedByInput[] | Prisma.TaskUncheckedCreateWithoutCreatedByInput[]
   connectOrCreate?: Prisma.TaskCreateOrConnectWithoutCreatedByInput | Prisma.TaskCreateOrConnectWithoutCreatedByInput[]
@@ -1057,6 +1222,13 @@ export type TaskUncheckedCreateNestedManyWithoutApproverInput = {
   create?: Prisma.XOR<Prisma.TaskCreateWithoutApproverInput, Prisma.TaskUncheckedCreateWithoutApproverInput> | Prisma.TaskCreateWithoutApproverInput[] | Prisma.TaskUncheckedCreateWithoutApproverInput[]
   connectOrCreate?: Prisma.TaskCreateOrConnectWithoutApproverInput | Prisma.TaskCreateOrConnectWithoutApproverInput[]
   createMany?: Prisma.TaskCreateManyApproverInputEnvelope
+  connect?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+}
+
+export type TaskUncheckedCreateNestedManyWithoutQcByInput = {
+  create?: Prisma.XOR<Prisma.TaskCreateWithoutQcByInput, Prisma.TaskUncheckedCreateWithoutQcByInput> | Prisma.TaskCreateWithoutQcByInput[] | Prisma.TaskUncheckedCreateWithoutQcByInput[]
+  connectOrCreate?: Prisma.TaskCreateOrConnectWithoutQcByInput | Prisma.TaskCreateOrConnectWithoutQcByInput[]
+  createMany?: Prisma.TaskCreateManyQcByInputEnvelope
   connect?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
 }
 
@@ -1102,6 +1274,20 @@ export type TaskUpdateManyWithoutApproverNestedInput = {
   deleteMany?: Prisma.TaskScalarWhereInput | Prisma.TaskScalarWhereInput[]
 }
 
+export type TaskUpdateManyWithoutQcByNestedInput = {
+  create?: Prisma.XOR<Prisma.TaskCreateWithoutQcByInput, Prisma.TaskUncheckedCreateWithoutQcByInput> | Prisma.TaskCreateWithoutQcByInput[] | Prisma.TaskUncheckedCreateWithoutQcByInput[]
+  connectOrCreate?: Prisma.TaskCreateOrConnectWithoutQcByInput | Prisma.TaskCreateOrConnectWithoutQcByInput[]
+  upsert?: Prisma.TaskUpsertWithWhereUniqueWithoutQcByInput | Prisma.TaskUpsertWithWhereUniqueWithoutQcByInput[]
+  createMany?: Prisma.TaskCreateManyQcByInputEnvelope
+  set?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  disconnect?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  delete?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  connect?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  update?: Prisma.TaskUpdateWithWhereUniqueWithoutQcByInput | Prisma.TaskUpdateWithWhereUniqueWithoutQcByInput[]
+  updateMany?: Prisma.TaskUpdateManyWithWhereWithoutQcByInput | Prisma.TaskUpdateManyWithWhereWithoutQcByInput[]
+  deleteMany?: Prisma.TaskScalarWhereInput | Prisma.TaskScalarWhereInput[]
+}
+
 export type TaskUncheckedUpdateManyWithoutCreatedByNestedInput = {
   create?: Prisma.XOR<Prisma.TaskCreateWithoutCreatedByInput, Prisma.TaskUncheckedCreateWithoutCreatedByInput> | Prisma.TaskCreateWithoutCreatedByInput[] | Prisma.TaskUncheckedCreateWithoutCreatedByInput[]
   connectOrCreate?: Prisma.TaskCreateOrConnectWithoutCreatedByInput | Prisma.TaskCreateOrConnectWithoutCreatedByInput[]
@@ -1144,6 +1330,20 @@ export type TaskUncheckedUpdateManyWithoutApproverNestedInput = {
   deleteMany?: Prisma.TaskScalarWhereInput | Prisma.TaskScalarWhereInput[]
 }
 
+export type TaskUncheckedUpdateManyWithoutQcByNestedInput = {
+  create?: Prisma.XOR<Prisma.TaskCreateWithoutQcByInput, Prisma.TaskUncheckedCreateWithoutQcByInput> | Prisma.TaskCreateWithoutQcByInput[] | Prisma.TaskUncheckedCreateWithoutQcByInput[]
+  connectOrCreate?: Prisma.TaskCreateOrConnectWithoutQcByInput | Prisma.TaskCreateOrConnectWithoutQcByInput[]
+  upsert?: Prisma.TaskUpsertWithWhereUniqueWithoutQcByInput | Prisma.TaskUpsertWithWhereUniqueWithoutQcByInput[]
+  createMany?: Prisma.TaskCreateManyQcByInputEnvelope
+  set?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  disconnect?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  delete?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  connect?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  update?: Prisma.TaskUpdateWithWhereUniqueWithoutQcByInput | Prisma.TaskUpdateWithWhereUniqueWithoutQcByInput[]
+  updateMany?: Prisma.TaskUpdateManyWithWhereWithoutQcByInput | Prisma.TaskUpdateManyWithWhereWithoutQcByInput[]
+  deleteMany?: Prisma.TaskScalarWhereInput | Prisma.TaskScalarWhereInput[]
+}
+
 export type TaskCreateNestedOneWithoutAttachmentsInput = {
   create?: Prisma.XOR<Prisma.TaskCreateWithoutAttachmentsInput, Prisma.TaskUncheckedCreateWithoutAttachmentsInput>
   connectOrCreate?: Prisma.TaskCreateOrConnectWithoutAttachmentsInput
@@ -1158,7 +1358,36 @@ export type TaskUpdateOneRequiredWithoutAttachmentsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.TaskUpdateToOneWithWhereWithoutAttachmentsInput, Prisma.TaskUpdateWithoutAttachmentsInput>, Prisma.TaskUncheckedUpdateWithoutAttachmentsInput>
 }
 
+export type TaskCreateNestedOneWithoutRejectionsInput = {
+  create?: Prisma.XOR<Prisma.TaskCreateWithoutRejectionsInput, Prisma.TaskUncheckedCreateWithoutRejectionsInput>
+  connectOrCreate?: Prisma.TaskCreateOrConnectWithoutRejectionsInput
+  connect?: Prisma.TaskWhereUniqueInput
+}
+
+export type TaskUpdateOneRequiredWithoutRejectionsNestedInput = {
+  create?: Prisma.XOR<Prisma.TaskCreateWithoutRejectionsInput, Prisma.TaskUncheckedCreateWithoutRejectionsInput>
+  connectOrCreate?: Prisma.TaskCreateOrConnectWithoutRejectionsInput
+  upsert?: Prisma.TaskUpsertWithoutRejectionsInput
+  connect?: Prisma.TaskWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TaskUpdateToOneWithWhereWithoutRejectionsInput, Prisma.TaskUpdateWithoutRejectionsInput>, Prisma.TaskUncheckedUpdateWithoutRejectionsInput>
+}
+
+export type TaskCreateNestedOneWithoutApprovalsInput = {
+  create?: Prisma.XOR<Prisma.TaskCreateWithoutApprovalsInput, Prisma.TaskUncheckedCreateWithoutApprovalsInput>
+  connectOrCreate?: Prisma.TaskCreateOrConnectWithoutApprovalsInput
+  connect?: Prisma.TaskWhereUniqueInput
+}
+
+export type TaskUpdateOneRequiredWithoutApprovalsNestedInput = {
+  create?: Prisma.XOR<Prisma.TaskCreateWithoutApprovalsInput, Prisma.TaskUncheckedCreateWithoutApprovalsInput>
+  connectOrCreate?: Prisma.TaskCreateOrConnectWithoutApprovalsInput
+  upsert?: Prisma.TaskUpsertWithoutApprovalsInput
+  connect?: Prisma.TaskWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TaskUpdateToOneWithWhereWithoutApprovalsInput, Prisma.TaskUpdateWithoutApprovalsInput>, Prisma.TaskUncheckedUpdateWithoutApprovalsInput>
+}
+
 export type TaskCreateWithoutProjectInput = {
+  driveFolderId?: string | null
   title: string
   description?: string | null
   status?: $Enums.TaskStatus
@@ -1168,6 +1397,10 @@ export type TaskCreateWithoutProjectInput = {
   estimatedMinutes?: number | null
   weight?: number | null
   approvedAt?: Date | string | null
+  qcAt?: Date | string | null
+  qcNote?: string | null
+  qcPassed?: boolean | null
+  submittedForReviewAt?: Date | string | null
   isRecurring?: boolean
   recurrencePattern?: string | null
   recurrenceDays?: string | null
@@ -1177,17 +1410,21 @@ export type TaskCreateWithoutProjectInput = {
   updatedAt?: Date | string
   approvedBy?: Prisma.UserCreateNestedOneWithoutApprovedTasksInput
   approver?: Prisma.UserCreateNestedOneWithoutApproverTasksInput
+  qcBy?: Prisma.UserCreateNestedOneWithoutQcReviewedTasksInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedTasksInput
   assignees?: Prisma.TaskAssigneeCreateNestedManyWithoutTaskInput
   subtasks?: Prisma.TaskSubtaskCreateNestedManyWithoutTaskInput
   reports?: Prisma.TaskReportCreateNestedManyWithoutTaskInput
   attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutTaskInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutTaskInput
+  rejections?: Prisma.TaskRejectionCreateNestedManyWithoutTaskInput
+  approvals?: Prisma.TaskApprovalCreateNestedManyWithoutTaskInput
   recurringParent?: Prisma.TaskCreateNestedOneWithoutRecurringInstancesInput
   recurringInstances?: Prisma.TaskCreateNestedManyWithoutRecurringParentInput
 }
 
 export type TaskUncheckedCreateWithoutProjectInput = {
+  driveFolderId?: string | null
   id?: number
   title: string
   description?: string | null
@@ -1200,6 +1437,11 @@ export type TaskUncheckedCreateWithoutProjectInput = {
   approvedById?: number | null
   approvedAt?: Date | string | null
   approverId?: number | null
+  qcById?: number | null
+  qcAt?: Date | string | null
+  qcNote?: string | null
+  qcPassed?: boolean | null
+  submittedForReviewAt?: Date | string | null
   createdById: number
   isRecurring?: boolean
   recurrencePattern?: string | null
@@ -1214,6 +1456,8 @@ export type TaskUncheckedCreateWithoutProjectInput = {
   reports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutTaskInput
   attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutTaskInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTaskInput
+  rejections?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutTaskInput
+  approvals?: Prisma.TaskApprovalUncheckedCreateNestedManyWithoutTaskInput
   recurringInstances?: Prisma.TaskUncheckedCreateNestedManyWithoutRecurringParentInput
 }
 
@@ -1247,6 +1491,7 @@ export type TaskScalarWhereInput = {
   AND?: Prisma.TaskScalarWhereInput | Prisma.TaskScalarWhereInput[]
   OR?: Prisma.TaskScalarWhereInput[]
   NOT?: Prisma.TaskScalarWhereInput | Prisma.TaskScalarWhereInput[]
+  driveFolderId?: Prisma.StringNullableFilter<"Task"> | string | null
   id?: Prisma.IntFilter<"Task"> | number
   title?: Prisma.StringFilter<"Task"> | string
   description?: Prisma.StringNullableFilter<"Task"> | string | null
@@ -1259,6 +1504,11 @@ export type TaskScalarWhereInput = {
   approvedById?: Prisma.IntNullableFilter<"Task"> | number | null
   approvedAt?: Prisma.DateTimeNullableFilter<"Task"> | Date | string | null
   approverId?: Prisma.IntNullableFilter<"Task"> | number | null
+  qcById?: Prisma.IntNullableFilter<"Task"> | number | null
+  qcAt?: Prisma.DateTimeNullableFilter<"Task"> | Date | string | null
+  qcNote?: Prisma.StringNullableFilter<"Task"> | string | null
+  qcPassed?: Prisma.BoolNullableFilter<"Task"> | boolean | null
+  submittedForReviewAt?: Prisma.DateTimeNullableFilter<"Task"> | Date | string | null
   projectId?: Prisma.IntFilter<"Task"> | number
   createdById?: Prisma.IntFilter<"Task"> | number
   isRecurring?: Prisma.BoolFilter<"Task"> | boolean
@@ -1272,6 +1522,7 @@ export type TaskScalarWhereInput = {
 }
 
 export type TaskCreateWithoutRecurringInstancesInput = {
+  driveFolderId?: string | null
   title: string
   description?: string | null
   status?: $Enums.TaskStatus
@@ -1281,6 +1532,10 @@ export type TaskCreateWithoutRecurringInstancesInput = {
   estimatedMinutes?: number | null
   weight?: number | null
   approvedAt?: Date | string | null
+  qcAt?: Date | string | null
+  qcNote?: string | null
+  qcPassed?: boolean | null
+  submittedForReviewAt?: Date | string | null
   isRecurring?: boolean
   recurrencePattern?: string | null
   recurrenceDays?: string | null
@@ -1290,6 +1545,7 @@ export type TaskCreateWithoutRecurringInstancesInput = {
   updatedAt?: Date | string
   approvedBy?: Prisma.UserCreateNestedOneWithoutApprovedTasksInput
   approver?: Prisma.UserCreateNestedOneWithoutApproverTasksInput
+  qcBy?: Prisma.UserCreateNestedOneWithoutQcReviewedTasksInput
   project: Prisma.ProjectCreateNestedOneWithoutTasksInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedTasksInput
   assignees?: Prisma.TaskAssigneeCreateNestedManyWithoutTaskInput
@@ -1297,10 +1553,13 @@ export type TaskCreateWithoutRecurringInstancesInput = {
   reports?: Prisma.TaskReportCreateNestedManyWithoutTaskInput
   attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutTaskInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutTaskInput
+  rejections?: Prisma.TaskRejectionCreateNestedManyWithoutTaskInput
+  approvals?: Prisma.TaskApprovalCreateNestedManyWithoutTaskInput
   recurringParent?: Prisma.TaskCreateNestedOneWithoutRecurringInstancesInput
 }
 
 export type TaskUncheckedCreateWithoutRecurringInstancesInput = {
+  driveFolderId?: string | null
   id?: number
   title: string
   description?: string | null
@@ -1313,6 +1572,11 @@ export type TaskUncheckedCreateWithoutRecurringInstancesInput = {
   approvedById?: number | null
   approvedAt?: Date | string | null
   approverId?: number | null
+  qcById?: number | null
+  qcAt?: Date | string | null
+  qcNote?: string | null
+  qcPassed?: boolean | null
+  submittedForReviewAt?: Date | string | null
   projectId: number
   createdById: number
   isRecurring?: boolean
@@ -1328,6 +1592,8 @@ export type TaskUncheckedCreateWithoutRecurringInstancesInput = {
   reports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutTaskInput
   attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutTaskInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTaskInput
+  rejections?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutTaskInput
+  approvals?: Prisma.TaskApprovalUncheckedCreateNestedManyWithoutTaskInput
 }
 
 export type TaskCreateOrConnectWithoutRecurringInstancesInput = {
@@ -1336,6 +1602,7 @@ export type TaskCreateOrConnectWithoutRecurringInstancesInput = {
 }
 
 export type TaskCreateWithoutRecurringParentInput = {
+  driveFolderId?: string | null
   title: string
   description?: string | null
   status?: $Enums.TaskStatus
@@ -1345,6 +1612,10 @@ export type TaskCreateWithoutRecurringParentInput = {
   estimatedMinutes?: number | null
   weight?: number | null
   approvedAt?: Date | string | null
+  qcAt?: Date | string | null
+  qcNote?: string | null
+  qcPassed?: boolean | null
+  submittedForReviewAt?: Date | string | null
   isRecurring?: boolean
   recurrencePattern?: string | null
   recurrenceDays?: string | null
@@ -1354,6 +1625,7 @@ export type TaskCreateWithoutRecurringParentInput = {
   updatedAt?: Date | string
   approvedBy?: Prisma.UserCreateNestedOneWithoutApprovedTasksInput
   approver?: Prisma.UserCreateNestedOneWithoutApproverTasksInput
+  qcBy?: Prisma.UserCreateNestedOneWithoutQcReviewedTasksInput
   project: Prisma.ProjectCreateNestedOneWithoutTasksInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedTasksInput
   assignees?: Prisma.TaskAssigneeCreateNestedManyWithoutTaskInput
@@ -1361,10 +1633,13 @@ export type TaskCreateWithoutRecurringParentInput = {
   reports?: Prisma.TaskReportCreateNestedManyWithoutTaskInput
   attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutTaskInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutTaskInput
+  rejections?: Prisma.TaskRejectionCreateNestedManyWithoutTaskInput
+  approvals?: Prisma.TaskApprovalCreateNestedManyWithoutTaskInput
   recurringInstances?: Prisma.TaskCreateNestedManyWithoutRecurringParentInput
 }
 
 export type TaskUncheckedCreateWithoutRecurringParentInput = {
+  driveFolderId?: string | null
   id?: number
   title: string
   description?: string | null
@@ -1377,6 +1652,11 @@ export type TaskUncheckedCreateWithoutRecurringParentInput = {
   approvedById?: number | null
   approvedAt?: Date | string | null
   approverId?: number | null
+  qcById?: number | null
+  qcAt?: Date | string | null
+  qcNote?: string | null
+  qcPassed?: boolean | null
+  submittedForReviewAt?: Date | string | null
   projectId: number
   createdById: number
   isRecurring?: boolean
@@ -1391,6 +1671,8 @@ export type TaskUncheckedCreateWithoutRecurringParentInput = {
   reports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutTaskInput
   attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutTaskInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTaskInput
+  rejections?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutTaskInput
+  approvals?: Prisma.TaskApprovalUncheckedCreateNestedManyWithoutTaskInput
   recurringInstances?: Prisma.TaskUncheckedCreateNestedManyWithoutRecurringParentInput
 }
 
@@ -1416,6 +1698,7 @@ export type TaskUpdateToOneWithWhereWithoutRecurringInstancesInput = {
 }
 
 export type TaskUpdateWithoutRecurringInstancesInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
@@ -1425,6 +1708,10 @@ export type TaskUpdateWithoutRecurringInstancesInput = {
   estimatedMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   weight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qcPassed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  submittedForReviewAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isRecurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
   recurrencePattern?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recurrenceDays?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1434,6 +1721,7 @@ export type TaskUpdateWithoutRecurringInstancesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   approvedBy?: Prisma.UserUpdateOneWithoutApprovedTasksNestedInput
   approver?: Prisma.UserUpdateOneWithoutApproverTasksNestedInput
+  qcBy?: Prisma.UserUpdateOneWithoutQcReviewedTasksNestedInput
   project?: Prisma.ProjectUpdateOneRequiredWithoutTasksNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedTasksNestedInput
   assignees?: Prisma.TaskAssigneeUpdateManyWithoutTaskNestedInput
@@ -1441,10 +1729,13 @@ export type TaskUpdateWithoutRecurringInstancesInput = {
   reports?: Prisma.TaskReportUpdateManyWithoutTaskNestedInput
   attachments?: Prisma.TaskAttachmentUpdateManyWithoutTaskNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutTaskNestedInput
+  rejections?: Prisma.TaskRejectionUpdateManyWithoutTaskNestedInput
+  approvals?: Prisma.TaskApprovalUpdateManyWithoutTaskNestedInput
   recurringParent?: Prisma.TaskUpdateOneWithoutRecurringInstancesNestedInput
 }
 
 export type TaskUncheckedUpdateWithoutRecurringInstancesInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1457,6 +1748,11 @@ export type TaskUncheckedUpdateWithoutRecurringInstancesInput = {
   approvedById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approverId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qcById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qcAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qcPassed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  submittedForReviewAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   projectId?: Prisma.IntFieldUpdateOperationsInput | number
   createdById?: Prisma.IntFieldUpdateOperationsInput | number
   isRecurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1472,6 +1768,8 @@ export type TaskUncheckedUpdateWithoutRecurringInstancesInput = {
   reports?: Prisma.TaskReportUncheckedUpdateManyWithoutTaskNestedInput
   attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutTaskNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutTaskNestedInput
+  rejections?: Prisma.TaskRejectionUncheckedUpdateManyWithoutTaskNestedInput
+  approvals?: Prisma.TaskApprovalUncheckedUpdateManyWithoutTaskNestedInput
 }
 
 export type TaskUpsertWithWhereUniqueWithoutRecurringParentInput = {
@@ -1491,6 +1789,7 @@ export type TaskUpdateManyWithWhereWithoutRecurringParentInput = {
 }
 
 export type TaskCreateWithoutAssigneesInput = {
+  driveFolderId?: string | null
   title: string
   description?: string | null
   status?: $Enums.TaskStatus
@@ -1500,6 +1799,10 @@ export type TaskCreateWithoutAssigneesInput = {
   estimatedMinutes?: number | null
   weight?: number | null
   approvedAt?: Date | string | null
+  qcAt?: Date | string | null
+  qcNote?: string | null
+  qcPassed?: boolean | null
+  submittedForReviewAt?: Date | string | null
   isRecurring?: boolean
   recurrencePattern?: string | null
   recurrenceDays?: string | null
@@ -1509,17 +1812,21 @@ export type TaskCreateWithoutAssigneesInput = {
   updatedAt?: Date | string
   approvedBy?: Prisma.UserCreateNestedOneWithoutApprovedTasksInput
   approver?: Prisma.UserCreateNestedOneWithoutApproverTasksInput
+  qcBy?: Prisma.UserCreateNestedOneWithoutQcReviewedTasksInput
   project: Prisma.ProjectCreateNestedOneWithoutTasksInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedTasksInput
   subtasks?: Prisma.TaskSubtaskCreateNestedManyWithoutTaskInput
   reports?: Prisma.TaskReportCreateNestedManyWithoutTaskInput
   attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutTaskInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutTaskInput
+  rejections?: Prisma.TaskRejectionCreateNestedManyWithoutTaskInput
+  approvals?: Prisma.TaskApprovalCreateNestedManyWithoutTaskInput
   recurringParent?: Prisma.TaskCreateNestedOneWithoutRecurringInstancesInput
   recurringInstances?: Prisma.TaskCreateNestedManyWithoutRecurringParentInput
 }
 
 export type TaskUncheckedCreateWithoutAssigneesInput = {
+  driveFolderId?: string | null
   id?: number
   title: string
   description?: string | null
@@ -1532,6 +1839,11 @@ export type TaskUncheckedCreateWithoutAssigneesInput = {
   approvedById?: number | null
   approvedAt?: Date | string | null
   approverId?: number | null
+  qcById?: number | null
+  qcAt?: Date | string | null
+  qcNote?: string | null
+  qcPassed?: boolean | null
+  submittedForReviewAt?: Date | string | null
   projectId: number
   createdById: number
   isRecurring?: boolean
@@ -1546,6 +1858,8 @@ export type TaskUncheckedCreateWithoutAssigneesInput = {
   reports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutTaskInput
   attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutTaskInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTaskInput
+  rejections?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutTaskInput
+  approvals?: Prisma.TaskApprovalUncheckedCreateNestedManyWithoutTaskInput
   recurringInstances?: Prisma.TaskUncheckedCreateNestedManyWithoutRecurringParentInput
 }
 
@@ -1566,6 +1880,7 @@ export type TaskUpdateToOneWithWhereWithoutAssigneesInput = {
 }
 
 export type TaskUpdateWithoutAssigneesInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
@@ -1575,6 +1890,10 @@ export type TaskUpdateWithoutAssigneesInput = {
   estimatedMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   weight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qcPassed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  submittedForReviewAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isRecurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
   recurrencePattern?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recurrenceDays?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1584,17 +1903,21 @@ export type TaskUpdateWithoutAssigneesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   approvedBy?: Prisma.UserUpdateOneWithoutApprovedTasksNestedInput
   approver?: Prisma.UserUpdateOneWithoutApproverTasksNestedInput
+  qcBy?: Prisma.UserUpdateOneWithoutQcReviewedTasksNestedInput
   project?: Prisma.ProjectUpdateOneRequiredWithoutTasksNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedTasksNestedInput
   subtasks?: Prisma.TaskSubtaskUpdateManyWithoutTaskNestedInput
   reports?: Prisma.TaskReportUpdateManyWithoutTaskNestedInput
   attachments?: Prisma.TaskAttachmentUpdateManyWithoutTaskNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutTaskNestedInput
+  rejections?: Prisma.TaskRejectionUpdateManyWithoutTaskNestedInput
+  approvals?: Prisma.TaskApprovalUpdateManyWithoutTaskNestedInput
   recurringParent?: Prisma.TaskUpdateOneWithoutRecurringInstancesNestedInput
   recurringInstances?: Prisma.TaskUpdateManyWithoutRecurringParentNestedInput
 }
 
 export type TaskUncheckedUpdateWithoutAssigneesInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1607,6 +1930,11 @@ export type TaskUncheckedUpdateWithoutAssigneesInput = {
   approvedById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approverId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qcById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qcAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qcPassed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  submittedForReviewAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   projectId?: Prisma.IntFieldUpdateOperationsInput | number
   createdById?: Prisma.IntFieldUpdateOperationsInput | number
   isRecurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1621,10 +1949,13 @@ export type TaskUncheckedUpdateWithoutAssigneesInput = {
   reports?: Prisma.TaskReportUncheckedUpdateManyWithoutTaskNestedInput
   attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutTaskNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutTaskNestedInput
+  rejections?: Prisma.TaskRejectionUncheckedUpdateManyWithoutTaskNestedInput
+  approvals?: Prisma.TaskApprovalUncheckedUpdateManyWithoutTaskNestedInput
   recurringInstances?: Prisma.TaskUncheckedUpdateManyWithoutRecurringParentNestedInput
 }
 
 export type TaskCreateWithoutSubtasksInput = {
+  driveFolderId?: string | null
   title: string
   description?: string | null
   status?: $Enums.TaskStatus
@@ -1634,6 +1965,10 @@ export type TaskCreateWithoutSubtasksInput = {
   estimatedMinutes?: number | null
   weight?: number | null
   approvedAt?: Date | string | null
+  qcAt?: Date | string | null
+  qcNote?: string | null
+  qcPassed?: boolean | null
+  submittedForReviewAt?: Date | string | null
   isRecurring?: boolean
   recurrencePattern?: string | null
   recurrenceDays?: string | null
@@ -1643,17 +1978,21 @@ export type TaskCreateWithoutSubtasksInput = {
   updatedAt?: Date | string
   approvedBy?: Prisma.UserCreateNestedOneWithoutApprovedTasksInput
   approver?: Prisma.UserCreateNestedOneWithoutApproverTasksInput
+  qcBy?: Prisma.UserCreateNestedOneWithoutQcReviewedTasksInput
   project: Prisma.ProjectCreateNestedOneWithoutTasksInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedTasksInput
   assignees?: Prisma.TaskAssigneeCreateNestedManyWithoutTaskInput
   reports?: Prisma.TaskReportCreateNestedManyWithoutTaskInput
   attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutTaskInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutTaskInput
+  rejections?: Prisma.TaskRejectionCreateNestedManyWithoutTaskInput
+  approvals?: Prisma.TaskApprovalCreateNestedManyWithoutTaskInput
   recurringParent?: Prisma.TaskCreateNestedOneWithoutRecurringInstancesInput
   recurringInstances?: Prisma.TaskCreateNestedManyWithoutRecurringParentInput
 }
 
 export type TaskUncheckedCreateWithoutSubtasksInput = {
+  driveFolderId?: string | null
   id?: number
   title: string
   description?: string | null
@@ -1666,6 +2005,11 @@ export type TaskUncheckedCreateWithoutSubtasksInput = {
   approvedById?: number | null
   approvedAt?: Date | string | null
   approverId?: number | null
+  qcById?: number | null
+  qcAt?: Date | string | null
+  qcNote?: string | null
+  qcPassed?: boolean | null
+  submittedForReviewAt?: Date | string | null
   projectId: number
   createdById: number
   isRecurring?: boolean
@@ -1680,6 +2024,8 @@ export type TaskUncheckedCreateWithoutSubtasksInput = {
   reports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutTaskInput
   attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutTaskInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTaskInput
+  rejections?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutTaskInput
+  approvals?: Prisma.TaskApprovalUncheckedCreateNestedManyWithoutTaskInput
   recurringInstances?: Prisma.TaskUncheckedCreateNestedManyWithoutRecurringParentInput
 }
 
@@ -1700,6 +2046,7 @@ export type TaskUpdateToOneWithWhereWithoutSubtasksInput = {
 }
 
 export type TaskUpdateWithoutSubtasksInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
@@ -1709,6 +2056,10 @@ export type TaskUpdateWithoutSubtasksInput = {
   estimatedMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   weight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qcPassed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  submittedForReviewAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isRecurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
   recurrencePattern?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recurrenceDays?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1718,17 +2069,21 @@ export type TaskUpdateWithoutSubtasksInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   approvedBy?: Prisma.UserUpdateOneWithoutApprovedTasksNestedInput
   approver?: Prisma.UserUpdateOneWithoutApproverTasksNestedInput
+  qcBy?: Prisma.UserUpdateOneWithoutQcReviewedTasksNestedInput
   project?: Prisma.ProjectUpdateOneRequiredWithoutTasksNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedTasksNestedInput
   assignees?: Prisma.TaskAssigneeUpdateManyWithoutTaskNestedInput
   reports?: Prisma.TaskReportUpdateManyWithoutTaskNestedInput
   attachments?: Prisma.TaskAttachmentUpdateManyWithoutTaskNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutTaskNestedInput
+  rejections?: Prisma.TaskRejectionUpdateManyWithoutTaskNestedInput
+  approvals?: Prisma.TaskApprovalUpdateManyWithoutTaskNestedInput
   recurringParent?: Prisma.TaskUpdateOneWithoutRecurringInstancesNestedInput
   recurringInstances?: Prisma.TaskUpdateManyWithoutRecurringParentNestedInput
 }
 
 export type TaskUncheckedUpdateWithoutSubtasksInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1741,6 +2096,11 @@ export type TaskUncheckedUpdateWithoutSubtasksInput = {
   approvedById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approverId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qcById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qcAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qcPassed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  submittedForReviewAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   projectId?: Prisma.IntFieldUpdateOperationsInput | number
   createdById?: Prisma.IntFieldUpdateOperationsInput | number
   isRecurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1755,10 +2115,13 @@ export type TaskUncheckedUpdateWithoutSubtasksInput = {
   reports?: Prisma.TaskReportUncheckedUpdateManyWithoutTaskNestedInput
   attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutTaskNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutTaskNestedInput
+  rejections?: Prisma.TaskRejectionUncheckedUpdateManyWithoutTaskNestedInput
+  approvals?: Prisma.TaskApprovalUncheckedUpdateManyWithoutTaskNestedInput
   recurringInstances?: Prisma.TaskUncheckedUpdateManyWithoutRecurringParentNestedInput
 }
 
 export type TaskCreateWithoutReportsInput = {
+  driveFolderId?: string | null
   title: string
   description?: string | null
   status?: $Enums.TaskStatus
@@ -1768,6 +2131,10 @@ export type TaskCreateWithoutReportsInput = {
   estimatedMinutes?: number | null
   weight?: number | null
   approvedAt?: Date | string | null
+  qcAt?: Date | string | null
+  qcNote?: string | null
+  qcPassed?: boolean | null
+  submittedForReviewAt?: Date | string | null
   isRecurring?: boolean
   recurrencePattern?: string | null
   recurrenceDays?: string | null
@@ -1777,17 +2144,21 @@ export type TaskCreateWithoutReportsInput = {
   updatedAt?: Date | string
   approvedBy?: Prisma.UserCreateNestedOneWithoutApprovedTasksInput
   approver?: Prisma.UserCreateNestedOneWithoutApproverTasksInput
+  qcBy?: Prisma.UserCreateNestedOneWithoutQcReviewedTasksInput
   project: Prisma.ProjectCreateNestedOneWithoutTasksInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedTasksInput
   assignees?: Prisma.TaskAssigneeCreateNestedManyWithoutTaskInput
   subtasks?: Prisma.TaskSubtaskCreateNestedManyWithoutTaskInput
   attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutTaskInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutTaskInput
+  rejections?: Prisma.TaskRejectionCreateNestedManyWithoutTaskInput
+  approvals?: Prisma.TaskApprovalCreateNestedManyWithoutTaskInput
   recurringParent?: Prisma.TaskCreateNestedOneWithoutRecurringInstancesInput
   recurringInstances?: Prisma.TaskCreateNestedManyWithoutRecurringParentInput
 }
 
 export type TaskUncheckedCreateWithoutReportsInput = {
+  driveFolderId?: string | null
   id?: number
   title: string
   description?: string | null
@@ -1800,6 +2171,11 @@ export type TaskUncheckedCreateWithoutReportsInput = {
   approvedById?: number | null
   approvedAt?: Date | string | null
   approverId?: number | null
+  qcById?: number | null
+  qcAt?: Date | string | null
+  qcNote?: string | null
+  qcPassed?: boolean | null
+  submittedForReviewAt?: Date | string | null
   projectId: number
   createdById: number
   isRecurring?: boolean
@@ -1814,6 +2190,8 @@ export type TaskUncheckedCreateWithoutReportsInput = {
   subtasks?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutTaskInput
   attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutTaskInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTaskInput
+  rejections?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutTaskInput
+  approvals?: Prisma.TaskApprovalUncheckedCreateNestedManyWithoutTaskInput
   recurringInstances?: Prisma.TaskUncheckedCreateNestedManyWithoutRecurringParentInput
 }
 
@@ -1834,6 +2212,7 @@ export type TaskUpdateToOneWithWhereWithoutReportsInput = {
 }
 
 export type TaskUpdateWithoutReportsInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
@@ -1843,6 +2222,10 @@ export type TaskUpdateWithoutReportsInput = {
   estimatedMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   weight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qcPassed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  submittedForReviewAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isRecurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
   recurrencePattern?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recurrenceDays?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1852,17 +2235,21 @@ export type TaskUpdateWithoutReportsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   approvedBy?: Prisma.UserUpdateOneWithoutApprovedTasksNestedInput
   approver?: Prisma.UserUpdateOneWithoutApproverTasksNestedInput
+  qcBy?: Prisma.UserUpdateOneWithoutQcReviewedTasksNestedInput
   project?: Prisma.ProjectUpdateOneRequiredWithoutTasksNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedTasksNestedInput
   assignees?: Prisma.TaskAssigneeUpdateManyWithoutTaskNestedInput
   subtasks?: Prisma.TaskSubtaskUpdateManyWithoutTaskNestedInput
   attachments?: Prisma.TaskAttachmentUpdateManyWithoutTaskNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutTaskNestedInput
+  rejections?: Prisma.TaskRejectionUpdateManyWithoutTaskNestedInput
+  approvals?: Prisma.TaskApprovalUpdateManyWithoutTaskNestedInput
   recurringParent?: Prisma.TaskUpdateOneWithoutRecurringInstancesNestedInput
   recurringInstances?: Prisma.TaskUpdateManyWithoutRecurringParentNestedInput
 }
 
 export type TaskUncheckedUpdateWithoutReportsInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1875,6 +2262,11 @@ export type TaskUncheckedUpdateWithoutReportsInput = {
   approvedById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approverId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qcById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qcAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qcPassed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  submittedForReviewAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   projectId?: Prisma.IntFieldUpdateOperationsInput | number
   createdById?: Prisma.IntFieldUpdateOperationsInput | number
   isRecurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1889,10 +2281,13 @@ export type TaskUncheckedUpdateWithoutReportsInput = {
   subtasks?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutTaskNestedInput
   attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutTaskNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutTaskNestedInput
+  rejections?: Prisma.TaskRejectionUncheckedUpdateManyWithoutTaskNestedInput
+  approvals?: Prisma.TaskApprovalUncheckedUpdateManyWithoutTaskNestedInput
   recurringInstances?: Prisma.TaskUncheckedUpdateManyWithoutRecurringParentNestedInput
 }
 
 export type TaskCreateWithoutNotificationsInput = {
+  driveFolderId?: string | null
   title: string
   description?: string | null
   status?: $Enums.TaskStatus
@@ -1902,6 +2297,10 @@ export type TaskCreateWithoutNotificationsInput = {
   estimatedMinutes?: number | null
   weight?: number | null
   approvedAt?: Date | string | null
+  qcAt?: Date | string | null
+  qcNote?: string | null
+  qcPassed?: boolean | null
+  submittedForReviewAt?: Date | string | null
   isRecurring?: boolean
   recurrencePattern?: string | null
   recurrenceDays?: string | null
@@ -1911,17 +2310,21 @@ export type TaskCreateWithoutNotificationsInput = {
   updatedAt?: Date | string
   approvedBy?: Prisma.UserCreateNestedOneWithoutApprovedTasksInput
   approver?: Prisma.UserCreateNestedOneWithoutApproverTasksInput
+  qcBy?: Prisma.UserCreateNestedOneWithoutQcReviewedTasksInput
   project: Prisma.ProjectCreateNestedOneWithoutTasksInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedTasksInput
   assignees?: Prisma.TaskAssigneeCreateNestedManyWithoutTaskInput
   subtasks?: Prisma.TaskSubtaskCreateNestedManyWithoutTaskInput
   reports?: Prisma.TaskReportCreateNestedManyWithoutTaskInput
   attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutTaskInput
+  rejections?: Prisma.TaskRejectionCreateNestedManyWithoutTaskInput
+  approvals?: Prisma.TaskApprovalCreateNestedManyWithoutTaskInput
   recurringParent?: Prisma.TaskCreateNestedOneWithoutRecurringInstancesInput
   recurringInstances?: Prisma.TaskCreateNestedManyWithoutRecurringParentInput
 }
 
 export type TaskUncheckedCreateWithoutNotificationsInput = {
+  driveFolderId?: string | null
   id?: number
   title: string
   description?: string | null
@@ -1934,6 +2337,11 @@ export type TaskUncheckedCreateWithoutNotificationsInput = {
   approvedById?: number | null
   approvedAt?: Date | string | null
   approverId?: number | null
+  qcById?: number | null
+  qcAt?: Date | string | null
+  qcNote?: string | null
+  qcPassed?: boolean | null
+  submittedForReviewAt?: Date | string | null
   projectId: number
   createdById: number
   isRecurring?: boolean
@@ -1948,6 +2356,8 @@ export type TaskUncheckedCreateWithoutNotificationsInput = {
   subtasks?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutTaskInput
   reports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutTaskInput
   attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutTaskInput
+  rejections?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutTaskInput
+  approvals?: Prisma.TaskApprovalUncheckedCreateNestedManyWithoutTaskInput
   recurringInstances?: Prisma.TaskUncheckedCreateNestedManyWithoutRecurringParentInput
 }
 
@@ -1968,6 +2378,7 @@ export type TaskUpdateToOneWithWhereWithoutNotificationsInput = {
 }
 
 export type TaskUpdateWithoutNotificationsInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
@@ -1977,6 +2388,10 @@ export type TaskUpdateWithoutNotificationsInput = {
   estimatedMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   weight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qcPassed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  submittedForReviewAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isRecurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
   recurrencePattern?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recurrenceDays?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1986,17 +2401,21 @@ export type TaskUpdateWithoutNotificationsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   approvedBy?: Prisma.UserUpdateOneWithoutApprovedTasksNestedInput
   approver?: Prisma.UserUpdateOneWithoutApproverTasksNestedInput
+  qcBy?: Prisma.UserUpdateOneWithoutQcReviewedTasksNestedInput
   project?: Prisma.ProjectUpdateOneRequiredWithoutTasksNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedTasksNestedInput
   assignees?: Prisma.TaskAssigneeUpdateManyWithoutTaskNestedInput
   subtasks?: Prisma.TaskSubtaskUpdateManyWithoutTaskNestedInput
   reports?: Prisma.TaskReportUpdateManyWithoutTaskNestedInput
   attachments?: Prisma.TaskAttachmentUpdateManyWithoutTaskNestedInput
+  rejections?: Prisma.TaskRejectionUpdateManyWithoutTaskNestedInput
+  approvals?: Prisma.TaskApprovalUpdateManyWithoutTaskNestedInput
   recurringParent?: Prisma.TaskUpdateOneWithoutRecurringInstancesNestedInput
   recurringInstances?: Prisma.TaskUpdateManyWithoutRecurringParentNestedInput
 }
 
 export type TaskUncheckedUpdateWithoutNotificationsInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2009,6 +2428,11 @@ export type TaskUncheckedUpdateWithoutNotificationsInput = {
   approvedById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approverId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qcById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qcAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qcPassed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  submittedForReviewAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   projectId?: Prisma.IntFieldUpdateOperationsInput | number
   createdById?: Prisma.IntFieldUpdateOperationsInput | number
   isRecurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2023,10 +2447,13 @@ export type TaskUncheckedUpdateWithoutNotificationsInput = {
   subtasks?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutTaskNestedInput
   reports?: Prisma.TaskReportUncheckedUpdateManyWithoutTaskNestedInput
   attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutTaskNestedInput
+  rejections?: Prisma.TaskRejectionUncheckedUpdateManyWithoutTaskNestedInput
+  approvals?: Prisma.TaskApprovalUncheckedUpdateManyWithoutTaskNestedInput
   recurringInstances?: Prisma.TaskUncheckedUpdateManyWithoutRecurringParentNestedInput
 }
 
 export type TaskCreateWithoutCreatedByInput = {
+  driveFolderId?: string | null
   title: string
   description?: string | null
   status?: $Enums.TaskStatus
@@ -2036,6 +2463,10 @@ export type TaskCreateWithoutCreatedByInput = {
   estimatedMinutes?: number | null
   weight?: number | null
   approvedAt?: Date | string | null
+  qcAt?: Date | string | null
+  qcNote?: string | null
+  qcPassed?: boolean | null
+  submittedForReviewAt?: Date | string | null
   isRecurring?: boolean
   recurrencePattern?: string | null
   recurrenceDays?: string | null
@@ -2045,17 +2476,21 @@ export type TaskCreateWithoutCreatedByInput = {
   updatedAt?: Date | string
   approvedBy?: Prisma.UserCreateNestedOneWithoutApprovedTasksInput
   approver?: Prisma.UserCreateNestedOneWithoutApproverTasksInput
+  qcBy?: Prisma.UserCreateNestedOneWithoutQcReviewedTasksInput
   project: Prisma.ProjectCreateNestedOneWithoutTasksInput
   assignees?: Prisma.TaskAssigneeCreateNestedManyWithoutTaskInput
   subtasks?: Prisma.TaskSubtaskCreateNestedManyWithoutTaskInput
   reports?: Prisma.TaskReportCreateNestedManyWithoutTaskInput
   attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutTaskInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutTaskInput
+  rejections?: Prisma.TaskRejectionCreateNestedManyWithoutTaskInput
+  approvals?: Prisma.TaskApprovalCreateNestedManyWithoutTaskInput
   recurringParent?: Prisma.TaskCreateNestedOneWithoutRecurringInstancesInput
   recurringInstances?: Prisma.TaskCreateNestedManyWithoutRecurringParentInput
 }
 
 export type TaskUncheckedCreateWithoutCreatedByInput = {
+  driveFolderId?: string | null
   id?: number
   title: string
   description?: string | null
@@ -2068,6 +2503,11 @@ export type TaskUncheckedCreateWithoutCreatedByInput = {
   approvedById?: number | null
   approvedAt?: Date | string | null
   approverId?: number | null
+  qcById?: number | null
+  qcAt?: Date | string | null
+  qcNote?: string | null
+  qcPassed?: boolean | null
+  submittedForReviewAt?: Date | string | null
   projectId: number
   isRecurring?: boolean
   recurrencePattern?: string | null
@@ -2082,6 +2522,8 @@ export type TaskUncheckedCreateWithoutCreatedByInput = {
   reports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutTaskInput
   attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutTaskInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTaskInput
+  rejections?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutTaskInput
+  approvals?: Prisma.TaskApprovalUncheckedCreateNestedManyWithoutTaskInput
   recurringInstances?: Prisma.TaskUncheckedCreateNestedManyWithoutRecurringParentInput
 }
 
@@ -2096,6 +2538,7 @@ export type TaskCreateManyCreatedByInputEnvelope = {
 }
 
 export type TaskCreateWithoutApprovedByInput = {
+  driveFolderId?: string | null
   title: string
   description?: string | null
   status?: $Enums.TaskStatus
@@ -2105,6 +2548,10 @@ export type TaskCreateWithoutApprovedByInput = {
   estimatedMinutes?: number | null
   weight?: number | null
   approvedAt?: Date | string | null
+  qcAt?: Date | string | null
+  qcNote?: string | null
+  qcPassed?: boolean | null
+  submittedForReviewAt?: Date | string | null
   isRecurring?: boolean
   recurrencePattern?: string | null
   recurrenceDays?: string | null
@@ -2113,6 +2560,7 @@ export type TaskCreateWithoutApprovedByInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   approver?: Prisma.UserCreateNestedOneWithoutApproverTasksInput
+  qcBy?: Prisma.UserCreateNestedOneWithoutQcReviewedTasksInput
   project: Prisma.ProjectCreateNestedOneWithoutTasksInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedTasksInput
   assignees?: Prisma.TaskAssigneeCreateNestedManyWithoutTaskInput
@@ -2120,11 +2568,14 @@ export type TaskCreateWithoutApprovedByInput = {
   reports?: Prisma.TaskReportCreateNestedManyWithoutTaskInput
   attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutTaskInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutTaskInput
+  rejections?: Prisma.TaskRejectionCreateNestedManyWithoutTaskInput
+  approvals?: Prisma.TaskApprovalCreateNestedManyWithoutTaskInput
   recurringParent?: Prisma.TaskCreateNestedOneWithoutRecurringInstancesInput
   recurringInstances?: Prisma.TaskCreateNestedManyWithoutRecurringParentInput
 }
 
 export type TaskUncheckedCreateWithoutApprovedByInput = {
+  driveFolderId?: string | null
   id?: number
   title: string
   description?: string | null
@@ -2136,6 +2587,11 @@ export type TaskUncheckedCreateWithoutApprovedByInput = {
   weight?: number | null
   approvedAt?: Date | string | null
   approverId?: number | null
+  qcById?: number | null
+  qcAt?: Date | string | null
+  qcNote?: string | null
+  qcPassed?: boolean | null
+  submittedForReviewAt?: Date | string | null
   projectId: number
   createdById: number
   isRecurring?: boolean
@@ -2151,6 +2607,8 @@ export type TaskUncheckedCreateWithoutApprovedByInput = {
   reports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutTaskInput
   attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutTaskInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTaskInput
+  rejections?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutTaskInput
+  approvals?: Prisma.TaskApprovalUncheckedCreateNestedManyWithoutTaskInput
   recurringInstances?: Prisma.TaskUncheckedCreateNestedManyWithoutRecurringParentInput
 }
 
@@ -2165,6 +2623,7 @@ export type TaskCreateManyApprovedByInputEnvelope = {
 }
 
 export type TaskCreateWithoutApproverInput = {
+  driveFolderId?: string | null
   title: string
   description?: string | null
   status?: $Enums.TaskStatus
@@ -2174,6 +2633,10 @@ export type TaskCreateWithoutApproverInput = {
   estimatedMinutes?: number | null
   weight?: number | null
   approvedAt?: Date | string | null
+  qcAt?: Date | string | null
+  qcNote?: string | null
+  qcPassed?: boolean | null
+  submittedForReviewAt?: Date | string | null
   isRecurring?: boolean
   recurrencePattern?: string | null
   recurrenceDays?: string | null
@@ -2182,6 +2645,7 @@ export type TaskCreateWithoutApproverInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   approvedBy?: Prisma.UserCreateNestedOneWithoutApprovedTasksInput
+  qcBy?: Prisma.UserCreateNestedOneWithoutQcReviewedTasksInput
   project: Prisma.ProjectCreateNestedOneWithoutTasksInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedTasksInput
   assignees?: Prisma.TaskAssigneeCreateNestedManyWithoutTaskInput
@@ -2189,11 +2653,14 @@ export type TaskCreateWithoutApproverInput = {
   reports?: Prisma.TaskReportCreateNestedManyWithoutTaskInput
   attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutTaskInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutTaskInput
+  rejections?: Prisma.TaskRejectionCreateNestedManyWithoutTaskInput
+  approvals?: Prisma.TaskApprovalCreateNestedManyWithoutTaskInput
   recurringParent?: Prisma.TaskCreateNestedOneWithoutRecurringInstancesInput
   recurringInstances?: Prisma.TaskCreateNestedManyWithoutRecurringParentInput
 }
 
 export type TaskUncheckedCreateWithoutApproverInput = {
+  driveFolderId?: string | null
   id?: number
   title: string
   description?: string | null
@@ -2205,6 +2672,11 @@ export type TaskUncheckedCreateWithoutApproverInput = {
   weight?: number | null
   approvedById?: number | null
   approvedAt?: Date | string | null
+  qcById?: number | null
+  qcAt?: Date | string | null
+  qcNote?: string | null
+  qcPassed?: boolean | null
+  submittedForReviewAt?: Date | string | null
   projectId: number
   createdById: number
   isRecurring?: boolean
@@ -2220,6 +2692,8 @@ export type TaskUncheckedCreateWithoutApproverInput = {
   reports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutTaskInput
   attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutTaskInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTaskInput
+  rejections?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutTaskInput
+  approvals?: Prisma.TaskApprovalUncheckedCreateNestedManyWithoutTaskInput
   recurringInstances?: Prisma.TaskUncheckedCreateNestedManyWithoutRecurringParentInput
 }
 
@@ -2230,6 +2704,91 @@ export type TaskCreateOrConnectWithoutApproverInput = {
 
 export type TaskCreateManyApproverInputEnvelope = {
   data: Prisma.TaskCreateManyApproverInput | Prisma.TaskCreateManyApproverInput[]
+  skipDuplicates?: boolean
+}
+
+export type TaskCreateWithoutQcByInput = {
+  driveFolderId?: string | null
+  title: string
+  description?: string | null
+  status?: $Enums.TaskStatus
+  startDate?: Date | string | null
+  deadline?: Date | string | null
+  estimatedHours?: number | null
+  estimatedMinutes?: number | null
+  weight?: number | null
+  approvedAt?: Date | string | null
+  qcAt?: Date | string | null
+  qcNote?: string | null
+  qcPassed?: boolean | null
+  submittedForReviewAt?: Date | string | null
+  isRecurring?: boolean
+  recurrencePattern?: string | null
+  recurrenceDays?: string | null
+  recurrenceEnd?: Date | string | null
+  lastGeneratedDate?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  approvedBy?: Prisma.UserCreateNestedOneWithoutApprovedTasksInput
+  approver?: Prisma.UserCreateNestedOneWithoutApproverTasksInput
+  project: Prisma.ProjectCreateNestedOneWithoutTasksInput
+  createdBy: Prisma.UserCreateNestedOneWithoutCreatedTasksInput
+  assignees?: Prisma.TaskAssigneeCreateNestedManyWithoutTaskInput
+  subtasks?: Prisma.TaskSubtaskCreateNestedManyWithoutTaskInput
+  reports?: Prisma.TaskReportCreateNestedManyWithoutTaskInput
+  attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutTaskInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutTaskInput
+  rejections?: Prisma.TaskRejectionCreateNestedManyWithoutTaskInput
+  approvals?: Prisma.TaskApprovalCreateNestedManyWithoutTaskInput
+  recurringParent?: Prisma.TaskCreateNestedOneWithoutRecurringInstancesInput
+  recurringInstances?: Prisma.TaskCreateNestedManyWithoutRecurringParentInput
+}
+
+export type TaskUncheckedCreateWithoutQcByInput = {
+  driveFolderId?: string | null
+  id?: number
+  title: string
+  description?: string | null
+  status?: $Enums.TaskStatus
+  startDate?: Date | string | null
+  deadline?: Date | string | null
+  estimatedHours?: number | null
+  estimatedMinutes?: number | null
+  weight?: number | null
+  approvedById?: number | null
+  approvedAt?: Date | string | null
+  approverId?: number | null
+  qcAt?: Date | string | null
+  qcNote?: string | null
+  qcPassed?: boolean | null
+  submittedForReviewAt?: Date | string | null
+  projectId: number
+  createdById: number
+  isRecurring?: boolean
+  recurrencePattern?: string | null
+  recurrenceDays?: string | null
+  recurrenceEnd?: Date | string | null
+  recurringParentId?: number | null
+  lastGeneratedDate?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  assignees?: Prisma.TaskAssigneeUncheckedCreateNestedManyWithoutTaskInput
+  subtasks?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutTaskInput
+  reports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutTaskInput
+  attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutTaskInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTaskInput
+  rejections?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutTaskInput
+  approvals?: Prisma.TaskApprovalUncheckedCreateNestedManyWithoutTaskInput
+  recurringInstances?: Prisma.TaskUncheckedCreateNestedManyWithoutRecurringParentInput
+}
+
+export type TaskCreateOrConnectWithoutQcByInput = {
+  where: Prisma.TaskWhereUniqueInput
+  create: Prisma.XOR<Prisma.TaskCreateWithoutQcByInput, Prisma.TaskUncheckedCreateWithoutQcByInput>
+}
+
+export type TaskCreateManyQcByInputEnvelope = {
+  data: Prisma.TaskCreateManyQcByInput | Prisma.TaskCreateManyQcByInput[]
   skipDuplicates?: boolean
 }
 
@@ -2281,7 +2840,24 @@ export type TaskUpdateManyWithWhereWithoutApproverInput = {
   data: Prisma.XOR<Prisma.TaskUpdateManyMutationInput, Prisma.TaskUncheckedUpdateManyWithoutApproverInput>
 }
 
+export type TaskUpsertWithWhereUniqueWithoutQcByInput = {
+  where: Prisma.TaskWhereUniqueInput
+  update: Prisma.XOR<Prisma.TaskUpdateWithoutQcByInput, Prisma.TaskUncheckedUpdateWithoutQcByInput>
+  create: Prisma.XOR<Prisma.TaskCreateWithoutQcByInput, Prisma.TaskUncheckedCreateWithoutQcByInput>
+}
+
+export type TaskUpdateWithWhereUniqueWithoutQcByInput = {
+  where: Prisma.TaskWhereUniqueInput
+  data: Prisma.XOR<Prisma.TaskUpdateWithoutQcByInput, Prisma.TaskUncheckedUpdateWithoutQcByInput>
+}
+
+export type TaskUpdateManyWithWhereWithoutQcByInput = {
+  where: Prisma.TaskScalarWhereInput
+  data: Prisma.XOR<Prisma.TaskUpdateManyMutationInput, Prisma.TaskUncheckedUpdateManyWithoutQcByInput>
+}
+
 export type TaskCreateWithoutAttachmentsInput = {
+  driveFolderId?: string | null
   title: string
   description?: string | null
   status?: $Enums.TaskStatus
@@ -2291,6 +2867,10 @@ export type TaskCreateWithoutAttachmentsInput = {
   estimatedMinutes?: number | null
   weight?: number | null
   approvedAt?: Date | string | null
+  qcAt?: Date | string | null
+  qcNote?: string | null
+  qcPassed?: boolean | null
+  submittedForReviewAt?: Date | string | null
   isRecurring?: boolean
   recurrencePattern?: string | null
   recurrenceDays?: string | null
@@ -2300,17 +2880,21 @@ export type TaskCreateWithoutAttachmentsInput = {
   updatedAt?: Date | string
   approvedBy?: Prisma.UserCreateNestedOneWithoutApprovedTasksInput
   approver?: Prisma.UserCreateNestedOneWithoutApproverTasksInput
+  qcBy?: Prisma.UserCreateNestedOneWithoutQcReviewedTasksInput
   project: Prisma.ProjectCreateNestedOneWithoutTasksInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedTasksInput
   assignees?: Prisma.TaskAssigneeCreateNestedManyWithoutTaskInput
   subtasks?: Prisma.TaskSubtaskCreateNestedManyWithoutTaskInput
   reports?: Prisma.TaskReportCreateNestedManyWithoutTaskInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutTaskInput
+  rejections?: Prisma.TaskRejectionCreateNestedManyWithoutTaskInput
+  approvals?: Prisma.TaskApprovalCreateNestedManyWithoutTaskInput
   recurringParent?: Prisma.TaskCreateNestedOneWithoutRecurringInstancesInput
   recurringInstances?: Prisma.TaskCreateNestedManyWithoutRecurringParentInput
 }
 
 export type TaskUncheckedCreateWithoutAttachmentsInput = {
+  driveFolderId?: string | null
   id?: number
   title: string
   description?: string | null
@@ -2323,6 +2907,11 @@ export type TaskUncheckedCreateWithoutAttachmentsInput = {
   approvedById?: number | null
   approvedAt?: Date | string | null
   approverId?: number | null
+  qcById?: number | null
+  qcAt?: Date | string | null
+  qcNote?: string | null
+  qcPassed?: boolean | null
+  submittedForReviewAt?: Date | string | null
   projectId: number
   createdById: number
   isRecurring?: boolean
@@ -2337,6 +2926,8 @@ export type TaskUncheckedCreateWithoutAttachmentsInput = {
   subtasks?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutTaskInput
   reports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutTaskInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTaskInput
+  rejections?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutTaskInput
+  approvals?: Prisma.TaskApprovalUncheckedCreateNestedManyWithoutTaskInput
   recurringInstances?: Prisma.TaskUncheckedCreateNestedManyWithoutRecurringParentInput
 }
 
@@ -2357,6 +2948,7 @@ export type TaskUpdateToOneWithWhereWithoutAttachmentsInput = {
 }
 
 export type TaskUpdateWithoutAttachmentsInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
@@ -2366,6 +2958,10 @@ export type TaskUpdateWithoutAttachmentsInput = {
   estimatedMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   weight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qcPassed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  submittedForReviewAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isRecurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
   recurrencePattern?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recurrenceDays?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2375,17 +2971,21 @@ export type TaskUpdateWithoutAttachmentsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   approvedBy?: Prisma.UserUpdateOneWithoutApprovedTasksNestedInput
   approver?: Prisma.UserUpdateOneWithoutApproverTasksNestedInput
+  qcBy?: Prisma.UserUpdateOneWithoutQcReviewedTasksNestedInput
   project?: Prisma.ProjectUpdateOneRequiredWithoutTasksNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedTasksNestedInput
   assignees?: Prisma.TaskAssigneeUpdateManyWithoutTaskNestedInput
   subtasks?: Prisma.TaskSubtaskUpdateManyWithoutTaskNestedInput
   reports?: Prisma.TaskReportUpdateManyWithoutTaskNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutTaskNestedInput
+  rejections?: Prisma.TaskRejectionUpdateManyWithoutTaskNestedInput
+  approvals?: Prisma.TaskApprovalUpdateManyWithoutTaskNestedInput
   recurringParent?: Prisma.TaskUpdateOneWithoutRecurringInstancesNestedInput
   recurringInstances?: Prisma.TaskUpdateManyWithoutRecurringParentNestedInput
 }
 
 export type TaskUncheckedUpdateWithoutAttachmentsInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2398,6 +2998,11 @@ export type TaskUncheckedUpdateWithoutAttachmentsInput = {
   approvedById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approverId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qcById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qcAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qcPassed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  submittedForReviewAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   projectId?: Prisma.IntFieldUpdateOperationsInput | number
   createdById?: Prisma.IntFieldUpdateOperationsInput | number
   isRecurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2412,10 +3017,50 @@ export type TaskUncheckedUpdateWithoutAttachmentsInput = {
   subtasks?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutTaskNestedInput
   reports?: Prisma.TaskReportUncheckedUpdateManyWithoutTaskNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutTaskNestedInput
+  rejections?: Prisma.TaskRejectionUncheckedUpdateManyWithoutTaskNestedInput
+  approvals?: Prisma.TaskApprovalUncheckedUpdateManyWithoutTaskNestedInput
   recurringInstances?: Prisma.TaskUncheckedUpdateManyWithoutRecurringParentNestedInput
 }
 
-export type TaskCreateManyProjectInput = {
+export type TaskCreateWithoutRejectionsInput = {
+  driveFolderId?: string | null
+  title: string
+  description?: string | null
+  status?: $Enums.TaskStatus
+  startDate?: Date | string | null
+  deadline?: Date | string | null
+  estimatedHours?: number | null
+  estimatedMinutes?: number | null
+  weight?: number | null
+  approvedAt?: Date | string | null
+  qcAt?: Date | string | null
+  qcNote?: string | null
+  qcPassed?: boolean | null
+  submittedForReviewAt?: Date | string | null
+  isRecurring?: boolean
+  recurrencePattern?: string | null
+  recurrenceDays?: string | null
+  recurrenceEnd?: Date | string | null
+  lastGeneratedDate?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  approvedBy?: Prisma.UserCreateNestedOneWithoutApprovedTasksInput
+  approver?: Prisma.UserCreateNestedOneWithoutApproverTasksInput
+  qcBy?: Prisma.UserCreateNestedOneWithoutQcReviewedTasksInput
+  project: Prisma.ProjectCreateNestedOneWithoutTasksInput
+  createdBy: Prisma.UserCreateNestedOneWithoutCreatedTasksInput
+  assignees?: Prisma.TaskAssigneeCreateNestedManyWithoutTaskInput
+  subtasks?: Prisma.TaskSubtaskCreateNestedManyWithoutTaskInput
+  reports?: Prisma.TaskReportCreateNestedManyWithoutTaskInput
+  attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutTaskInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutTaskInput
+  approvals?: Prisma.TaskApprovalCreateNestedManyWithoutTaskInput
+  recurringParent?: Prisma.TaskCreateNestedOneWithoutRecurringInstancesInput
+  recurringInstances?: Prisma.TaskCreateNestedManyWithoutRecurringParentInput
+}
+
+export type TaskUncheckedCreateWithoutRejectionsInput = {
+  driveFolderId?: string | null
   id?: number
   title: string
   description?: string | null
@@ -2428,6 +3073,306 @@ export type TaskCreateManyProjectInput = {
   approvedById?: number | null
   approvedAt?: Date | string | null
   approverId?: number | null
+  qcById?: number | null
+  qcAt?: Date | string | null
+  qcNote?: string | null
+  qcPassed?: boolean | null
+  submittedForReviewAt?: Date | string | null
+  projectId: number
+  createdById: number
+  isRecurring?: boolean
+  recurrencePattern?: string | null
+  recurrenceDays?: string | null
+  recurrenceEnd?: Date | string | null
+  recurringParentId?: number | null
+  lastGeneratedDate?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  assignees?: Prisma.TaskAssigneeUncheckedCreateNestedManyWithoutTaskInput
+  subtasks?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutTaskInput
+  reports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutTaskInput
+  attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutTaskInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTaskInput
+  approvals?: Prisma.TaskApprovalUncheckedCreateNestedManyWithoutTaskInput
+  recurringInstances?: Prisma.TaskUncheckedCreateNestedManyWithoutRecurringParentInput
+}
+
+export type TaskCreateOrConnectWithoutRejectionsInput = {
+  where: Prisma.TaskWhereUniqueInput
+  create: Prisma.XOR<Prisma.TaskCreateWithoutRejectionsInput, Prisma.TaskUncheckedCreateWithoutRejectionsInput>
+}
+
+export type TaskUpsertWithoutRejectionsInput = {
+  update: Prisma.XOR<Prisma.TaskUpdateWithoutRejectionsInput, Prisma.TaskUncheckedUpdateWithoutRejectionsInput>
+  create: Prisma.XOR<Prisma.TaskCreateWithoutRejectionsInput, Prisma.TaskUncheckedCreateWithoutRejectionsInput>
+  where?: Prisma.TaskWhereInput
+}
+
+export type TaskUpdateToOneWithWhereWithoutRejectionsInput = {
+  where?: Prisma.TaskWhereInput
+  data: Prisma.XOR<Prisma.TaskUpdateWithoutRejectionsInput, Prisma.TaskUncheckedUpdateWithoutRejectionsInput>
+}
+
+export type TaskUpdateWithoutRejectionsInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  estimatedHours?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  estimatedMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  weight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qcPassed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  submittedForReviewAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isRecurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  recurrencePattern?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrenceDays?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrenceEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastGeneratedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  approvedBy?: Prisma.UserUpdateOneWithoutApprovedTasksNestedInput
+  approver?: Prisma.UserUpdateOneWithoutApproverTasksNestedInput
+  qcBy?: Prisma.UserUpdateOneWithoutQcReviewedTasksNestedInput
+  project?: Prisma.ProjectUpdateOneRequiredWithoutTasksNestedInput
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedTasksNestedInput
+  assignees?: Prisma.TaskAssigneeUpdateManyWithoutTaskNestedInput
+  subtasks?: Prisma.TaskSubtaskUpdateManyWithoutTaskNestedInput
+  reports?: Prisma.TaskReportUpdateManyWithoutTaskNestedInput
+  attachments?: Prisma.TaskAttachmentUpdateManyWithoutTaskNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutTaskNestedInput
+  approvals?: Prisma.TaskApprovalUpdateManyWithoutTaskNestedInput
+  recurringParent?: Prisma.TaskUpdateOneWithoutRecurringInstancesNestedInput
+  recurringInstances?: Prisma.TaskUpdateManyWithoutRecurringParentNestedInput
+}
+
+export type TaskUncheckedUpdateWithoutRejectionsInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  estimatedHours?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  estimatedMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  weight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  approvedById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  approverId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qcById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qcAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qcPassed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  submittedForReviewAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  projectId?: Prisma.IntFieldUpdateOperationsInput | number
+  createdById?: Prisma.IntFieldUpdateOperationsInput | number
+  isRecurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  recurrencePattern?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrenceDays?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrenceEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  recurringParentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  lastGeneratedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  assignees?: Prisma.TaskAssigneeUncheckedUpdateManyWithoutTaskNestedInput
+  subtasks?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutTaskNestedInput
+  reports?: Prisma.TaskReportUncheckedUpdateManyWithoutTaskNestedInput
+  attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutTaskNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutTaskNestedInput
+  approvals?: Prisma.TaskApprovalUncheckedUpdateManyWithoutTaskNestedInput
+  recurringInstances?: Prisma.TaskUncheckedUpdateManyWithoutRecurringParentNestedInput
+}
+
+export type TaskCreateWithoutApprovalsInput = {
+  driveFolderId?: string | null
+  title: string
+  description?: string | null
+  status?: $Enums.TaskStatus
+  startDate?: Date | string | null
+  deadline?: Date | string | null
+  estimatedHours?: number | null
+  estimatedMinutes?: number | null
+  weight?: number | null
+  approvedAt?: Date | string | null
+  qcAt?: Date | string | null
+  qcNote?: string | null
+  qcPassed?: boolean | null
+  submittedForReviewAt?: Date | string | null
+  isRecurring?: boolean
+  recurrencePattern?: string | null
+  recurrenceDays?: string | null
+  recurrenceEnd?: Date | string | null
+  lastGeneratedDate?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  approvedBy?: Prisma.UserCreateNestedOneWithoutApprovedTasksInput
+  approver?: Prisma.UserCreateNestedOneWithoutApproverTasksInput
+  qcBy?: Prisma.UserCreateNestedOneWithoutQcReviewedTasksInput
+  project: Prisma.ProjectCreateNestedOneWithoutTasksInput
+  createdBy: Prisma.UserCreateNestedOneWithoutCreatedTasksInput
+  assignees?: Prisma.TaskAssigneeCreateNestedManyWithoutTaskInput
+  subtasks?: Prisma.TaskSubtaskCreateNestedManyWithoutTaskInput
+  reports?: Prisma.TaskReportCreateNestedManyWithoutTaskInput
+  attachments?: Prisma.TaskAttachmentCreateNestedManyWithoutTaskInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutTaskInput
+  rejections?: Prisma.TaskRejectionCreateNestedManyWithoutTaskInput
+  recurringParent?: Prisma.TaskCreateNestedOneWithoutRecurringInstancesInput
+  recurringInstances?: Prisma.TaskCreateNestedManyWithoutRecurringParentInput
+}
+
+export type TaskUncheckedCreateWithoutApprovalsInput = {
+  driveFolderId?: string | null
+  id?: number
+  title: string
+  description?: string | null
+  status?: $Enums.TaskStatus
+  startDate?: Date | string | null
+  deadline?: Date | string | null
+  estimatedHours?: number | null
+  estimatedMinutes?: number | null
+  weight?: number | null
+  approvedById?: number | null
+  approvedAt?: Date | string | null
+  approverId?: number | null
+  qcById?: number | null
+  qcAt?: Date | string | null
+  qcNote?: string | null
+  qcPassed?: boolean | null
+  submittedForReviewAt?: Date | string | null
+  projectId: number
+  createdById: number
+  isRecurring?: boolean
+  recurrencePattern?: string | null
+  recurrenceDays?: string | null
+  recurrenceEnd?: Date | string | null
+  recurringParentId?: number | null
+  lastGeneratedDate?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  assignees?: Prisma.TaskAssigneeUncheckedCreateNestedManyWithoutTaskInput
+  subtasks?: Prisma.TaskSubtaskUncheckedCreateNestedManyWithoutTaskInput
+  reports?: Prisma.TaskReportUncheckedCreateNestedManyWithoutTaskInput
+  attachments?: Prisma.TaskAttachmentUncheckedCreateNestedManyWithoutTaskInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTaskInput
+  rejections?: Prisma.TaskRejectionUncheckedCreateNestedManyWithoutTaskInput
+  recurringInstances?: Prisma.TaskUncheckedCreateNestedManyWithoutRecurringParentInput
+}
+
+export type TaskCreateOrConnectWithoutApprovalsInput = {
+  where: Prisma.TaskWhereUniqueInput
+  create: Prisma.XOR<Prisma.TaskCreateWithoutApprovalsInput, Prisma.TaskUncheckedCreateWithoutApprovalsInput>
+}
+
+export type TaskUpsertWithoutApprovalsInput = {
+  update: Prisma.XOR<Prisma.TaskUpdateWithoutApprovalsInput, Prisma.TaskUncheckedUpdateWithoutApprovalsInput>
+  create: Prisma.XOR<Prisma.TaskCreateWithoutApprovalsInput, Prisma.TaskUncheckedCreateWithoutApprovalsInput>
+  where?: Prisma.TaskWhereInput
+}
+
+export type TaskUpdateToOneWithWhereWithoutApprovalsInput = {
+  where?: Prisma.TaskWhereInput
+  data: Prisma.XOR<Prisma.TaskUpdateWithoutApprovalsInput, Prisma.TaskUncheckedUpdateWithoutApprovalsInput>
+}
+
+export type TaskUpdateWithoutApprovalsInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  estimatedHours?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  estimatedMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  weight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qcPassed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  submittedForReviewAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isRecurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  recurrencePattern?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrenceDays?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrenceEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastGeneratedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  approvedBy?: Prisma.UserUpdateOneWithoutApprovedTasksNestedInput
+  approver?: Prisma.UserUpdateOneWithoutApproverTasksNestedInput
+  qcBy?: Prisma.UserUpdateOneWithoutQcReviewedTasksNestedInput
+  project?: Prisma.ProjectUpdateOneRequiredWithoutTasksNestedInput
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedTasksNestedInput
+  assignees?: Prisma.TaskAssigneeUpdateManyWithoutTaskNestedInput
+  subtasks?: Prisma.TaskSubtaskUpdateManyWithoutTaskNestedInput
+  reports?: Prisma.TaskReportUpdateManyWithoutTaskNestedInput
+  attachments?: Prisma.TaskAttachmentUpdateManyWithoutTaskNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutTaskNestedInput
+  rejections?: Prisma.TaskRejectionUpdateManyWithoutTaskNestedInput
+  recurringParent?: Prisma.TaskUpdateOneWithoutRecurringInstancesNestedInput
+  recurringInstances?: Prisma.TaskUpdateManyWithoutRecurringParentNestedInput
+}
+
+export type TaskUncheckedUpdateWithoutApprovalsInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  estimatedHours?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  estimatedMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  weight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  approvedById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  approverId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qcById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qcAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qcPassed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  submittedForReviewAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  projectId?: Prisma.IntFieldUpdateOperationsInput | number
+  createdById?: Prisma.IntFieldUpdateOperationsInput | number
+  isRecurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  recurrencePattern?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrenceDays?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrenceEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  recurringParentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  lastGeneratedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  assignees?: Prisma.TaskAssigneeUncheckedUpdateManyWithoutTaskNestedInput
+  subtasks?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutTaskNestedInput
+  reports?: Prisma.TaskReportUncheckedUpdateManyWithoutTaskNestedInput
+  attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutTaskNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutTaskNestedInput
+  rejections?: Prisma.TaskRejectionUncheckedUpdateManyWithoutTaskNestedInput
+  recurringInstances?: Prisma.TaskUncheckedUpdateManyWithoutRecurringParentNestedInput
+}
+
+export type TaskCreateManyProjectInput = {
+  driveFolderId?: string | null
+  id?: number
+  title: string
+  description?: string | null
+  status?: $Enums.TaskStatus
+  startDate?: Date | string | null
+  deadline?: Date | string | null
+  estimatedHours?: number | null
+  estimatedMinutes?: number | null
+  weight?: number | null
+  approvedById?: number | null
+  approvedAt?: Date | string | null
+  approverId?: number | null
+  qcById?: number | null
+  qcAt?: Date | string | null
+  qcNote?: string | null
+  qcPassed?: boolean | null
+  submittedForReviewAt?: Date | string | null
   createdById: number
   isRecurring?: boolean
   recurrencePattern?: string | null
@@ -2440,6 +3385,7 @@ export type TaskCreateManyProjectInput = {
 }
 
 export type TaskUpdateWithoutProjectInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
@@ -2449,6 +3395,10 @@ export type TaskUpdateWithoutProjectInput = {
   estimatedMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   weight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qcPassed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  submittedForReviewAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isRecurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
   recurrencePattern?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recurrenceDays?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2458,17 +3408,21 @@ export type TaskUpdateWithoutProjectInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   approvedBy?: Prisma.UserUpdateOneWithoutApprovedTasksNestedInput
   approver?: Prisma.UserUpdateOneWithoutApproverTasksNestedInput
+  qcBy?: Prisma.UserUpdateOneWithoutQcReviewedTasksNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedTasksNestedInput
   assignees?: Prisma.TaskAssigneeUpdateManyWithoutTaskNestedInput
   subtasks?: Prisma.TaskSubtaskUpdateManyWithoutTaskNestedInput
   reports?: Prisma.TaskReportUpdateManyWithoutTaskNestedInput
   attachments?: Prisma.TaskAttachmentUpdateManyWithoutTaskNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutTaskNestedInput
+  rejections?: Prisma.TaskRejectionUpdateManyWithoutTaskNestedInput
+  approvals?: Prisma.TaskApprovalUpdateManyWithoutTaskNestedInput
   recurringParent?: Prisma.TaskUpdateOneWithoutRecurringInstancesNestedInput
   recurringInstances?: Prisma.TaskUpdateManyWithoutRecurringParentNestedInput
 }
 
 export type TaskUncheckedUpdateWithoutProjectInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2481,6 +3435,11 @@ export type TaskUncheckedUpdateWithoutProjectInput = {
   approvedById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approverId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qcById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qcAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qcPassed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  submittedForReviewAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdById?: Prisma.IntFieldUpdateOperationsInput | number
   isRecurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
   recurrencePattern?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2495,10 +3454,13 @@ export type TaskUncheckedUpdateWithoutProjectInput = {
   reports?: Prisma.TaskReportUncheckedUpdateManyWithoutTaskNestedInput
   attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutTaskNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutTaskNestedInput
+  rejections?: Prisma.TaskRejectionUncheckedUpdateManyWithoutTaskNestedInput
+  approvals?: Prisma.TaskApprovalUncheckedUpdateManyWithoutTaskNestedInput
   recurringInstances?: Prisma.TaskUncheckedUpdateManyWithoutRecurringParentNestedInput
 }
 
 export type TaskUncheckedUpdateManyWithoutProjectInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2511,6 +3473,11 @@ export type TaskUncheckedUpdateManyWithoutProjectInput = {
   approvedById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approverId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qcById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qcAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qcPassed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  submittedForReviewAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdById?: Prisma.IntFieldUpdateOperationsInput | number
   isRecurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
   recurrencePattern?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2523,6 +3490,7 @@ export type TaskUncheckedUpdateManyWithoutProjectInput = {
 }
 
 export type TaskCreateManyRecurringParentInput = {
+  driveFolderId?: string | null
   id?: number
   title: string
   description?: string | null
@@ -2535,6 +3503,11 @@ export type TaskCreateManyRecurringParentInput = {
   approvedById?: number | null
   approvedAt?: Date | string | null
   approverId?: number | null
+  qcById?: number | null
+  qcAt?: Date | string | null
+  qcNote?: string | null
+  qcPassed?: boolean | null
+  submittedForReviewAt?: Date | string | null
   projectId: number
   createdById: number
   isRecurring?: boolean
@@ -2547,6 +3520,7 @@ export type TaskCreateManyRecurringParentInput = {
 }
 
 export type TaskUpdateWithoutRecurringParentInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
@@ -2556,6 +3530,10 @@ export type TaskUpdateWithoutRecurringParentInput = {
   estimatedMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   weight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qcPassed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  submittedForReviewAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isRecurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
   recurrencePattern?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recurrenceDays?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2565,6 +3543,7 @@ export type TaskUpdateWithoutRecurringParentInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   approvedBy?: Prisma.UserUpdateOneWithoutApprovedTasksNestedInput
   approver?: Prisma.UserUpdateOneWithoutApproverTasksNestedInput
+  qcBy?: Prisma.UserUpdateOneWithoutQcReviewedTasksNestedInput
   project?: Prisma.ProjectUpdateOneRequiredWithoutTasksNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedTasksNestedInput
   assignees?: Prisma.TaskAssigneeUpdateManyWithoutTaskNestedInput
@@ -2572,10 +3551,13 @@ export type TaskUpdateWithoutRecurringParentInput = {
   reports?: Prisma.TaskReportUpdateManyWithoutTaskNestedInput
   attachments?: Prisma.TaskAttachmentUpdateManyWithoutTaskNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutTaskNestedInput
+  rejections?: Prisma.TaskRejectionUpdateManyWithoutTaskNestedInput
+  approvals?: Prisma.TaskApprovalUpdateManyWithoutTaskNestedInput
   recurringInstances?: Prisma.TaskUpdateManyWithoutRecurringParentNestedInput
 }
 
 export type TaskUncheckedUpdateWithoutRecurringParentInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2588,6 +3570,11 @@ export type TaskUncheckedUpdateWithoutRecurringParentInput = {
   approvedById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approverId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qcById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qcAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qcPassed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  submittedForReviewAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   projectId?: Prisma.IntFieldUpdateOperationsInput | number
   createdById?: Prisma.IntFieldUpdateOperationsInput | number
   isRecurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2602,10 +3589,13 @@ export type TaskUncheckedUpdateWithoutRecurringParentInput = {
   reports?: Prisma.TaskReportUncheckedUpdateManyWithoutTaskNestedInput
   attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutTaskNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutTaskNestedInput
+  rejections?: Prisma.TaskRejectionUncheckedUpdateManyWithoutTaskNestedInput
+  approvals?: Prisma.TaskApprovalUncheckedUpdateManyWithoutTaskNestedInput
   recurringInstances?: Prisma.TaskUncheckedUpdateManyWithoutRecurringParentNestedInput
 }
 
 export type TaskUncheckedUpdateManyWithoutRecurringParentInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2618,6 +3608,11 @@ export type TaskUncheckedUpdateManyWithoutRecurringParentInput = {
   approvedById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approverId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qcById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qcAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qcPassed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  submittedForReviewAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   projectId?: Prisma.IntFieldUpdateOperationsInput | number
   createdById?: Prisma.IntFieldUpdateOperationsInput | number
   isRecurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2630,6 +3625,7 @@ export type TaskUncheckedUpdateManyWithoutRecurringParentInput = {
 }
 
 export type TaskCreateManyCreatedByInput = {
+  driveFolderId?: string | null
   id?: number
   title: string
   description?: string | null
@@ -2642,6 +3638,11 @@ export type TaskCreateManyCreatedByInput = {
   approvedById?: number | null
   approvedAt?: Date | string | null
   approverId?: number | null
+  qcById?: number | null
+  qcAt?: Date | string | null
+  qcNote?: string | null
+  qcPassed?: boolean | null
+  submittedForReviewAt?: Date | string | null
   projectId: number
   isRecurring?: boolean
   recurrencePattern?: string | null
@@ -2654,6 +3655,7 @@ export type TaskCreateManyCreatedByInput = {
 }
 
 export type TaskCreateManyApprovedByInput = {
+  driveFolderId?: string | null
   id?: number
   title: string
   description?: string | null
@@ -2665,6 +3667,11 @@ export type TaskCreateManyApprovedByInput = {
   weight?: number | null
   approvedAt?: Date | string | null
   approverId?: number | null
+  qcById?: number | null
+  qcAt?: Date | string | null
+  qcNote?: string | null
+  qcPassed?: boolean | null
+  submittedForReviewAt?: Date | string | null
   projectId: number
   createdById: number
   isRecurring?: boolean
@@ -2678,6 +3685,7 @@ export type TaskCreateManyApprovedByInput = {
 }
 
 export type TaskCreateManyApproverInput = {
+  driveFolderId?: string | null
   id?: number
   title: string
   description?: string | null
@@ -2689,6 +3697,41 @@ export type TaskCreateManyApproverInput = {
   weight?: number | null
   approvedById?: number | null
   approvedAt?: Date | string | null
+  qcById?: number | null
+  qcAt?: Date | string | null
+  qcNote?: string | null
+  qcPassed?: boolean | null
+  submittedForReviewAt?: Date | string | null
+  projectId: number
+  createdById: number
+  isRecurring?: boolean
+  recurrencePattern?: string | null
+  recurrenceDays?: string | null
+  recurrenceEnd?: Date | string | null
+  recurringParentId?: number | null
+  lastGeneratedDate?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type TaskCreateManyQcByInput = {
+  driveFolderId?: string | null
+  id?: number
+  title: string
+  description?: string | null
+  status?: $Enums.TaskStatus
+  startDate?: Date | string | null
+  deadline?: Date | string | null
+  estimatedHours?: number | null
+  estimatedMinutes?: number | null
+  weight?: number | null
+  approvedById?: number | null
+  approvedAt?: Date | string | null
+  approverId?: number | null
+  qcAt?: Date | string | null
+  qcNote?: string | null
+  qcPassed?: boolean | null
+  submittedForReviewAt?: Date | string | null
   projectId: number
   createdById: number
   isRecurring?: boolean
@@ -2702,6 +3745,7 @@ export type TaskCreateManyApproverInput = {
 }
 
 export type TaskUpdateWithoutCreatedByInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
@@ -2711,6 +3755,10 @@ export type TaskUpdateWithoutCreatedByInput = {
   estimatedMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   weight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qcPassed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  submittedForReviewAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isRecurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
   recurrencePattern?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recurrenceDays?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2720,17 +3768,21 @@ export type TaskUpdateWithoutCreatedByInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   approvedBy?: Prisma.UserUpdateOneWithoutApprovedTasksNestedInput
   approver?: Prisma.UserUpdateOneWithoutApproverTasksNestedInput
+  qcBy?: Prisma.UserUpdateOneWithoutQcReviewedTasksNestedInput
   project?: Prisma.ProjectUpdateOneRequiredWithoutTasksNestedInput
   assignees?: Prisma.TaskAssigneeUpdateManyWithoutTaskNestedInput
   subtasks?: Prisma.TaskSubtaskUpdateManyWithoutTaskNestedInput
   reports?: Prisma.TaskReportUpdateManyWithoutTaskNestedInput
   attachments?: Prisma.TaskAttachmentUpdateManyWithoutTaskNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutTaskNestedInput
+  rejections?: Prisma.TaskRejectionUpdateManyWithoutTaskNestedInput
+  approvals?: Prisma.TaskApprovalUpdateManyWithoutTaskNestedInput
   recurringParent?: Prisma.TaskUpdateOneWithoutRecurringInstancesNestedInput
   recurringInstances?: Prisma.TaskUpdateManyWithoutRecurringParentNestedInput
 }
 
 export type TaskUncheckedUpdateWithoutCreatedByInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2743,6 +3795,11 @@ export type TaskUncheckedUpdateWithoutCreatedByInput = {
   approvedById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approverId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qcById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qcAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qcPassed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  submittedForReviewAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   projectId?: Prisma.IntFieldUpdateOperationsInput | number
   isRecurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
   recurrencePattern?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2757,10 +3814,13 @@ export type TaskUncheckedUpdateWithoutCreatedByInput = {
   reports?: Prisma.TaskReportUncheckedUpdateManyWithoutTaskNestedInput
   attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutTaskNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutTaskNestedInput
+  rejections?: Prisma.TaskRejectionUncheckedUpdateManyWithoutTaskNestedInput
+  approvals?: Prisma.TaskApprovalUncheckedUpdateManyWithoutTaskNestedInput
   recurringInstances?: Prisma.TaskUncheckedUpdateManyWithoutRecurringParentNestedInput
 }
 
 export type TaskUncheckedUpdateManyWithoutCreatedByInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2773,6 +3833,11 @@ export type TaskUncheckedUpdateManyWithoutCreatedByInput = {
   approvedById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approverId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qcById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qcAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qcPassed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  submittedForReviewAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   projectId?: Prisma.IntFieldUpdateOperationsInput | number
   isRecurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
   recurrencePattern?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2785,6 +3850,7 @@ export type TaskUncheckedUpdateManyWithoutCreatedByInput = {
 }
 
 export type TaskUpdateWithoutApprovedByInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
@@ -2794,6 +3860,10 @@ export type TaskUpdateWithoutApprovedByInput = {
   estimatedMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   weight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qcPassed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  submittedForReviewAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isRecurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
   recurrencePattern?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recurrenceDays?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2802,6 +3872,7 @@ export type TaskUpdateWithoutApprovedByInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   approver?: Prisma.UserUpdateOneWithoutApproverTasksNestedInput
+  qcBy?: Prisma.UserUpdateOneWithoutQcReviewedTasksNestedInput
   project?: Prisma.ProjectUpdateOneRequiredWithoutTasksNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedTasksNestedInput
   assignees?: Prisma.TaskAssigneeUpdateManyWithoutTaskNestedInput
@@ -2809,11 +3880,14 @@ export type TaskUpdateWithoutApprovedByInput = {
   reports?: Prisma.TaskReportUpdateManyWithoutTaskNestedInput
   attachments?: Prisma.TaskAttachmentUpdateManyWithoutTaskNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutTaskNestedInput
+  rejections?: Prisma.TaskRejectionUpdateManyWithoutTaskNestedInput
+  approvals?: Prisma.TaskApprovalUpdateManyWithoutTaskNestedInput
   recurringParent?: Prisma.TaskUpdateOneWithoutRecurringInstancesNestedInput
   recurringInstances?: Prisma.TaskUpdateManyWithoutRecurringParentNestedInput
 }
 
 export type TaskUncheckedUpdateWithoutApprovedByInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2825,6 +3899,11 @@ export type TaskUncheckedUpdateWithoutApprovedByInput = {
   weight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approverId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qcById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qcAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qcPassed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  submittedForReviewAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   projectId?: Prisma.IntFieldUpdateOperationsInput | number
   createdById?: Prisma.IntFieldUpdateOperationsInput | number
   isRecurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2840,10 +3919,13 @@ export type TaskUncheckedUpdateWithoutApprovedByInput = {
   reports?: Prisma.TaskReportUncheckedUpdateManyWithoutTaskNestedInput
   attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutTaskNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutTaskNestedInput
+  rejections?: Prisma.TaskRejectionUncheckedUpdateManyWithoutTaskNestedInput
+  approvals?: Prisma.TaskApprovalUncheckedUpdateManyWithoutTaskNestedInput
   recurringInstances?: Prisma.TaskUncheckedUpdateManyWithoutRecurringParentNestedInput
 }
 
 export type TaskUncheckedUpdateManyWithoutApprovedByInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2855,6 +3937,11 @@ export type TaskUncheckedUpdateManyWithoutApprovedByInput = {
   weight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approverId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qcById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qcAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qcPassed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  submittedForReviewAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   projectId?: Prisma.IntFieldUpdateOperationsInput | number
   createdById?: Prisma.IntFieldUpdateOperationsInput | number
   isRecurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2868,6 +3955,7 @@ export type TaskUncheckedUpdateManyWithoutApprovedByInput = {
 }
 
 export type TaskUpdateWithoutApproverInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
@@ -2877,6 +3965,10 @@ export type TaskUpdateWithoutApproverInput = {
   estimatedMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   weight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qcPassed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  submittedForReviewAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isRecurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
   recurrencePattern?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recurrenceDays?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2885,6 +3977,7 @@ export type TaskUpdateWithoutApproverInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   approvedBy?: Prisma.UserUpdateOneWithoutApprovedTasksNestedInput
+  qcBy?: Prisma.UserUpdateOneWithoutQcReviewedTasksNestedInput
   project?: Prisma.ProjectUpdateOneRequiredWithoutTasksNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedTasksNestedInput
   assignees?: Prisma.TaskAssigneeUpdateManyWithoutTaskNestedInput
@@ -2892,11 +3985,14 @@ export type TaskUpdateWithoutApproverInput = {
   reports?: Prisma.TaskReportUpdateManyWithoutTaskNestedInput
   attachments?: Prisma.TaskAttachmentUpdateManyWithoutTaskNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutTaskNestedInput
+  rejections?: Prisma.TaskRejectionUpdateManyWithoutTaskNestedInput
+  approvals?: Prisma.TaskApprovalUpdateManyWithoutTaskNestedInput
   recurringParent?: Prisma.TaskUpdateOneWithoutRecurringInstancesNestedInput
   recurringInstances?: Prisma.TaskUpdateManyWithoutRecurringParentNestedInput
 }
 
 export type TaskUncheckedUpdateWithoutApproverInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2908,6 +4004,11 @@ export type TaskUncheckedUpdateWithoutApproverInput = {
   weight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   approvedById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qcAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qcPassed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  submittedForReviewAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   projectId?: Prisma.IntFieldUpdateOperationsInput | number
   createdById?: Prisma.IntFieldUpdateOperationsInput | number
   isRecurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2923,10 +4024,13 @@ export type TaskUncheckedUpdateWithoutApproverInput = {
   reports?: Prisma.TaskReportUncheckedUpdateManyWithoutTaskNestedInput
   attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutTaskNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutTaskNestedInput
+  rejections?: Prisma.TaskRejectionUncheckedUpdateManyWithoutTaskNestedInput
+  approvals?: Prisma.TaskApprovalUncheckedUpdateManyWithoutTaskNestedInput
   recurringInstances?: Prisma.TaskUncheckedUpdateManyWithoutRecurringParentNestedInput
 }
 
 export type TaskUncheckedUpdateManyWithoutApproverInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2938,6 +4042,116 @@ export type TaskUncheckedUpdateManyWithoutApproverInput = {
   weight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   approvedById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qcAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qcPassed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  submittedForReviewAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  projectId?: Prisma.IntFieldUpdateOperationsInput | number
+  createdById?: Prisma.IntFieldUpdateOperationsInput | number
+  isRecurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  recurrencePattern?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrenceDays?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrenceEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  recurringParentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  lastGeneratedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type TaskUpdateWithoutQcByInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  estimatedHours?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  estimatedMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  weight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qcPassed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  submittedForReviewAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isRecurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  recurrencePattern?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrenceDays?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrenceEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastGeneratedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  approvedBy?: Prisma.UserUpdateOneWithoutApprovedTasksNestedInput
+  approver?: Prisma.UserUpdateOneWithoutApproverTasksNestedInput
+  project?: Prisma.ProjectUpdateOneRequiredWithoutTasksNestedInput
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedTasksNestedInput
+  assignees?: Prisma.TaskAssigneeUpdateManyWithoutTaskNestedInput
+  subtasks?: Prisma.TaskSubtaskUpdateManyWithoutTaskNestedInput
+  reports?: Prisma.TaskReportUpdateManyWithoutTaskNestedInput
+  attachments?: Prisma.TaskAttachmentUpdateManyWithoutTaskNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutTaskNestedInput
+  rejections?: Prisma.TaskRejectionUpdateManyWithoutTaskNestedInput
+  approvals?: Prisma.TaskApprovalUpdateManyWithoutTaskNestedInput
+  recurringParent?: Prisma.TaskUpdateOneWithoutRecurringInstancesNestedInput
+  recurringInstances?: Prisma.TaskUpdateManyWithoutRecurringParentNestedInput
+}
+
+export type TaskUncheckedUpdateWithoutQcByInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  estimatedHours?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  estimatedMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  weight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  approvedById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  approverId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qcAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qcPassed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  submittedForReviewAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  projectId?: Prisma.IntFieldUpdateOperationsInput | number
+  createdById?: Prisma.IntFieldUpdateOperationsInput | number
+  isRecurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  recurrencePattern?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrenceDays?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrenceEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  recurringParentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  lastGeneratedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  assignees?: Prisma.TaskAssigneeUncheckedUpdateManyWithoutTaskNestedInput
+  subtasks?: Prisma.TaskSubtaskUncheckedUpdateManyWithoutTaskNestedInput
+  reports?: Prisma.TaskReportUncheckedUpdateManyWithoutTaskNestedInput
+  attachments?: Prisma.TaskAttachmentUncheckedUpdateManyWithoutTaskNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutTaskNestedInput
+  rejections?: Prisma.TaskRejectionUncheckedUpdateManyWithoutTaskNestedInput
+  approvals?: Prisma.TaskApprovalUncheckedUpdateManyWithoutTaskNestedInput
+  recurringInstances?: Prisma.TaskUncheckedUpdateManyWithoutRecurringParentNestedInput
+}
+
+export type TaskUncheckedUpdateManyWithoutQcByInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  estimatedHours?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  estimatedMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  weight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  approvedById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  approverId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qcAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qcNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qcPassed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  submittedForReviewAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   projectId?: Prisma.IntFieldUpdateOperationsInput | number
   createdById?: Prisma.IntFieldUpdateOperationsInput | number
   isRecurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2961,6 +4175,8 @@ export type TaskCountOutputType = {
   reports: number
   attachments: number
   notifications: number
+  rejections: number
+  approvals: number
   recurringInstances: number
 }
 
@@ -2970,6 +4186,8 @@ export type TaskCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   reports?: boolean | TaskCountOutputTypeCountReportsArgs
   attachments?: boolean | TaskCountOutputTypeCountAttachmentsArgs
   notifications?: boolean | TaskCountOutputTypeCountNotificationsArgs
+  rejections?: boolean | TaskCountOutputTypeCountRejectionsArgs
+  approvals?: boolean | TaskCountOutputTypeCountApprovalsArgs
   recurringInstances?: boolean | TaskCountOutputTypeCountRecurringInstancesArgs
 }
 
@@ -3021,12 +4239,27 @@ export type TaskCountOutputTypeCountNotificationsArgs<ExtArgs extends runtime.Ty
 /**
  * TaskCountOutputType without action
  */
+export type TaskCountOutputTypeCountRejectionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TaskRejectionWhereInput
+}
+
+/**
+ * TaskCountOutputType without action
+ */
+export type TaskCountOutputTypeCountApprovalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TaskApprovalWhereInput
+}
+
+/**
+ * TaskCountOutputType without action
+ */
 export type TaskCountOutputTypeCountRecurringInstancesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.TaskWhereInput
 }
 
 
 export type TaskSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  driveFolderId?: boolean
   id?: boolean
   title?: boolean
   description?: boolean
@@ -3039,6 +4272,11 @@ export type TaskSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   approvedById?: boolean
   approvedAt?: boolean
   approverId?: boolean
+  qcById?: boolean
+  qcAt?: boolean
+  qcNote?: boolean
+  qcPassed?: boolean
+  submittedForReviewAt?: boolean
   projectId?: boolean
   createdById?: boolean
   isRecurring?: boolean
@@ -3051,6 +4289,7 @@ export type TaskSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   updatedAt?: boolean
   approvedBy?: boolean | Prisma.Task$approvedByArgs<ExtArgs>
   approver?: boolean | Prisma.Task$approverArgs<ExtArgs>
+  qcBy?: boolean | Prisma.Task$qcByArgs<ExtArgs>
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   assignees?: boolean | Prisma.Task$assigneesArgs<ExtArgs>
@@ -3058,12 +4297,15 @@ export type TaskSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   reports?: boolean | Prisma.Task$reportsArgs<ExtArgs>
   attachments?: boolean | Prisma.Task$attachmentsArgs<ExtArgs>
   notifications?: boolean | Prisma.Task$notificationsArgs<ExtArgs>
+  rejections?: boolean | Prisma.Task$rejectionsArgs<ExtArgs>
+  approvals?: boolean | Prisma.Task$approvalsArgs<ExtArgs>
   recurringParent?: boolean | Prisma.Task$recurringParentArgs<ExtArgs>
   recurringInstances?: boolean | Prisma.Task$recurringInstancesArgs<ExtArgs>
   _count?: boolean | Prisma.TaskCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["task"]>
 
 export type TaskSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  driveFolderId?: boolean
   id?: boolean
   title?: boolean
   description?: boolean
@@ -3076,6 +4318,11 @@ export type TaskSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   approvedById?: boolean
   approvedAt?: boolean
   approverId?: boolean
+  qcById?: boolean
+  qcAt?: boolean
+  qcNote?: boolean
+  qcPassed?: boolean
+  submittedForReviewAt?: boolean
   projectId?: boolean
   createdById?: boolean
   isRecurring?: boolean
@@ -3088,12 +4335,14 @@ export type TaskSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   updatedAt?: boolean
   approvedBy?: boolean | Prisma.Task$approvedByArgs<ExtArgs>
   approver?: boolean | Prisma.Task$approverArgs<ExtArgs>
+  qcBy?: boolean | Prisma.Task$qcByArgs<ExtArgs>
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   recurringParent?: boolean | Prisma.Task$recurringParentArgs<ExtArgs>
 }, ExtArgs["result"]["task"]>
 
 export type TaskSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  driveFolderId?: boolean
   id?: boolean
   title?: boolean
   description?: boolean
@@ -3106,6 +4355,11 @@ export type TaskSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   approvedById?: boolean
   approvedAt?: boolean
   approverId?: boolean
+  qcById?: boolean
+  qcAt?: boolean
+  qcNote?: boolean
+  qcPassed?: boolean
+  submittedForReviewAt?: boolean
   projectId?: boolean
   createdById?: boolean
   isRecurring?: boolean
@@ -3118,12 +4372,14 @@ export type TaskSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   updatedAt?: boolean
   approvedBy?: boolean | Prisma.Task$approvedByArgs<ExtArgs>
   approver?: boolean | Prisma.Task$approverArgs<ExtArgs>
+  qcBy?: boolean | Prisma.Task$qcByArgs<ExtArgs>
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   recurringParent?: boolean | Prisma.Task$recurringParentArgs<ExtArgs>
 }, ExtArgs["result"]["task"]>
 
 export type TaskSelectScalar = {
+  driveFolderId?: boolean
   id?: boolean
   title?: boolean
   description?: boolean
@@ -3136,6 +4392,11 @@ export type TaskSelectScalar = {
   approvedById?: boolean
   approvedAt?: boolean
   approverId?: boolean
+  qcById?: boolean
+  qcAt?: boolean
+  qcNote?: boolean
+  qcPassed?: boolean
+  submittedForReviewAt?: boolean
   projectId?: boolean
   createdById?: boolean
   isRecurring?: boolean
@@ -3148,10 +4409,11 @@ export type TaskSelectScalar = {
   updatedAt?: boolean
 }
 
-export type TaskOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "status" | "startDate" | "deadline" | "estimatedHours" | "estimatedMinutes" | "weight" | "approvedById" | "approvedAt" | "approverId" | "projectId" | "createdById" | "isRecurring" | "recurrencePattern" | "recurrenceDays" | "recurrenceEnd" | "recurringParentId" | "lastGeneratedDate" | "createdAt" | "updatedAt", ExtArgs["result"]["task"]>
+export type TaskOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"driveFolderId" | "id" | "title" | "description" | "status" | "startDate" | "deadline" | "estimatedHours" | "estimatedMinutes" | "weight" | "approvedById" | "approvedAt" | "approverId" | "qcById" | "qcAt" | "qcNote" | "qcPassed" | "submittedForReviewAt" | "projectId" | "createdById" | "isRecurring" | "recurrencePattern" | "recurrenceDays" | "recurrenceEnd" | "recurringParentId" | "lastGeneratedDate" | "createdAt" | "updatedAt", ExtArgs["result"]["task"]>
 export type TaskInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   approvedBy?: boolean | Prisma.Task$approvedByArgs<ExtArgs>
   approver?: boolean | Prisma.Task$approverArgs<ExtArgs>
+  qcBy?: boolean | Prisma.Task$qcByArgs<ExtArgs>
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   assignees?: boolean | Prisma.Task$assigneesArgs<ExtArgs>
@@ -3159,6 +4421,8 @@ export type TaskInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   reports?: boolean | Prisma.Task$reportsArgs<ExtArgs>
   attachments?: boolean | Prisma.Task$attachmentsArgs<ExtArgs>
   notifications?: boolean | Prisma.Task$notificationsArgs<ExtArgs>
+  rejections?: boolean | Prisma.Task$rejectionsArgs<ExtArgs>
+  approvals?: boolean | Prisma.Task$approvalsArgs<ExtArgs>
   recurringParent?: boolean | Prisma.Task$recurringParentArgs<ExtArgs>
   recurringInstances?: boolean | Prisma.Task$recurringInstancesArgs<ExtArgs>
   _count?: boolean | Prisma.TaskCountOutputTypeDefaultArgs<ExtArgs>
@@ -3166,6 +4430,7 @@ export type TaskInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
 export type TaskIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   approvedBy?: boolean | Prisma.Task$approvedByArgs<ExtArgs>
   approver?: boolean | Prisma.Task$approverArgs<ExtArgs>
+  qcBy?: boolean | Prisma.Task$qcByArgs<ExtArgs>
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   recurringParent?: boolean | Prisma.Task$recurringParentArgs<ExtArgs>
@@ -3173,6 +4438,7 @@ export type TaskIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 export type TaskIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   approvedBy?: boolean | Prisma.Task$approvedByArgs<ExtArgs>
   approver?: boolean | Prisma.Task$approverArgs<ExtArgs>
+  qcBy?: boolean | Prisma.Task$qcByArgs<ExtArgs>
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   recurringParent?: boolean | Prisma.Task$recurringParentArgs<ExtArgs>
@@ -3183,6 +4449,7 @@ export type $TaskPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   objects: {
     approvedBy: Prisma.$UserPayload<ExtArgs> | null
     approver: Prisma.$UserPayload<ExtArgs> | null
+    qcBy: Prisma.$UserPayload<ExtArgs> | null
     project: Prisma.$ProjectPayload<ExtArgs>
     createdBy: Prisma.$UserPayload<ExtArgs>
     assignees: Prisma.$TaskAssigneePayload<ExtArgs>[]
@@ -3190,10 +4457,16 @@ export type $TaskPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     reports: Prisma.$TaskReportPayload<ExtArgs>[]
     attachments: Prisma.$TaskAttachmentPayload<ExtArgs>[]
     notifications: Prisma.$NotificationPayload<ExtArgs>[]
+    rejections: Prisma.$TaskRejectionPayload<ExtArgs>[]
+    approvals: Prisma.$TaskApprovalPayload<ExtArgs>[]
     recurringParent: Prisma.$TaskPayload<ExtArgs> | null
     recurringInstances: Prisma.$TaskPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
+    /**
+     * Drive folder holding this task's files; created on first upload.
+     */
+    driveFolderId: string | null
     id: number
     title: string
     description: string | null
@@ -3206,6 +4479,15 @@ export type $TaskPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     approvedById: number | null
     approvedAt: Date | null
     approverId: number | null
+    qcById: number | null
+    qcAt: Date | null
+    qcNote: string | null
+    qcPassed: boolean | null
+    /**
+     * When the task was handed over for review. The overdue clock stops here:
+     * time spent waiting on a reviewer is not the assignee's lateness.
+     */
+    submittedForReviewAt: Date | null
     projectId: number
     createdById: number
     isRecurring: boolean
@@ -3299,8 +4581,8 @@ export interface TaskDelegate<ExtArgs extends runtime.Types.Extensions.InternalA
    * // Get first 10 Tasks
    * const tasks = await prisma.task.findMany({ take: 10 })
    * 
-   * // Only select the `id`
-   * const taskWithIdOnly = await prisma.task.findMany({ select: { id: true } })
+   * // Only select the `driveFolderId`
+   * const taskWithDriveFolderIdOnly = await prisma.task.findMany({ select: { driveFolderId: true } })
    * 
    */
   findMany<T extends TaskFindManyArgs>(args?: Prisma.SelectSubset<T, TaskFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
@@ -3344,9 +4626,9 @@ export interface TaskDelegate<ExtArgs extends runtime.Types.Extensions.InternalA
    *   ]
    * })
    * 
-   * // Create many Tasks and only return the `id`
-   * const taskWithIdOnly = await prisma.task.createManyAndReturn({
-   *   select: { id: true },
+   * // Create many Tasks and only return the `driveFolderId`
+   * const taskWithDriveFolderIdOnly = await prisma.task.createManyAndReturn({
+   *   select: { driveFolderId: true },
    *   data: [
    *     // ... provide data here
    *   ]
@@ -3435,9 +4717,9 @@ export interface TaskDelegate<ExtArgs extends runtime.Types.Extensions.InternalA
    *   ]
    * })
    * 
-   * // Update zero or more Tasks and only return the `id`
-   * const taskWithIdOnly = await prisma.task.updateManyAndReturn({
-   *   select: { id: true },
+   * // Update zero or more Tasks and only return the `driveFolderId`
+   * const taskWithDriveFolderIdOnly = await prisma.task.updateManyAndReturn({
+   *   select: { driveFolderId: true },
    *   where: {
    *     // ... provide filter here
    *   },
@@ -3612,6 +4894,7 @@ export interface Prisma__TaskClient<T, Null = never, ExtArgs extends runtime.Typ
   readonly [Symbol.toStringTag]: "PrismaPromise"
   approvedBy<T extends Prisma.Task$approvedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Task$approvedByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   approver<T extends Prisma.Task$approverArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Task$approverArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  qcBy<T extends Prisma.Task$qcByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Task$qcByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   project<T extends Prisma.ProjectDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProjectDefaultArgs<ExtArgs>>): Prisma.Prisma__ProjectClient<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   createdBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   assignees<T extends Prisma.Task$assigneesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Task$assigneesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskAssigneePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -3619,6 +4902,8 @@ export interface Prisma__TaskClient<T, Null = never, ExtArgs extends runtime.Typ
   reports<T extends Prisma.Task$reportsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Task$reportsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   attachments<T extends Prisma.Task$attachmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Task$attachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskAttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   notifications<T extends Prisma.Task$notificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Task$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  rejections<T extends Prisma.Task$rejectionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Task$rejectionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskRejectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  approvals<T extends Prisma.Task$approvalsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Task$approvalsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskApprovalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   recurringParent<T extends Prisma.Task$recurringParentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Task$recurringParentArgs<ExtArgs>>): Prisma.Prisma__TaskClient<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   recurringInstances<T extends Prisma.Task$recurringInstancesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Task$recurringInstancesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -3650,6 +4935,7 @@ export interface Prisma__TaskClient<T, Null = never, ExtArgs extends runtime.Typ
  * Fields of the Task model
  */
 export interface TaskFieldRefs {
+  readonly driveFolderId: Prisma.FieldRef<"Task", 'String'>
   readonly id: Prisma.FieldRef<"Task", 'Int'>
   readonly title: Prisma.FieldRef<"Task", 'String'>
   readonly description: Prisma.FieldRef<"Task", 'String'>
@@ -3662,6 +4948,11 @@ export interface TaskFieldRefs {
   readonly approvedById: Prisma.FieldRef<"Task", 'Int'>
   readonly approvedAt: Prisma.FieldRef<"Task", 'DateTime'>
   readonly approverId: Prisma.FieldRef<"Task", 'Int'>
+  readonly qcById: Prisma.FieldRef<"Task", 'Int'>
+  readonly qcAt: Prisma.FieldRef<"Task", 'DateTime'>
+  readonly qcNote: Prisma.FieldRef<"Task", 'String'>
+  readonly qcPassed: Prisma.FieldRef<"Task", 'Boolean'>
+  readonly submittedForReviewAt: Prisma.FieldRef<"Task", 'DateTime'>
   readonly projectId: Prisma.FieldRef<"Task", 'Int'>
   readonly createdById: Prisma.FieldRef<"Task", 'Int'>
   readonly isRecurring: Prisma.FieldRef<"Task", 'Boolean'>
@@ -4111,6 +5402,25 @@ export type Task$approverArgs<ExtArgs extends runtime.Types.Extensions.InternalA
 }
 
 /**
+ * Task.qcBy
+ */
+export type Task$qcByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
+}
+
+/**
  * Task.assignees
  */
 export type Task$assigneesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -4228,6 +5538,54 @@ export type Task$notificationsArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.NotificationScalarFieldEnum | Prisma.NotificationScalarFieldEnum[]
+}
+
+/**
+ * Task.rejections
+ */
+export type Task$rejectionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TaskRejection
+   */
+  select?: Prisma.TaskRejectionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TaskRejection
+   */
+  omit?: Prisma.TaskRejectionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TaskRejectionInclude<ExtArgs> | null
+  where?: Prisma.TaskRejectionWhereInput
+  orderBy?: Prisma.TaskRejectionOrderByWithRelationInput | Prisma.TaskRejectionOrderByWithRelationInput[]
+  cursor?: Prisma.TaskRejectionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TaskRejectionScalarFieldEnum | Prisma.TaskRejectionScalarFieldEnum[]
+}
+
+/**
+ * Task.approvals
+ */
+export type Task$approvalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TaskApproval
+   */
+  select?: Prisma.TaskApprovalSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TaskApproval
+   */
+  omit?: Prisma.TaskApprovalOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TaskApprovalInclude<ExtArgs> | null
+  where?: Prisma.TaskApprovalWhereInput
+  orderBy?: Prisma.TaskApprovalOrderByWithRelationInput | Prisma.TaskApprovalOrderByWithRelationInput[]
+  cursor?: Prisma.TaskApprovalWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TaskApprovalScalarFieldEnum | Prisma.TaskApprovalScalarFieldEnum[]
 }
 
 /**

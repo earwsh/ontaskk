@@ -30,43 +30,51 @@ export type ProjectAvgAggregateOutputType = {
   id: number | null
   departmentId: number | null
   createdById: number | null
+  qcId: number | null
 }
 
 export type ProjectSumAggregateOutputType = {
   id: number | null
   departmentId: number | null
   createdById: number | null
+  qcId: number | null
 }
 
 export type ProjectMinAggregateOutputType = {
+  driveFolderId: string | null
   id: number | null
   name: string | null
   description: string | null
   client: string | null
   departmentId: number | null
   createdById: number | null
+  qcId: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
 
 export type ProjectMaxAggregateOutputType = {
+  driveFolderId: string | null
   id: number | null
   name: string | null
   description: string | null
   client: string | null
   departmentId: number | null
   createdById: number | null
+  qcId: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
 
 export type ProjectCountAggregateOutputType = {
+  driveFolderId: number
   id: number
   name: number
   description: number
   client: number
   departmentId: number
   createdById: number
+  qcId: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -77,43 +85,51 @@ export type ProjectAvgAggregateInputType = {
   id?: true
   departmentId?: true
   createdById?: true
+  qcId?: true
 }
 
 export type ProjectSumAggregateInputType = {
   id?: true
   departmentId?: true
   createdById?: true
+  qcId?: true
 }
 
 export type ProjectMinAggregateInputType = {
+  driveFolderId?: true
   id?: true
   name?: true
   description?: true
   client?: true
   departmentId?: true
   createdById?: true
+  qcId?: true
   createdAt?: true
   updatedAt?: true
 }
 
 export type ProjectMaxAggregateInputType = {
+  driveFolderId?: true
   id?: true
   name?: true
   description?: true
   client?: true
   departmentId?: true
   createdById?: true
+  qcId?: true
   createdAt?: true
   updatedAt?: true
 }
 
 export type ProjectCountAggregateInputType = {
+  driveFolderId?: true
   id?: true
   name?: true
   description?: true
   client?: true
   departmentId?: true
   createdById?: true
+  qcId?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -206,12 +222,14 @@ export type ProjectGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 export type ProjectGroupByOutputType = {
+  driveFolderId: string | null
   id: number
   name: string
   description: string | null
   client: string | null
   departmentId: number
   createdById: number
+  qcId: number | null
   createdAt: Date
   updatedAt: Date
   _count: ProjectCountAggregateOutputType | null
@@ -240,33 +258,41 @@ export type ProjectWhereInput = {
   AND?: Prisma.ProjectWhereInput | Prisma.ProjectWhereInput[]
   OR?: Prisma.ProjectWhereInput[]
   NOT?: Prisma.ProjectWhereInput | Prisma.ProjectWhereInput[]
+  driveFolderId?: Prisma.StringNullableFilter<"Project"> | string | null
   id?: Prisma.IntFilter<"Project"> | number
   name?: Prisma.StringFilter<"Project"> | string
   description?: Prisma.StringNullableFilter<"Project"> | string | null
   client?: Prisma.StringNullableFilter<"Project"> | string | null
   departmentId?: Prisma.IntFilter<"Project"> | number
   createdById?: Prisma.IntFilter<"Project"> | number
+  qcId?: Prisma.IntNullableFilter<"Project"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Project"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Project"> | Date | string
   department?: Prisma.XOR<Prisma.DepartmentScalarRelationFilter, Prisma.DepartmentWhereInput>
   createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  qc?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   tasks?: Prisma.TaskListRelationFilter
   members?: Prisma.ProjectMemberListRelationFilter
+  invoices?: Prisma.InvoiceListRelationFilter
 }
 
 export type ProjectOrderByWithRelationInput = {
+  driveFolderId?: Prisma.SortOrderInput | Prisma.SortOrder
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   client?: Prisma.SortOrderInput | Prisma.SortOrder
   departmentId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
+  qcId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   department?: Prisma.DepartmentOrderByWithRelationInput
   createdBy?: Prisma.UserOrderByWithRelationInput
+  qc?: Prisma.UserOrderByWithRelationInput
   tasks?: Prisma.TaskOrderByRelationAggregateInput
   members?: Prisma.ProjectMemberOrderByRelationAggregateInput
+  invoices?: Prisma.InvoiceOrderByRelationAggregateInput
 }
 
 export type ProjectWhereUniqueInput = Prisma.AtLeast<{
@@ -274,26 +300,32 @@ export type ProjectWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.ProjectWhereInput | Prisma.ProjectWhereInput[]
   OR?: Prisma.ProjectWhereInput[]
   NOT?: Prisma.ProjectWhereInput | Prisma.ProjectWhereInput[]
+  driveFolderId?: Prisma.StringNullableFilter<"Project"> | string | null
   name?: Prisma.StringFilter<"Project"> | string
   description?: Prisma.StringNullableFilter<"Project"> | string | null
   client?: Prisma.StringNullableFilter<"Project"> | string | null
   departmentId?: Prisma.IntFilter<"Project"> | number
   createdById?: Prisma.IntFilter<"Project"> | number
+  qcId?: Prisma.IntNullableFilter<"Project"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Project"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Project"> | Date | string
   department?: Prisma.XOR<Prisma.DepartmentScalarRelationFilter, Prisma.DepartmentWhereInput>
   createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  qc?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   tasks?: Prisma.TaskListRelationFilter
   members?: Prisma.ProjectMemberListRelationFilter
+  invoices?: Prisma.InvoiceListRelationFilter
 }, "id">
 
 export type ProjectOrderByWithAggregationInput = {
+  driveFolderId?: Prisma.SortOrderInput | Prisma.SortOrder
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   client?: Prisma.SortOrderInput | Prisma.SortOrder
   departmentId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
+  qcId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.ProjectCountOrderByAggregateInput
@@ -307,17 +339,20 @@ export type ProjectScalarWhereWithAggregatesInput = {
   AND?: Prisma.ProjectScalarWhereWithAggregatesInput | Prisma.ProjectScalarWhereWithAggregatesInput[]
   OR?: Prisma.ProjectScalarWhereWithAggregatesInput[]
   NOT?: Prisma.ProjectScalarWhereWithAggregatesInput | Prisma.ProjectScalarWhereWithAggregatesInput[]
+  driveFolderId?: Prisma.StringNullableWithAggregatesFilter<"Project"> | string | null
   id?: Prisma.IntWithAggregatesFilter<"Project"> | number
   name?: Prisma.StringWithAggregatesFilter<"Project"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"Project"> | string | null
   client?: Prisma.StringNullableWithAggregatesFilter<"Project"> | string | null
   departmentId?: Prisma.IntWithAggregatesFilter<"Project"> | number
   createdById?: Prisma.IntWithAggregatesFilter<"Project"> | number
+  qcId?: Prisma.IntNullableWithAggregatesFilter<"Project"> | number | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Project"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Project"> | Date | string
 }
 
 export type ProjectCreateInput = {
+  driveFolderId?: string | null
   name: string
   description?: string | null
   client?: string | null
@@ -325,24 +360,30 @@ export type ProjectCreateInput = {
   updatedAt?: Date | string
   department: Prisma.DepartmentCreateNestedOneWithoutProjectsInput
   createdBy: Prisma.UserCreateNestedOneWithoutProjectsInput
+  qc?: Prisma.UserCreateNestedOneWithoutQcProjectsInput
   tasks?: Prisma.TaskCreateNestedManyWithoutProjectInput
   members?: Prisma.ProjectMemberCreateNestedManyWithoutProjectInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateInput = {
+  driveFolderId?: string | null
   id?: number
   name: string
   description?: string | null
   client?: string | null
   departmentId: number
   createdById: number
+  qcId?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutProjectInput
   members?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutProjectInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUpdateInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   client?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -350,35 +391,43 @@ export type ProjectUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   department?: Prisma.DepartmentUpdateOneRequiredWithoutProjectsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
+  qc?: Prisma.UserUpdateOneWithoutQcProjectsNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutProjectNestedInput
   members?: Prisma.ProjectMemberUpdateManyWithoutProjectNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   client?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.IntFieldUpdateOperationsInput | number
   createdById?: Prisma.IntFieldUpdateOperationsInput | number
+  qcId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutProjectNestedInput
   members?: Prisma.ProjectMemberUncheckedUpdateManyWithoutProjectNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateManyInput = {
+  driveFolderId?: string | null
   id?: number
   name: string
   description?: string | null
   client?: string | null
   departmentId: number
   createdById: number
+  qcId?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type ProjectUpdateManyMutationInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   client?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -387,12 +436,14 @@ export type ProjectUpdateManyMutationInput = {
 }
 
 export type ProjectUncheckedUpdateManyInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   client?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.IntFieldUpdateOperationsInput | number
   createdById?: Prisma.IntFieldUpdateOperationsInput | number
+  qcId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -408,12 +459,14 @@ export type ProjectOrderByRelationAggregateInput = {
 }
 
 export type ProjectCountOrderByAggregateInput = {
+  driveFolderId?: Prisma.SortOrder
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
   client?: Prisma.SortOrder
   departmentId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
+  qcId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -422,26 +475,31 @@ export type ProjectAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   departmentId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
+  qcId?: Prisma.SortOrder
 }
 
 export type ProjectMaxOrderByAggregateInput = {
+  driveFolderId?: Prisma.SortOrder
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
   client?: Prisma.SortOrder
   departmentId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
+  qcId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type ProjectMinOrderByAggregateInput = {
+  driveFolderId?: Prisma.SortOrder
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
   client?: Prisma.SortOrder
   departmentId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
+  qcId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -450,6 +508,7 @@ export type ProjectSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   departmentId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
+  qcId?: Prisma.SortOrder
 }
 
 export type ProjectScalarRelationFilter = {
@@ -534,10 +593,24 @@ export type ProjectCreateNestedManyWithoutCreatedByInput = {
   connect?: Prisma.ProjectWhereUniqueInput | Prisma.ProjectWhereUniqueInput[]
 }
 
+export type ProjectCreateNestedManyWithoutQcInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutQcInput, Prisma.ProjectUncheckedCreateWithoutQcInput> | Prisma.ProjectCreateWithoutQcInput[] | Prisma.ProjectUncheckedCreateWithoutQcInput[]
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutQcInput | Prisma.ProjectCreateOrConnectWithoutQcInput[]
+  createMany?: Prisma.ProjectCreateManyQcInputEnvelope
+  connect?: Prisma.ProjectWhereUniqueInput | Prisma.ProjectWhereUniqueInput[]
+}
+
 export type ProjectUncheckedCreateNestedManyWithoutCreatedByInput = {
   create?: Prisma.XOR<Prisma.ProjectCreateWithoutCreatedByInput, Prisma.ProjectUncheckedCreateWithoutCreatedByInput> | Prisma.ProjectCreateWithoutCreatedByInput[] | Prisma.ProjectUncheckedCreateWithoutCreatedByInput[]
   connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutCreatedByInput | Prisma.ProjectCreateOrConnectWithoutCreatedByInput[]
   createMany?: Prisma.ProjectCreateManyCreatedByInputEnvelope
+  connect?: Prisma.ProjectWhereUniqueInput | Prisma.ProjectWhereUniqueInput[]
+}
+
+export type ProjectUncheckedCreateNestedManyWithoutQcInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutQcInput, Prisma.ProjectUncheckedCreateWithoutQcInput> | Prisma.ProjectCreateWithoutQcInput[] | Prisma.ProjectUncheckedCreateWithoutQcInput[]
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutQcInput | Prisma.ProjectCreateOrConnectWithoutQcInput[]
+  createMany?: Prisma.ProjectCreateManyQcInputEnvelope
   connect?: Prisma.ProjectWhereUniqueInput | Prisma.ProjectWhereUniqueInput[]
 }
 
@@ -555,6 +628,20 @@ export type ProjectUpdateManyWithoutCreatedByNestedInput = {
   deleteMany?: Prisma.ProjectScalarWhereInput | Prisma.ProjectScalarWhereInput[]
 }
 
+export type ProjectUpdateManyWithoutQcNestedInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutQcInput, Prisma.ProjectUncheckedCreateWithoutQcInput> | Prisma.ProjectCreateWithoutQcInput[] | Prisma.ProjectUncheckedCreateWithoutQcInput[]
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutQcInput | Prisma.ProjectCreateOrConnectWithoutQcInput[]
+  upsert?: Prisma.ProjectUpsertWithWhereUniqueWithoutQcInput | Prisma.ProjectUpsertWithWhereUniqueWithoutQcInput[]
+  createMany?: Prisma.ProjectCreateManyQcInputEnvelope
+  set?: Prisma.ProjectWhereUniqueInput | Prisma.ProjectWhereUniqueInput[]
+  disconnect?: Prisma.ProjectWhereUniqueInput | Prisma.ProjectWhereUniqueInput[]
+  delete?: Prisma.ProjectWhereUniqueInput | Prisma.ProjectWhereUniqueInput[]
+  connect?: Prisma.ProjectWhereUniqueInput | Prisma.ProjectWhereUniqueInput[]
+  update?: Prisma.ProjectUpdateWithWhereUniqueWithoutQcInput | Prisma.ProjectUpdateWithWhereUniqueWithoutQcInput[]
+  updateMany?: Prisma.ProjectUpdateManyWithWhereWithoutQcInput | Prisma.ProjectUpdateManyWithWhereWithoutQcInput[]
+  deleteMany?: Prisma.ProjectScalarWhereInput | Prisma.ProjectScalarWhereInput[]
+}
+
 export type ProjectUncheckedUpdateManyWithoutCreatedByNestedInput = {
   create?: Prisma.XOR<Prisma.ProjectCreateWithoutCreatedByInput, Prisma.ProjectUncheckedCreateWithoutCreatedByInput> | Prisma.ProjectCreateWithoutCreatedByInput[] | Prisma.ProjectUncheckedCreateWithoutCreatedByInput[]
   connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutCreatedByInput | Prisma.ProjectCreateOrConnectWithoutCreatedByInput[]
@@ -569,27 +656,61 @@ export type ProjectUncheckedUpdateManyWithoutCreatedByNestedInput = {
   deleteMany?: Prisma.ProjectScalarWhereInput | Prisma.ProjectScalarWhereInput[]
 }
 
+export type ProjectUncheckedUpdateManyWithoutQcNestedInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutQcInput, Prisma.ProjectUncheckedCreateWithoutQcInput> | Prisma.ProjectCreateWithoutQcInput[] | Prisma.ProjectUncheckedCreateWithoutQcInput[]
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutQcInput | Prisma.ProjectCreateOrConnectWithoutQcInput[]
+  upsert?: Prisma.ProjectUpsertWithWhereUniqueWithoutQcInput | Prisma.ProjectUpsertWithWhereUniqueWithoutQcInput[]
+  createMany?: Prisma.ProjectCreateManyQcInputEnvelope
+  set?: Prisma.ProjectWhereUniqueInput | Prisma.ProjectWhereUniqueInput[]
+  disconnect?: Prisma.ProjectWhereUniqueInput | Prisma.ProjectWhereUniqueInput[]
+  delete?: Prisma.ProjectWhereUniqueInput | Prisma.ProjectWhereUniqueInput[]
+  connect?: Prisma.ProjectWhereUniqueInput | Prisma.ProjectWhereUniqueInput[]
+  update?: Prisma.ProjectUpdateWithWhereUniqueWithoutQcInput | Prisma.ProjectUpdateWithWhereUniqueWithoutQcInput[]
+  updateMany?: Prisma.ProjectUpdateManyWithWhereWithoutQcInput | Prisma.ProjectUpdateManyWithWhereWithoutQcInput[]
+  deleteMany?: Prisma.ProjectScalarWhereInput | Prisma.ProjectScalarWhereInput[]
+}
+
+export type ProjectCreateNestedOneWithoutInvoicesInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutInvoicesInput, Prisma.ProjectUncheckedCreateWithoutInvoicesInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutInvoicesInput
+  connect?: Prisma.ProjectWhereUniqueInput
+}
+
+export type ProjectUpdateOneRequiredWithoutInvoicesNestedInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutInvoicesInput, Prisma.ProjectUncheckedCreateWithoutInvoicesInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutInvoicesInput
+  upsert?: Prisma.ProjectUpsertWithoutInvoicesInput
+  connect?: Prisma.ProjectWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProjectUpdateToOneWithWhereWithoutInvoicesInput, Prisma.ProjectUpdateWithoutInvoicesInput>, Prisma.ProjectUncheckedUpdateWithoutInvoicesInput>
+}
+
 export type ProjectCreateWithoutDepartmentInput = {
+  driveFolderId?: string | null
   name: string
   description?: string | null
   client?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   createdBy: Prisma.UserCreateNestedOneWithoutProjectsInput
+  qc?: Prisma.UserCreateNestedOneWithoutQcProjectsInput
   tasks?: Prisma.TaskCreateNestedManyWithoutProjectInput
   members?: Prisma.ProjectMemberCreateNestedManyWithoutProjectInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutDepartmentInput = {
+  driveFolderId?: string | null
   id?: number
   name: string
   description?: string | null
   client?: string | null
   createdById: number
+  qcId?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutProjectInput
   members?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutProjectInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutDepartmentInput = {
@@ -622,17 +743,20 @@ export type ProjectScalarWhereInput = {
   AND?: Prisma.ProjectScalarWhereInput | Prisma.ProjectScalarWhereInput[]
   OR?: Prisma.ProjectScalarWhereInput[]
   NOT?: Prisma.ProjectScalarWhereInput | Prisma.ProjectScalarWhereInput[]
+  driveFolderId?: Prisma.StringNullableFilter<"Project"> | string | null
   id?: Prisma.IntFilter<"Project"> | number
   name?: Prisma.StringFilter<"Project"> | string
   description?: Prisma.StringNullableFilter<"Project"> | string | null
   client?: Prisma.StringNullableFilter<"Project"> | string | null
   departmentId?: Prisma.IntFilter<"Project"> | number
   createdById?: Prisma.IntFilter<"Project"> | number
+  qcId?: Prisma.IntNullableFilter<"Project"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Project"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Project"> | Date | string
 }
 
 export type ProjectCreateWithoutMembersInput = {
+  driveFolderId?: string | null
   name: string
   description?: string | null
   client?: string | null
@@ -640,19 +764,24 @@ export type ProjectCreateWithoutMembersInput = {
   updatedAt?: Date | string
   department: Prisma.DepartmentCreateNestedOneWithoutProjectsInput
   createdBy: Prisma.UserCreateNestedOneWithoutProjectsInput
+  qc?: Prisma.UserCreateNestedOneWithoutQcProjectsInput
   tasks?: Prisma.TaskCreateNestedManyWithoutProjectInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutMembersInput = {
+  driveFolderId?: string | null
   id?: number
   name: string
   description?: string | null
   client?: string | null
   departmentId: number
   createdById: number
+  qcId?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutProjectInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutMembersInput = {
@@ -672,6 +801,7 @@ export type ProjectUpdateToOneWithWhereWithoutMembersInput = {
 }
 
 export type ProjectUpdateWithoutMembersInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   client?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -679,22 +809,28 @@ export type ProjectUpdateWithoutMembersInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   department?: Prisma.DepartmentUpdateOneRequiredWithoutProjectsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
+  qc?: Prisma.UserUpdateOneWithoutQcProjectsNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutProjectNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutMembersInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   client?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.IntFieldUpdateOperationsInput | number
   createdById?: Prisma.IntFieldUpdateOperationsInput | number
+  qcId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutProjectNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutTasksInput = {
+  driveFolderId?: string | null
   name: string
   description?: string | null
   client?: string | null
@@ -702,19 +838,24 @@ export type ProjectCreateWithoutTasksInput = {
   updatedAt?: Date | string
   department: Prisma.DepartmentCreateNestedOneWithoutProjectsInput
   createdBy: Prisma.UserCreateNestedOneWithoutProjectsInput
+  qc?: Prisma.UserCreateNestedOneWithoutQcProjectsInput
   members?: Prisma.ProjectMemberCreateNestedManyWithoutProjectInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutTasksInput = {
+  driveFolderId?: string | null
   id?: number
   name: string
   description?: string | null
   client?: string | null
   departmentId: number
   createdById: number
+  qcId?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutProjectInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutTasksInput = {
@@ -734,6 +875,7 @@ export type ProjectUpdateToOneWithWhereWithoutTasksInput = {
 }
 
 export type ProjectUpdateWithoutTasksInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   client?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -741,42 +883,53 @@ export type ProjectUpdateWithoutTasksInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   department?: Prisma.DepartmentUpdateOneRequiredWithoutProjectsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
+  qc?: Prisma.UserUpdateOneWithoutQcProjectsNestedInput
   members?: Prisma.ProjectMemberUpdateManyWithoutProjectNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutTasksInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   client?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.IntFieldUpdateOperationsInput | number
   createdById?: Prisma.IntFieldUpdateOperationsInput | number
+  qcId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.ProjectMemberUncheckedUpdateManyWithoutProjectNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutCreatedByInput = {
+  driveFolderId?: string | null
   name: string
   description?: string | null
   client?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   department: Prisma.DepartmentCreateNestedOneWithoutProjectsInput
+  qc?: Prisma.UserCreateNestedOneWithoutQcProjectsInput
   tasks?: Prisma.TaskCreateNestedManyWithoutProjectInput
   members?: Prisma.ProjectMemberCreateNestedManyWithoutProjectInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutCreatedByInput = {
+  driveFolderId?: string | null
   id?: number
   name: string
   description?: string | null
   client?: string | null
   departmentId: number
+  qcId?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutProjectInput
   members?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutProjectInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutCreatedByInput = {
@@ -786,6 +939,45 @@ export type ProjectCreateOrConnectWithoutCreatedByInput = {
 
 export type ProjectCreateManyCreatedByInputEnvelope = {
   data: Prisma.ProjectCreateManyCreatedByInput | Prisma.ProjectCreateManyCreatedByInput[]
+  skipDuplicates?: boolean
+}
+
+export type ProjectCreateWithoutQcInput = {
+  driveFolderId?: string | null
+  name: string
+  description?: string | null
+  client?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  department: Prisma.DepartmentCreateNestedOneWithoutProjectsInput
+  createdBy: Prisma.UserCreateNestedOneWithoutProjectsInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutProjectInput
+  members?: Prisma.ProjectMemberCreateNestedManyWithoutProjectInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectUncheckedCreateWithoutQcInput = {
+  driveFolderId?: string | null
+  id?: number
+  name: string
+  description?: string | null
+  client?: string | null
+  departmentId: number
+  createdById: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutProjectInput
+  members?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutProjectInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectCreateOrConnectWithoutQcInput = {
+  where: Prisma.ProjectWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutQcInput, Prisma.ProjectUncheckedCreateWithoutQcInput>
+}
+
+export type ProjectCreateManyQcInputEnvelope = {
+  data: Prisma.ProjectCreateManyQcInput | Prisma.ProjectCreateManyQcInput[]
   skipDuplicates?: boolean
 }
 
@@ -805,88 +997,251 @@ export type ProjectUpdateManyWithWhereWithoutCreatedByInput = {
   data: Prisma.XOR<Prisma.ProjectUpdateManyMutationInput, Prisma.ProjectUncheckedUpdateManyWithoutCreatedByInput>
 }
 
-export type ProjectCreateManyDepartmentInput = {
-  id?: number
+export type ProjectUpsertWithWhereUniqueWithoutQcInput = {
+  where: Prisma.ProjectWhereUniqueInput
+  update: Prisma.XOR<Prisma.ProjectUpdateWithoutQcInput, Prisma.ProjectUncheckedUpdateWithoutQcInput>
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutQcInput, Prisma.ProjectUncheckedCreateWithoutQcInput>
+}
+
+export type ProjectUpdateWithWhereUniqueWithoutQcInput = {
+  where: Prisma.ProjectWhereUniqueInput
+  data: Prisma.XOR<Prisma.ProjectUpdateWithoutQcInput, Prisma.ProjectUncheckedUpdateWithoutQcInput>
+}
+
+export type ProjectUpdateManyWithWhereWithoutQcInput = {
+  where: Prisma.ProjectScalarWhereInput
+  data: Prisma.XOR<Prisma.ProjectUpdateManyMutationInput, Prisma.ProjectUncheckedUpdateManyWithoutQcInput>
+}
+
+export type ProjectCreateWithoutInvoicesInput = {
+  driveFolderId?: string | null
   name: string
   description?: string | null
   client?: string | null
-  createdById: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  department: Prisma.DepartmentCreateNestedOneWithoutProjectsInput
+  createdBy: Prisma.UserCreateNestedOneWithoutProjectsInput
+  qc?: Prisma.UserCreateNestedOneWithoutQcProjectsInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutProjectInput
+  members?: Prisma.ProjectMemberCreateNestedManyWithoutProjectInput
 }
 
-export type ProjectUpdateWithoutDepartmentInput = {
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  client?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  createdBy?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
-  tasks?: Prisma.TaskUpdateManyWithoutProjectNestedInput
-  members?: Prisma.ProjectMemberUpdateManyWithoutProjectNestedInput
-}
-
-export type ProjectUncheckedUpdateWithoutDepartmentInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  client?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdById?: Prisma.IntFieldUpdateOperationsInput | number
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  tasks?: Prisma.TaskUncheckedUpdateManyWithoutProjectNestedInput
-  members?: Prisma.ProjectMemberUncheckedUpdateManyWithoutProjectNestedInput
-}
-
-export type ProjectUncheckedUpdateManyWithoutDepartmentInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  client?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdById?: Prisma.IntFieldUpdateOperationsInput | number
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type ProjectCreateManyCreatedByInput = {
+export type ProjectUncheckedCreateWithoutInvoicesInput = {
+  driveFolderId?: string | null
   id?: number
   name: string
   description?: string | null
   client?: string | null
   departmentId: number
+  createdById: number
+  qcId?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutProjectInput
+  members?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutProjectInput
 }
 
-export type ProjectUpdateWithoutCreatedByInput = {
+export type ProjectCreateOrConnectWithoutInvoicesInput = {
+  where: Prisma.ProjectWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutInvoicesInput, Prisma.ProjectUncheckedCreateWithoutInvoicesInput>
+}
+
+export type ProjectUpsertWithoutInvoicesInput = {
+  update: Prisma.XOR<Prisma.ProjectUpdateWithoutInvoicesInput, Prisma.ProjectUncheckedUpdateWithoutInvoicesInput>
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutInvoicesInput, Prisma.ProjectUncheckedCreateWithoutInvoicesInput>
+  where?: Prisma.ProjectWhereInput
+}
+
+export type ProjectUpdateToOneWithWhereWithoutInvoicesInput = {
+  where?: Prisma.ProjectWhereInput
+  data: Prisma.XOR<Prisma.ProjectUpdateWithoutInvoicesInput, Prisma.ProjectUncheckedUpdateWithoutInvoicesInput>
+}
+
+export type ProjectUpdateWithoutInvoicesInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   client?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   department?: Prisma.DepartmentUpdateOneRequiredWithoutProjectsNestedInput
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
+  qc?: Prisma.UserUpdateOneWithoutQcProjectsNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutProjectNestedInput
   members?: Prisma.ProjectMemberUpdateManyWithoutProjectNestedInput
 }
 
-export type ProjectUncheckedUpdateWithoutCreatedByInput = {
+export type ProjectUncheckedUpdateWithoutInvoicesInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   client?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.IntFieldUpdateOperationsInput | number
+  createdById?: Prisma.IntFieldUpdateOperationsInput | number
+  qcId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutProjectNestedInput
   members?: Prisma.ProjectMemberUncheckedUpdateManyWithoutProjectNestedInput
 }
 
-export type ProjectUncheckedUpdateManyWithoutCreatedByInput = {
+export type ProjectCreateManyDepartmentInput = {
+  driveFolderId?: string | null
+  id?: number
+  name: string
+  description?: string | null
+  client?: string | null
+  createdById: number
+  qcId?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type ProjectUpdateWithoutDepartmentInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  client?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
+  qc?: Prisma.UserUpdateOneWithoutQcProjectsNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutProjectNestedInput
+  members?: Prisma.ProjectMemberUpdateManyWithoutProjectNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectUncheckedUpdateWithoutDepartmentInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  client?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdById?: Prisma.IntFieldUpdateOperationsInput | number
+  qcId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutProjectNestedInput
+  members?: Prisma.ProjectMemberUncheckedUpdateManyWithoutProjectNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectUncheckedUpdateManyWithoutDepartmentInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  client?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdById?: Prisma.IntFieldUpdateOperationsInput | number
+  qcId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type ProjectCreateManyCreatedByInput = {
+  driveFolderId?: string | null
+  id?: number
+  name: string
+  description?: string | null
+  client?: string | null
+  departmentId: number
+  qcId?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type ProjectCreateManyQcInput = {
+  driveFolderId?: string | null
+  id?: number
+  name: string
+  description?: string | null
+  client?: string | null
+  departmentId: number
+  createdById: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type ProjectUpdateWithoutCreatedByInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  client?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  department?: Prisma.DepartmentUpdateOneRequiredWithoutProjectsNestedInput
+  qc?: Prisma.UserUpdateOneWithoutQcProjectsNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutProjectNestedInput
+  members?: Prisma.ProjectMemberUpdateManyWithoutProjectNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectUncheckedUpdateWithoutCreatedByInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   client?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.IntFieldUpdateOperationsInput | number
+  qcId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutProjectNestedInput
+  members?: Prisma.ProjectMemberUncheckedUpdateManyWithoutProjectNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectUncheckedUpdateManyWithoutCreatedByInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  client?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  departmentId?: Prisma.IntFieldUpdateOperationsInput | number
+  qcId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type ProjectUpdateWithoutQcInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  client?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  department?: Prisma.DepartmentUpdateOneRequiredWithoutProjectsNestedInput
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutProjectNestedInput
+  members?: Prisma.ProjectMemberUpdateManyWithoutProjectNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectUncheckedUpdateWithoutQcInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  client?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  departmentId?: Prisma.IntFieldUpdateOperationsInput | number
+  createdById?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutProjectNestedInput
+  members?: Prisma.ProjectMemberUncheckedUpdateManyWithoutProjectNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectUncheckedUpdateManyWithoutQcInput = {
+  driveFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  client?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  departmentId?: Prisma.IntFieldUpdateOperationsInput | number
+  createdById?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -899,11 +1254,13 @@ export type ProjectUncheckedUpdateManyWithoutCreatedByInput = {
 export type ProjectCountOutputType = {
   tasks: number
   members: number
+  invoices: number
 }
 
 export type ProjectCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tasks?: boolean | ProjectCountOutputTypeCountTasksArgs
   members?: boolean | ProjectCountOutputTypeCountMembersArgs
+  invoices?: boolean | ProjectCountOutputTypeCountInvoicesArgs
 }
 
 /**
@@ -930,75 +1287,98 @@ export type ProjectCountOutputTypeCountMembersArgs<ExtArgs extends runtime.Types
   where?: Prisma.ProjectMemberWhereInput
 }
 
+/**
+ * ProjectCountOutputType without action
+ */
+export type ProjectCountOutputTypeCountInvoicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.InvoiceWhereInput
+}
+
 
 export type ProjectSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  driveFolderId?: boolean
   id?: boolean
   name?: boolean
   description?: boolean
   client?: boolean
   departmentId?: boolean
   createdById?: boolean
+  qcId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  qc?: boolean | Prisma.Project$qcArgs<ExtArgs>
   tasks?: boolean | Prisma.Project$tasksArgs<ExtArgs>
   members?: boolean | Prisma.Project$membersArgs<ExtArgs>
+  invoices?: boolean | Prisma.Project$invoicesArgs<ExtArgs>
   _count?: boolean | Prisma.ProjectCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["project"]>
 
 export type ProjectSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  driveFolderId?: boolean
   id?: boolean
   name?: boolean
   description?: boolean
   client?: boolean
   departmentId?: boolean
   createdById?: boolean
+  qcId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  qc?: boolean | Prisma.Project$qcArgs<ExtArgs>
 }, ExtArgs["result"]["project"]>
 
 export type ProjectSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  driveFolderId?: boolean
   id?: boolean
   name?: boolean
   description?: boolean
   client?: boolean
   departmentId?: boolean
   createdById?: boolean
+  qcId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  qc?: boolean | Prisma.Project$qcArgs<ExtArgs>
 }, ExtArgs["result"]["project"]>
 
 export type ProjectSelectScalar = {
+  driveFolderId?: boolean
   id?: boolean
   name?: boolean
   description?: boolean
   client?: boolean
   departmentId?: boolean
   createdById?: boolean
+  qcId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ProjectOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "description" | "client" | "departmentId" | "createdById" | "createdAt" | "updatedAt", ExtArgs["result"]["project"]>
+export type ProjectOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"driveFolderId" | "id" | "name" | "description" | "client" | "departmentId" | "createdById" | "qcId" | "createdAt" | "updatedAt", ExtArgs["result"]["project"]>
 export type ProjectInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  qc?: boolean | Prisma.Project$qcArgs<ExtArgs>
   tasks?: boolean | Prisma.Project$tasksArgs<ExtArgs>
   members?: boolean | Prisma.Project$membersArgs<ExtArgs>
+  invoices?: boolean | Prisma.Project$invoicesArgs<ExtArgs>
   _count?: boolean | Prisma.ProjectCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ProjectIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  qc?: boolean | Prisma.Project$qcArgs<ExtArgs>
 }
 export type ProjectIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  qc?: boolean | Prisma.Project$qcArgs<ExtArgs>
 }
 
 export type $ProjectPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1006,16 +1386,23 @@ export type $ProjectPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   objects: {
     department: Prisma.$DepartmentPayload<ExtArgs>
     createdBy: Prisma.$UserPayload<ExtArgs>
+    qc: Prisma.$UserPayload<ExtArgs> | null
     tasks: Prisma.$TaskPayload<ExtArgs>[]
     members: Prisma.$ProjectMemberPayload<ExtArgs>[]
+    invoices: Prisma.$InvoicePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
+    /**
+     * Drive folder holding this project's files; created on first upload.
+     */
+    driveFolderId: string | null
     id: number
     name: string
     description: string | null
     client: string | null
     departmentId: number
     createdById: number
+    qcId: number | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["project"]>
@@ -1101,8 +1488,8 @@ export interface ProjectDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    * // Get first 10 Projects
    * const projects = await prisma.project.findMany({ take: 10 })
    * 
-   * // Only select the `id`
-   * const projectWithIdOnly = await prisma.project.findMany({ select: { id: true } })
+   * // Only select the `driveFolderId`
+   * const projectWithDriveFolderIdOnly = await prisma.project.findMany({ select: { driveFolderId: true } })
    * 
    */
   findMany<T extends ProjectFindManyArgs>(args?: Prisma.SelectSubset<T, ProjectFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
@@ -1146,9 +1533,9 @@ export interface ProjectDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    *   ]
    * })
    * 
-   * // Create many Projects and only return the `id`
-   * const projectWithIdOnly = await prisma.project.createManyAndReturn({
-   *   select: { id: true },
+   * // Create many Projects and only return the `driveFolderId`
+   * const projectWithDriveFolderIdOnly = await prisma.project.createManyAndReturn({
+   *   select: { driveFolderId: true },
    *   data: [
    *     // ... provide data here
    *   ]
@@ -1237,9 +1624,9 @@ export interface ProjectDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    *   ]
    * })
    * 
-   * // Update zero or more Projects and only return the `id`
-   * const projectWithIdOnly = await prisma.project.updateManyAndReturn({
-   *   select: { id: true },
+   * // Update zero or more Projects and only return the `driveFolderId`
+   * const projectWithDriveFolderIdOnly = await prisma.project.updateManyAndReturn({
+   *   select: { driveFolderId: true },
    *   where: {
    *     // ... provide filter here
    *   },
@@ -1414,8 +1801,10 @@ export interface Prisma__ProjectClient<T, Null = never, ExtArgs extends runtime.
   readonly [Symbol.toStringTag]: "PrismaPromise"
   department<T extends Prisma.DepartmentDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DepartmentDefaultArgs<ExtArgs>>): Prisma.Prisma__DepartmentClient<runtime.Types.Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   createdBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  qc<T extends Prisma.Project$qcArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$qcArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   tasks<T extends Prisma.Project$tasksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$tasksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   members<T extends Prisma.Project$membersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$membersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  invoices<T extends Prisma.Project$invoicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$invoicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1445,12 +1834,14 @@ export interface Prisma__ProjectClient<T, Null = never, ExtArgs extends runtime.
  * Fields of the Project model
  */
 export interface ProjectFieldRefs {
+  readonly driveFolderId: Prisma.FieldRef<"Project", 'String'>
   readonly id: Prisma.FieldRef<"Project", 'Int'>
   readonly name: Prisma.FieldRef<"Project", 'String'>
   readonly description: Prisma.FieldRef<"Project", 'String'>
   readonly client: Prisma.FieldRef<"Project", 'String'>
   readonly departmentId: Prisma.FieldRef<"Project", 'Int'>
   readonly createdById: Prisma.FieldRef<"Project", 'Int'>
+  readonly qcId: Prisma.FieldRef<"Project", 'Int'>
   readonly createdAt: Prisma.FieldRef<"Project", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Project", 'DateTime'>
 }
@@ -1854,6 +2245,25 @@ export type ProjectDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
 }
 
 /**
+ * Project.qc
+ */
+export type Project$qcArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
+}
+
+/**
  * Project.tasks
  */
 export type Project$tasksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1899,6 +2309,30 @@ export type Project$membersArgs<ExtArgs extends runtime.Types.Extensions.Interna
   take?: number
   skip?: number
   distinct?: Prisma.ProjectMemberScalarFieldEnum | Prisma.ProjectMemberScalarFieldEnum[]
+}
+
+/**
+ * Project.invoices
+ */
+export type Project$invoicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Invoice
+   */
+  select?: Prisma.InvoiceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Invoice
+   */
+  omit?: Prisma.InvoiceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InvoiceInclude<ExtArgs> | null
+  where?: Prisma.InvoiceWhereInput
+  orderBy?: Prisma.InvoiceOrderByWithRelationInput | Prisma.InvoiceOrderByWithRelationInput[]
+  cursor?: Prisma.InvoiceWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.InvoiceScalarFieldEnum | Prisma.InvoiceScalarFieldEnum[]
 }
 
 /**

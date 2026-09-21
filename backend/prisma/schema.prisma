@@ -10,7 +10,7 @@ datasource db {
 enum Role {
   CEO
   DEPARTMENT_MANAGER
-  HR_MANAGER
+  INTERNAL_MANAGER
   TECHNICAL_MANAGER
   STRATEGY_MANAGER
   EMPLOYEE
@@ -20,6 +20,7 @@ enum Role {
 enum TaskStatus {
   TODO
   IN_PROGRESS
+  PENDING_QC
   PENDING_APPROVAL
   DONE
 }
@@ -38,7 +39,10 @@ model Department {
   id          Int             @id @default(autoincrement())
   name        String          @unique
   description String?
-  managerId   Int?            @unique
+  /// Not unique: one person can run several departments. The unique index
+  /// that used to sit here made a second assignment fail outright at the
+  /// database level, before any application code could even be consulted.
+  managerId   Int?
   manager     User?           @relation("DepartmentManager", fields: [managerId], references: [id])
   members     UserDepartment[]
   projects    Project[]
@@ -47,6 +51,8 @@ model Department {
 }
 
 model Project {
+  /// Drive folder holding this project's files; created on first upload.
+  driveFolderId String?
   id           Int             @id @default(autoincrement())
   name         String
   description  String?
@@ -55,8 +61,11 @@ model Project {
   department   Department      @relation(fields: [departmentId], references: [id])
   createdById  Int
   createdBy    User            @relation("CreatedProjects", fields: [createdById], references: [id])
+  qcId         Int?
+  qc           User?           @relation("ProjectQC", fields: [qcId], references: [id])
   tasks        Task[]
   members      ProjectMember[]
+  invoices     Invoice[]
   createdAt    DateTime        @default(now())
   updatedAt    DateTime        @updatedAt
 }
@@ -73,6 +82,8 @@ model ProjectMember {
 }
 
 model Task {
+  /// Drive folder holding this task's files; created on first upload.
+  driveFolderId String?
   id             Int            @id @default(autoincrement())
   title          String
   description    String?
@@ -87,6 +98,14 @@ model Task {
   approvedAt     DateTime?
   approverId     Int?
   approver       User?          @relation("TaskApprover", fields: [approverId], references: [id])
+  qcById         Int?
+  qcBy           User?          @relation("QcReviewedTasks", fields: [qcById], references: [id])
+  qcAt           DateTime?
+  qcNote         String?
+  qcPassed       Boolean?
+  /// When the task was handed over for review. The overdue clock stops here:
+  /// time spent waiting on a reviewer is not the assignee's lateness.
+  submittedForReviewAt DateTime?
   projectId      Int
   project        Project        @relation(fields: [projectId], references: [id])
   createdById    Int
@@ -96,6 +115,8 @@ model Task {
   reports        TaskReport[]
   attachments    TaskAttachment[]
   notifications  Notification[]
+  rejections     TaskRejection[]
+  approvals      TaskApproval[]
   isRecurring         Boolean        @default(false)
   recurrencePattern   String?
   recurrenceDays      String?
@@ -128,7 +149,21 @@ model TaskSubtask {
   completedAt DateTime?
   taskId      Int
   task        Task      @relation(fields: [taskId], references: [id])
+  /// Who is responsible for this step. Null means any of the task's assignees
+  /// may do it, which is how every subtask behaved before this existed.
+  assigneeId  Int?
+  assignee    User?     @relation("SubtaskAssignee", fields: [assigneeId], references: [id])
+  /// Who actually ticked it, kept so a completed step can be traced back.
+  completedById Int?
+  completedBy User?     @relation("SubtaskCompletedBy", fields: [completedById], references: [id])
   createdAt   DateTime  @default(now())
+  /// Order within the task, lowest first. Steps are a sequence — "draft, then
+  /// review, then publish" — and creation time only matched that until someone
+  /// added a step they had forgotten, which then sorted to the end.
+  position    Int       @default(0)
+
+  @@index([taskId])
+  @@index([assigneeId])
 }
 
 model TaskReport {
@@ -165,8 +200,14 @@ model User {
   startDate    DateTime?
   nationalId   String?     @unique
   position     String?
+  /// Profile photo, served from the uploads folder. Null means the initials
+  /// avatar, which stays the fallback everywhere.
+  avatarUrl    String?
   role         Role        @default(EMPLOYEE)
-  managedDept  Department? @relation("DepartmentManager")
+  /// Departments this user manages — a list, because one person can run
+  /// several. Declaring it as a single Department is what forced the unique
+  /// index on the other side.
+  managedDepts Department[] @relation("DepartmentManager")
   phone        String?
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
@@ -177,12 +218,27 @@ model User {
   taskReports  TaskReport[] @relation("TaskReports")
   approvedTasks  Task[]     @relation("ApprovedTasks")
   approverTasks  Task[]     @relation("TaskApprover")
+  qcReviewedTasks Task[]    @relation("QcReviewedTasks")
+  qcProjects     Project[]  @relation("ProjectQC")
   notifications  Notification[]
   departmentMemberships UserDepartment[]
   attachments    TaskAttachment[]
   chatParticipants ChatParticipant[]
   chatMessages     ChatMessage[]
   createdWebhooks  Webhook[]
+  storageAccounts StorageAccount[] @relation("StorageConnectedBy")
+  subtasksAssigned  TaskSubtask[] @relation("SubtaskAssignee")
+  subtasksCompleted TaskSubtask[] @relation("SubtaskCompletedBy")
+  rejectionsReceived TaskRejection[] @relation("RejectionsReceived")
+  rejectionsMade     TaskRejection[] @relation("RejectionsMade")
+  approvalsMade      TaskApproval[]  @relation("ApprovalsMade")
+  tickets            Ticket[]        @relation("UserTickets")
+  createdInvoices    Invoice[]       @relation("CreatedInvoices")
+  financialProfile   EmployeeFinancialProfile? @relation("FinancialProfile")
+  userAdvances       PersonnelAdvance[] @relation("UserAdvances")
+  approvedAdvances   PersonnelAdvance[] @relation("ApprovedAdvances")
+  approvedPayrolls   PayrollPeriod[]    @relation("ApprovedPayrolls")
+  userPayslips       Payslip[]          @relation("UserPayslips")
 }
 
 model TaskAttachment {
@@ -195,7 +251,120 @@ model TaskAttachment {
   userId    Int
   user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
+
+  /// Where the bytes actually live. LOCAL rows predate cloud storage and are
+  /// served from the server's own uploads folder.
+  provider     StorageProvider @default(LOCAL)
+  /// Provider-side id (Drive fileId), needed to delete or re-share later.
+  externalId   String?
+  thumbnailUrl String?
+  sizeBytes    BigInt?
+
+  @@index([taskId])
 }
+
+/// Which gate sent the task back: quality control, or the final approval.
+/// Why a task was sent back, as a fixed list.
+///
+/// The free-text reason alone could not be analysed: of the first 21
+/// rejections, 16 read "." or "/" — a required field answered with one
+/// keystroke. A category the reviewer picks is the part that can be counted.
+enum RejectionCategory {
+  CONTENT         /// محتوا و نگارش
+  DESIGN          /// تصویر و طراحی
+  BRIEF_MISMATCH  /// مغایرت با بریف
+  INCOMPLETE      /// ناقص بودن کار
+  WEAK_REPORT     /// گزارش ناکافی
+  TIMING          /// زمان‌بندی
+  OTHER           /// سایر
+}
+
+enum ReviewStage {
+  QC
+  APPROVAL
+}
+
+/// One row per assignee per time a task was sent back for rework.
+///
+/// The task's own qcPassed/qcNote fields only hold the *latest* decision and
+/// are cleared on resubmission, so counting rejections from them loses every
+/// earlier one. This table is the history those numbers need.
+model TaskRejection {
+  id        Int             @id @default(autoincrement())
+  taskId    Int
+  task      Task            @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  /// The assignee this rejection counts against.
+  userId    Int
+  user      User            @relation("RejectionsReceived", fields: [userId], references: [id])
+  /// Who sent it back. Null for rows backfilled from historic qc fields.
+  byId      Int?
+  by        User?           @relation("RejectionsMade", fields: [byId], references: [id])
+  stage     ReviewStage
+  /// Why it came back. More than one is normal — a task can be wrong in the
+  /// copy and wrong in the artwork at the same time, and forcing a single
+  /// label made the reviewer drop half of what they had just found.
+  ///
+  /// Empty on the rows written before categories existed.
+  categories RejectionCategory[]
+  /// How long the reviewer expects the fix to take, in minutes.
+  ///
+  /// Counted against the assignee, not the reviewer: it is time that person
+  /// spends redoing work already delivered once, which is what turns
+  /// "minutes completed" into "minutes of useful work".
+  reworkMinutes Int?
+  reason    String?
+  createdAt DateTime        @default(now())
+
+  @@index([userId, createdAt])
+  @@index([taskId])
+}
+/// One approval, kept forever.
+///
+/// The task's own qc* and approvedBy* fields hold only the latest decision, so
+/// a task approved, sent back, then approved again remembered just the last
+/// pass — and a reviewer's history could not show what they had waved through.
+/// Rejections already had this table; approvals were the missing half.
+model TaskApproval {
+  id        Int         @id @default(autoincrement())
+  taskId    Int
+  task      Task        @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  /// Who approved. Null for rows backfilled from historic fields with no author.
+  byId      Int?
+  by        User?       @relation("ApprovalsMade", fields: [byId], references: [id])
+  stage     ReviewStage
+  note      String?
+  createdAt DateTime    @default(now())
+
+  @@index([byId, createdAt])
+  @@index([taskId])
+}
+
+
+enum StorageProvider {
+  LOCAL
+  GOOGLE_DRIVE
+}
+
+/// The organisation's single connected cloud drive.
+///
+/// Deliberately one shared account rather than per-user connections: files
+/// outlive the person who uploaded them, and a departing employee must not
+/// take the project's deliverables with them.
+model StorageAccount {
+  id              Int             @id @default(autoincrement())
+  provider        StorageProvider @unique
+  /// Encrypted at rest — see lib/crypto.ts. A refresh token is a long-lived
+  /// credential to the organisation's whole drive.
+  refreshTokenEnc String
+  accountEmail    String?
+  /// Drive folder that holds every project folder we create.
+  rootFolderId    String?
+  connectedById   Int?
+  connectedBy     User?           @relation("StorageConnectedBy", fields: [connectedById], references: [id])
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+}
+
 
 enum ConversationType {
   DIRECT
@@ -257,4 +426,258 @@ model Webhook {
   updatedAt   DateTime @updatedAt
 }
 
+
+
+/// A form submission posted from an external website.
+///
+/// The ingest endpoint is public and unauthenticated by design, so nothing
+/// here is trusted: `site` and `pageUrl` are self-reported by the page, and
+/// `fields` is arbitrary user input. Treat every value as untrusted text.
+model FormSubmission {
+  id        Int      @id @default(autoincrement())
+  site      String
+  formName  String
+  pageUrl   String?
+  fields    Json
+  ip        String?
+  userAgent String?
+  read      Boolean  @default(false)
+  archived  Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([site])
+  @@index([read])
+}
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum TicketPriority {
+  LOW
+  NORMAL
+  HIGH
+  CRITICAL
+}
+
+model Ticket {
+  id          Int            @id @default(autoincrement())
+  title       String
+  description String
+  department  String         @default("technical")
+  priority    TicketPriority @default(NORMAL)
+  status      TicketStatus   @default(OPEN)
+  userId      Int
+  user        User           @relation("UserTickets", fields: [userId], references: [id])
+  response    String?
+  resolvedAt  DateTime?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+enum InvoiceStatus {
+  DRAFT
+  ISSUED
+  PAID
+  CANCELLED
+}
+
+model Invoice {
+  id            Int           @id @default(autoincrement())
+  invoiceNumber String        @unique
+  title         String
+  projectId     Int
+  project       Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  
+  // Seller / Provider info (Customizable)
+  sellerName    String?       @default("تسکان (Task-On)")
+  sellerPhone   String?
+  sellerAddress String?
+  sellerTaxId   String?
+
+  // Client / Buyer info
+  clientName    String
+  clientPhone   String?
+  clientAddress String?
+  clientTaxId   String?
+  
+  // Dates
+  issueDate     DateTime      @default(now())
+  dueDate       DateTime?
+  paidAt        DateTime?
+  
+  status        InvoiceStatus @default(DRAFT)
+  
+  // Amounts
+  subtotal      Float         @default(0)
+  discount      Float         @default(0)
+  taxRate       Float         @default(0)
+  taxAmount     Float         @default(0)
+  totalAmount   Float         @default(0)
+
+  // Debtor & Creditor (Accounting)
+  previousDebt  Float         @default(0)
+  paidAmount    Float         @default(0)
+  finalAmount   Float         @default(0)
+
+  currency      String        @default("تومان")
+  
+  notes         String?
+  iban1         String?
+  iban2         String?
+  paymentAccounts Json?
+  createdById   Int
+  createdBy     User          @relation("CreatedInvoices", fields: [createdById], references: [id])
+  
+  items         InvoiceItem[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([projectId])
+  @@index([status])
+}
+
+model InvoiceItem {
+  id          Int      @id @default(autoincrement())
+  invoiceId   Int
+  invoice     Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  description String
+  quantity    Float    @default(1)
+  unit        String   @default("مورد")
+  unitPrice   Float
+  totalPrice  Float
+  taskId      Int?
+  createdAt   DateTime @default(now())
+
+  @@index([invoiceId])
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Phase 2 Internal Finance & Payroll Models (FIN-04, FIN-05, FIN-07)
+// ─────────────────────────────────────────────────────────────────────────────
+
+enum FinancialRequestType {
+  ADVANCE
+  LOAN
+  PETTY_CASH
+}
+
+enum AdvanceStatus {
+  PENDING
+  APPROVED
+  PAID
+  REJECTED
+  RECOVERED
+}
+
+enum PayrollPeriodStatus {
+  DRAFT
+  PROCESSING
+  APPROVED
+  PAID
+  CLOSED
+}
+
+enum PayslipStatus {
+  DRAFT
+  PENDING_APPROVAL
+  APPROVED
+  PAID
+}
+
+model EmployeeFinancialProfile {
+  id              Int      @id @default(autoincrement())
+  userId          Int      @unique
+  user            User     @relation("FinancialProfile", fields: [userId], references: [id], onDelete: Cascade)
+  baseSalary      Float    @default(0)
+  hourlyRate      Float?   @default(0)
+  bankIban        String?
+  bankCardNumber  String?
+  bankName        String?
+  maxAdvanceLimit Float?   @default(0)
+  notes           String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model PersonnelAdvance {
+  id               Int                  @id @default(autoincrement())
+  userId           Int
+  user             User                 @relation("UserAdvances", fields: [userId], references: [id], onDelete: Cascade)
+  type             FinancialRequestType @default(ADVANCE)
+  amount           Float
+  reason           String?
+  installments     Int?                 @default(1)
+  attachmentUrl    String?
+  status           AdvanceStatus        @default(PENDING)
+  requestedAt      DateTime             @default(now())
+  approvedById     Int?
+  approvedBy       User?                @relation("ApprovedAdvances", fields: [approvedById], references: [id])
+  approvedAt       DateTime?
+  rejectionReason  String?
+  paidAt           DateTime?
+  recoveryPeriod   String?
+  payslipId        Int?
+  payslip          Payslip?             @relation(fields: [payslipId], references: [id])
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+
+  @@index([userId])
+  @@index([type])
+  @@index([status])
+  @@index([recoveryPeriod])
+}
+
+model PayrollPeriod {
+  id              Int                 @id @default(autoincrement())
+  periodKey       String              @unique
+  title           String
+  startDate       DateTime
+  endDate         DateTime
+  status          PayrollPeriodStatus @default(DRAFT)
+  totalGross      Float               @default(0)
+  totalDeductions Float               @default(0)
+  totalNet        Float               @default(0)
+  payslips        Payslip[]
+  approvedById    Int?
+  approvedBy      User?               @relation("ApprovedPayrolls", fields: [approvedById], references: [id])
+  approvedAt      DateTime?
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+}
+
+model Payslip {
+  id                Int                @id @default(autoincrement())
+  payrollPeriodId   Int
+  payrollPeriod     PayrollPeriod      @relation(fields: [payrollPeriodId], references: [id], onDelete: Cascade)
+  userId            Int
+  user              User               @relation("UserPayslips", fields: [userId], references: [id], onDelete: Cascade)
+  status            PayslipStatus      @default(DRAFT)
+  workedMinutes     Int                @default(0)
+  overtimeMinutes   Int                @default(0)
+  tasksCompleted    Int                @default(0)
+  baseSalary        Float              @default(0)
+  overtimeAmount    Float              @default(0)
+  bonusesAmount     Float              @default(0)
+  advancesDeduction Float              @default(0)
+  penaltiesAmount   Float              @default(0)
+  grossPayable      Float              @default(0)
+  netPayable        Float              @default(0)
+  bankIban          String?
+  notes             String?
+  advances          PersonnelAdvance[]
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+
+  @@unique([payrollPeriodId, userId])
+  @@index([userId])
+}
 

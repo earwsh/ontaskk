@@ -1,6 +1,6 @@
 import prisma from './prisma';
 
-type NotificationType = 'TASK_ASSIGNED' | 'PENDING_APPROVAL' | 'TASK_APPROVED' | 'REPORT_ADDED';
+type NotificationType = 'TASK_ASSIGNED' | 'PENDING_APPROVAL' | 'TASK_APPROVED' | 'REPORT_ADDED' | 'PENDING_QC' | 'QC_REJECTED' | 'QC_PASSED' | 'FORM_SUBMISSION';
 
 export async function createNotification(params: {
   type: NotificationType;
@@ -97,6 +97,42 @@ export async function notifyReportAdded(taskId: number, taskTitle: string, proje
       title: 'گزارش جدید',
       message: `${reporterName} گزارش جدیدی به تسک "${taskTitle}" اضافه کرد`,
       userId: manager.id,
+      taskId,
+    });
+  }
+}
+
+/** The project's QC reviewer is the only person who can act on this. */
+export async function notifyPendingQc(taskId: number, taskTitle: string, qcUserId: number) {
+  await createNotification({
+    type: 'PENDING_QC',
+    title: 'کنترل کیفیت',
+    message: `تسک «${taskTitle}» منتظر بررسی کیفیت شماست`,
+    userId: qcUserId,
+    taskId,
+  });
+}
+
+/** Everyone who worked on it needs to know what to fix, and why. */
+export async function notifyQcRejected(taskId: number, taskTitle: string, assigneeIds: number[], note: string) {
+  for (const userId of assigneeIds) {
+    await createNotification({
+      type: 'QC_REJECTED',
+      title: 'رد کنترل کیفیت',
+      message: `تسک «${taskTitle}» در کنترل کیفیت رد شد: ${note}`,
+      userId,
+      taskId,
+    });
+  }
+}
+
+export async function notifyQcPassed(taskId: number, taskTitle: string, assigneeIds: number[]) {
+  for (const userId of assigneeIds) {
+    await createNotification({
+      type: 'QC_PASSED',
+      title: 'تایید کنترل کیفیت',
+      message: `تسک «${taskTitle}» کنترل کیفیت را گذراند و برای تایید نهایی ارسال شد`,
+      userId,
       taskId,
     });
   }

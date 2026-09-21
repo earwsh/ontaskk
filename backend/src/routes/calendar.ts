@@ -1,6 +1,7 @@
 import { Router, Response } from 'express';
 import { authenticate, AuthRequest } from '../middleware/auth';
 import prisma from '../lib/prisma';
+import { managedDepartmentIds } from '../lib/departments';
 
 const router = Router();
 
@@ -14,12 +15,12 @@ router.get('/', authenticate, async (req: AuthRequest, res: Response) => {
     const startDate = new Date(start as string);
     const endDate = new Date(end as string);
     const user = req.user!;
-    let projectFilter: { departmentId?: number } = {};
+    let projectFilter: { departmentId?: number | { in: number[] } } = {};
 
     if (user.role === 'DEPARTMENT_MANAGER') {
-      const dept = await prisma.department.findFirst({ where: { managerId: user.id } });
-      if (!dept) return res.status(403).json({ error: 'No managed department' });
-      projectFilter = { departmentId: dept.id };
+      const deptIds = await managedDepartmentIds(user.id);
+      if (deptIds.length === 0) return res.status(403).json({ error: 'No managed department' });
+      projectFilter = { departmentId: { in: deptIds } };
     } else if (user.role === 'EMPLOYEE') {
       const deptMembership = await prisma.userDepartment.findFirst({
         where: { userId: user.id },

@@ -54,12 +54,17 @@ export function toGregorian(jy: number, jm: number, jd: number) {
     days = (days - 1) % 365;
   }
   const gd_m = [0, 31, (gy % 4 === 0 && gy % 100 !== 0) || gy % 400 === 0 ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  // `days` is zero-based here; the day of month is one more. Walking the
+  // months on `days` itself returned every date one day early — 1 Shahrivar
+  // 1405 came back as 22 August instead of 23 — so a Jalali month bucket
+  // started a day before the month it named.
+  let gd = days + 1;
   let gm = 0;
-  while (gm < 13 && days > gd_m[gm]) {
-    days -= gd_m[gm];
+  while (gm < 13 && gd > gd_m[gm]) {
+    gd -= gd_m[gm];
     gm++;
   }
-  return { gy, gm, gd: days };
+  return { gy, gm, gd };
 }
 
 /**

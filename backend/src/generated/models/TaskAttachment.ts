@@ -30,12 +30,14 @@ export type TaskAttachmentAvgAggregateOutputType = {
   id: number | null
   taskId: number | null
   userId: number | null
+  sizeBytes: number | null
 }
 
 export type TaskAttachmentSumAggregateOutputType = {
   id: number | null
   taskId: number | null
   userId: number | null
+  sizeBytes: bigint | null
 }
 
 export type TaskAttachmentMinAggregateOutputType = {
@@ -46,6 +48,10 @@ export type TaskAttachmentMinAggregateOutputType = {
   taskId: number | null
   userId: number | null
   createdAt: Date | null
+  provider: $Enums.StorageProvider | null
+  externalId: string | null
+  thumbnailUrl: string | null
+  sizeBytes: bigint | null
 }
 
 export type TaskAttachmentMaxAggregateOutputType = {
@@ -56,6 +62,10 @@ export type TaskAttachmentMaxAggregateOutputType = {
   taskId: number | null
   userId: number | null
   createdAt: Date | null
+  provider: $Enums.StorageProvider | null
+  externalId: string | null
+  thumbnailUrl: string | null
+  sizeBytes: bigint | null
 }
 
 export type TaskAttachmentCountAggregateOutputType = {
@@ -66,6 +76,10 @@ export type TaskAttachmentCountAggregateOutputType = {
   taskId: number
   userId: number
   createdAt: number
+  provider: number
+  externalId: number
+  thumbnailUrl: number
+  sizeBytes: number
   _all: number
 }
 
@@ -74,12 +88,14 @@ export type TaskAttachmentAvgAggregateInputType = {
   id?: true
   taskId?: true
   userId?: true
+  sizeBytes?: true
 }
 
 export type TaskAttachmentSumAggregateInputType = {
   id?: true
   taskId?: true
   userId?: true
+  sizeBytes?: true
 }
 
 export type TaskAttachmentMinAggregateInputType = {
@@ -90,6 +106,10 @@ export type TaskAttachmentMinAggregateInputType = {
   taskId?: true
   userId?: true
   createdAt?: true
+  provider?: true
+  externalId?: true
+  thumbnailUrl?: true
+  sizeBytes?: true
 }
 
 export type TaskAttachmentMaxAggregateInputType = {
@@ -100,6 +120,10 @@ export type TaskAttachmentMaxAggregateInputType = {
   taskId?: true
   userId?: true
   createdAt?: true
+  provider?: true
+  externalId?: true
+  thumbnailUrl?: true
+  sizeBytes?: true
 }
 
 export type TaskAttachmentCountAggregateInputType = {
@@ -110,6 +134,10 @@ export type TaskAttachmentCountAggregateInputType = {
   taskId?: true
   userId?: true
   createdAt?: true
+  provider?: true
+  externalId?: true
+  thumbnailUrl?: true
+  sizeBytes?: true
   _all?: true
 }
 
@@ -207,6 +235,10 @@ export type TaskAttachmentGroupByOutputType = {
   taskId: number
   userId: number
   createdAt: Date
+  provider: $Enums.StorageProvider
+  externalId: string | null
+  thumbnailUrl: string | null
+  sizeBytes: bigint | null
   _count: TaskAttachmentCountAggregateOutputType | null
   _avg: TaskAttachmentAvgAggregateOutputType | null
   _sum: TaskAttachmentSumAggregateOutputType | null
@@ -240,6 +272,10 @@ export type TaskAttachmentWhereInput = {
   taskId?: Prisma.IntFilter<"TaskAttachment"> | number
   userId?: Prisma.IntFilter<"TaskAttachment"> | number
   createdAt?: Prisma.DateTimeFilter<"TaskAttachment"> | Date | string
+  provider?: Prisma.EnumStorageProviderFilter<"TaskAttachment"> | $Enums.StorageProvider
+  externalId?: Prisma.StringNullableFilter<"TaskAttachment"> | string | null
+  thumbnailUrl?: Prisma.StringNullableFilter<"TaskAttachment"> | string | null
+  sizeBytes?: Prisma.BigIntNullableFilter<"TaskAttachment"> | bigint | number | null
   task?: Prisma.XOR<Prisma.TaskScalarRelationFilter, Prisma.TaskWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
@@ -252,6 +288,10 @@ export type TaskAttachmentOrderByWithRelationInput = {
   taskId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  provider?: Prisma.SortOrder
+  externalId?: Prisma.SortOrderInput | Prisma.SortOrder
+  thumbnailUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  sizeBytes?: Prisma.SortOrderInput | Prisma.SortOrder
   task?: Prisma.TaskOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
 }
@@ -267,6 +307,10 @@ export type TaskAttachmentWhereUniqueInput = Prisma.AtLeast<{
   taskId?: Prisma.IntFilter<"TaskAttachment"> | number
   userId?: Prisma.IntFilter<"TaskAttachment"> | number
   createdAt?: Prisma.DateTimeFilter<"TaskAttachment"> | Date | string
+  provider?: Prisma.EnumStorageProviderFilter<"TaskAttachment"> | $Enums.StorageProvider
+  externalId?: Prisma.StringNullableFilter<"TaskAttachment"> | string | null
+  thumbnailUrl?: Prisma.StringNullableFilter<"TaskAttachment"> | string | null
+  sizeBytes?: Prisma.BigIntNullableFilter<"TaskAttachment"> | bigint | number | null
   task?: Prisma.XOR<Prisma.TaskScalarRelationFilter, Prisma.TaskWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id">
@@ -279,6 +323,10 @@ export type TaskAttachmentOrderByWithAggregationInput = {
   taskId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  provider?: Prisma.SortOrder
+  externalId?: Prisma.SortOrderInput | Prisma.SortOrder
+  thumbnailUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  sizeBytes?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.TaskAttachmentCountOrderByAggregateInput
   _avg?: Prisma.TaskAttachmentAvgOrderByAggregateInput
   _max?: Prisma.TaskAttachmentMaxOrderByAggregateInput
@@ -297,6 +345,10 @@ export type TaskAttachmentScalarWhereWithAggregatesInput = {
   taskId?: Prisma.IntWithAggregatesFilter<"TaskAttachment"> | number
   userId?: Prisma.IntWithAggregatesFilter<"TaskAttachment"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"TaskAttachment"> | Date | string
+  provider?: Prisma.EnumStorageProviderWithAggregatesFilter<"TaskAttachment"> | $Enums.StorageProvider
+  externalId?: Prisma.StringNullableWithAggregatesFilter<"TaskAttachment"> | string | null
+  thumbnailUrl?: Prisma.StringNullableWithAggregatesFilter<"TaskAttachment"> | string | null
+  sizeBytes?: Prisma.BigIntNullableWithAggregatesFilter<"TaskAttachment"> | bigint | number | null
 }
 
 export type TaskAttachmentCreateInput = {
@@ -304,6 +356,10 @@ export type TaskAttachmentCreateInput = {
   fileUrl: string
   mimeType?: string | null
   createdAt?: Date | string
+  provider?: $Enums.StorageProvider
+  externalId?: string | null
+  thumbnailUrl?: string | null
+  sizeBytes?: bigint | number | null
   task: Prisma.TaskCreateNestedOneWithoutAttachmentsInput
   user: Prisma.UserCreateNestedOneWithoutAttachmentsInput
 }
@@ -316,6 +372,10 @@ export type TaskAttachmentUncheckedCreateInput = {
   taskId: number
   userId: number
   createdAt?: Date | string
+  provider?: $Enums.StorageProvider
+  externalId?: string | null
+  thumbnailUrl?: string | null
+  sizeBytes?: bigint | number | null
 }
 
 export type TaskAttachmentUpdateInput = {
@@ -323,6 +383,10 @@ export type TaskAttachmentUpdateInput = {
   fileUrl?: Prisma.StringFieldUpdateOperationsInput | string
   mimeType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  provider?: Prisma.EnumStorageProviderFieldUpdateOperationsInput | $Enums.StorageProvider
+  externalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sizeBytes?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   task?: Prisma.TaskUpdateOneRequiredWithoutAttachmentsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutAttachmentsNestedInput
 }
@@ -335,6 +399,10 @@ export type TaskAttachmentUncheckedUpdateInput = {
   taskId?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  provider?: Prisma.EnumStorageProviderFieldUpdateOperationsInput | $Enums.StorageProvider
+  externalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sizeBytes?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
 }
 
 export type TaskAttachmentCreateManyInput = {
@@ -345,6 +413,10 @@ export type TaskAttachmentCreateManyInput = {
   taskId: number
   userId: number
   createdAt?: Date | string
+  provider?: $Enums.StorageProvider
+  externalId?: string | null
+  thumbnailUrl?: string | null
+  sizeBytes?: bigint | number | null
 }
 
 export type TaskAttachmentUpdateManyMutationInput = {
@@ -352,6 +424,10 @@ export type TaskAttachmentUpdateManyMutationInput = {
   fileUrl?: Prisma.StringFieldUpdateOperationsInput | string
   mimeType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  provider?: Prisma.EnumStorageProviderFieldUpdateOperationsInput | $Enums.StorageProvider
+  externalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sizeBytes?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
 }
 
 export type TaskAttachmentUncheckedUpdateManyInput = {
@@ -362,6 +438,10 @@ export type TaskAttachmentUncheckedUpdateManyInput = {
   taskId?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  provider?: Prisma.EnumStorageProviderFieldUpdateOperationsInput | $Enums.StorageProvider
+  externalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sizeBytes?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
 }
 
 export type TaskAttachmentListRelationFilter = {
@@ -382,12 +462,17 @@ export type TaskAttachmentCountOrderByAggregateInput = {
   taskId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  provider?: Prisma.SortOrder
+  externalId?: Prisma.SortOrder
+  thumbnailUrl?: Prisma.SortOrder
+  sizeBytes?: Prisma.SortOrder
 }
 
 export type TaskAttachmentAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   taskId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  sizeBytes?: Prisma.SortOrder
 }
 
 export type TaskAttachmentMaxOrderByAggregateInput = {
@@ -398,6 +483,10 @@ export type TaskAttachmentMaxOrderByAggregateInput = {
   taskId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  provider?: Prisma.SortOrder
+  externalId?: Prisma.SortOrder
+  thumbnailUrl?: Prisma.SortOrder
+  sizeBytes?: Prisma.SortOrder
 }
 
 export type TaskAttachmentMinOrderByAggregateInput = {
@@ -408,12 +497,17 @@ export type TaskAttachmentMinOrderByAggregateInput = {
   taskId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  provider?: Prisma.SortOrder
+  externalId?: Prisma.SortOrder
+  thumbnailUrl?: Prisma.SortOrder
+  sizeBytes?: Prisma.SortOrder
 }
 
 export type TaskAttachmentSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   taskId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  sizeBytes?: Prisma.SortOrder
 }
 
 export type TaskAttachmentCreateNestedManyWithoutTaskInput = {
@@ -500,11 +594,27 @@ export type TaskAttachmentUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.TaskAttachmentScalarWhereInput | Prisma.TaskAttachmentScalarWhereInput[]
 }
 
+export type EnumStorageProviderFieldUpdateOperationsInput = {
+  set?: $Enums.StorageProvider
+}
+
+export type NullableBigIntFieldUpdateOperationsInput = {
+  set?: bigint | number | null
+  increment?: bigint | number
+  decrement?: bigint | number
+  multiply?: bigint | number
+  divide?: bigint | number
+}
+
 export type TaskAttachmentCreateWithoutTaskInput = {
   filename: string
   fileUrl: string
   mimeType?: string | null
   createdAt?: Date | string
+  provider?: $Enums.StorageProvider
+  externalId?: string | null
+  thumbnailUrl?: string | null
+  sizeBytes?: bigint | number | null
   user: Prisma.UserCreateNestedOneWithoutAttachmentsInput
 }
 
@@ -515,6 +625,10 @@ export type TaskAttachmentUncheckedCreateWithoutTaskInput = {
   mimeType?: string | null
   userId: number
   createdAt?: Date | string
+  provider?: $Enums.StorageProvider
+  externalId?: string | null
+  thumbnailUrl?: string | null
+  sizeBytes?: bigint | number | null
 }
 
 export type TaskAttachmentCreateOrConnectWithoutTaskInput = {
@@ -554,6 +668,10 @@ export type TaskAttachmentScalarWhereInput = {
   taskId?: Prisma.IntFilter<"TaskAttachment"> | number
   userId?: Prisma.IntFilter<"TaskAttachment"> | number
   createdAt?: Prisma.DateTimeFilter<"TaskAttachment"> | Date | string
+  provider?: Prisma.EnumStorageProviderFilter<"TaskAttachment"> | $Enums.StorageProvider
+  externalId?: Prisma.StringNullableFilter<"TaskAttachment"> | string | null
+  thumbnailUrl?: Prisma.StringNullableFilter<"TaskAttachment"> | string | null
+  sizeBytes?: Prisma.BigIntNullableFilter<"TaskAttachment"> | bigint | number | null
 }
 
 export type TaskAttachmentCreateWithoutUserInput = {
@@ -561,6 +679,10 @@ export type TaskAttachmentCreateWithoutUserInput = {
   fileUrl: string
   mimeType?: string | null
   createdAt?: Date | string
+  provider?: $Enums.StorageProvider
+  externalId?: string | null
+  thumbnailUrl?: string | null
+  sizeBytes?: bigint | number | null
   task: Prisma.TaskCreateNestedOneWithoutAttachmentsInput
 }
 
@@ -571,6 +693,10 @@ export type TaskAttachmentUncheckedCreateWithoutUserInput = {
   mimeType?: string | null
   taskId: number
   createdAt?: Date | string
+  provider?: $Enums.StorageProvider
+  externalId?: string | null
+  thumbnailUrl?: string | null
+  sizeBytes?: bigint | number | null
 }
 
 export type TaskAttachmentCreateOrConnectWithoutUserInput = {
@@ -606,6 +732,10 @@ export type TaskAttachmentCreateManyTaskInput = {
   mimeType?: string | null
   userId: number
   createdAt?: Date | string
+  provider?: $Enums.StorageProvider
+  externalId?: string | null
+  thumbnailUrl?: string | null
+  sizeBytes?: bigint | number | null
 }
 
 export type TaskAttachmentUpdateWithoutTaskInput = {
@@ -613,6 +743,10 @@ export type TaskAttachmentUpdateWithoutTaskInput = {
   fileUrl?: Prisma.StringFieldUpdateOperationsInput | string
   mimeType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  provider?: Prisma.EnumStorageProviderFieldUpdateOperationsInput | $Enums.StorageProvider
+  externalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sizeBytes?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   user?: Prisma.UserUpdateOneRequiredWithoutAttachmentsNestedInput
 }
 
@@ -623,6 +757,10 @@ export type TaskAttachmentUncheckedUpdateWithoutTaskInput = {
   mimeType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  provider?: Prisma.EnumStorageProviderFieldUpdateOperationsInput | $Enums.StorageProvider
+  externalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sizeBytes?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
 }
 
 export type TaskAttachmentUncheckedUpdateManyWithoutTaskInput = {
@@ -632,6 +770,10 @@ export type TaskAttachmentUncheckedUpdateManyWithoutTaskInput = {
   mimeType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  provider?: Prisma.EnumStorageProviderFieldUpdateOperationsInput | $Enums.StorageProvider
+  externalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sizeBytes?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
 }
 
 export type TaskAttachmentCreateManyUserInput = {
@@ -641,6 +783,10 @@ export type TaskAttachmentCreateManyUserInput = {
   mimeType?: string | null
   taskId: number
   createdAt?: Date | string
+  provider?: $Enums.StorageProvider
+  externalId?: string | null
+  thumbnailUrl?: string | null
+  sizeBytes?: bigint | number | null
 }
 
 export type TaskAttachmentUpdateWithoutUserInput = {
@@ -648,6 +794,10 @@ export type TaskAttachmentUpdateWithoutUserInput = {
   fileUrl?: Prisma.StringFieldUpdateOperationsInput | string
   mimeType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  provider?: Prisma.EnumStorageProviderFieldUpdateOperationsInput | $Enums.StorageProvider
+  externalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sizeBytes?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   task?: Prisma.TaskUpdateOneRequiredWithoutAttachmentsNestedInput
 }
 
@@ -658,6 +808,10 @@ export type TaskAttachmentUncheckedUpdateWithoutUserInput = {
   mimeType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   taskId?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  provider?: Prisma.EnumStorageProviderFieldUpdateOperationsInput | $Enums.StorageProvider
+  externalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sizeBytes?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
 }
 
 export type TaskAttachmentUncheckedUpdateManyWithoutUserInput = {
@@ -667,6 +821,10 @@ export type TaskAttachmentUncheckedUpdateManyWithoutUserInput = {
   mimeType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   taskId?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  provider?: Prisma.EnumStorageProviderFieldUpdateOperationsInput | $Enums.StorageProvider
+  externalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sizeBytes?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
 }
 
 
@@ -679,6 +837,10 @@ export type TaskAttachmentSelect<ExtArgs extends runtime.Types.Extensions.Intern
   taskId?: boolean
   userId?: boolean
   createdAt?: boolean
+  provider?: boolean
+  externalId?: boolean
+  thumbnailUrl?: boolean
+  sizeBytes?: boolean
   task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["taskAttachment"]>
@@ -691,6 +853,10 @@ export type TaskAttachmentSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   taskId?: boolean
   userId?: boolean
   createdAt?: boolean
+  provider?: boolean
+  externalId?: boolean
+  thumbnailUrl?: boolean
+  sizeBytes?: boolean
   task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["taskAttachment"]>
@@ -703,6 +869,10 @@ export type TaskAttachmentSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   taskId?: boolean
   userId?: boolean
   createdAt?: boolean
+  provider?: boolean
+  externalId?: boolean
+  thumbnailUrl?: boolean
+  sizeBytes?: boolean
   task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["taskAttachment"]>
@@ -715,9 +885,13 @@ export type TaskAttachmentSelectScalar = {
   taskId?: boolean
   userId?: boolean
   createdAt?: boolean
+  provider?: boolean
+  externalId?: boolean
+  thumbnailUrl?: boolean
+  sizeBytes?: boolean
 }
 
-export type TaskAttachmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "filename" | "fileUrl" | "mimeType" | "taskId" | "userId" | "createdAt", ExtArgs["result"]["taskAttachment"]>
+export type TaskAttachmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "filename" | "fileUrl" | "mimeType" | "taskId" | "userId" | "createdAt" | "provider" | "externalId" | "thumbnailUrl" | "sizeBytes", ExtArgs["result"]["taskAttachment"]>
 export type TaskAttachmentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -745,6 +919,17 @@ export type $TaskAttachmentPayload<ExtArgs extends runtime.Types.Extensions.Inte
     taskId: number
     userId: number
     createdAt: Date
+    /**
+     * Where the bytes actually live. LOCAL rows predate cloud storage and are
+     * served from the server's own uploads folder.
+     */
+    provider: $Enums.StorageProvider
+    /**
+     * Provider-side id (Drive fileId), needed to delete or re-share later.
+     */
+    externalId: string | null
+    thumbnailUrl: string | null
+    sizeBytes: bigint | null
   }, ExtArgs["result"]["taskAttachment"]>
   composites: {}
 }
@@ -1177,6 +1362,10 @@ export interface TaskAttachmentFieldRefs {
   readonly taskId: Prisma.FieldRef<"TaskAttachment", 'Int'>
   readonly userId: Prisma.FieldRef<"TaskAttachment", 'Int'>
   readonly createdAt: Prisma.FieldRef<"TaskAttachment", 'DateTime'>
+  readonly provider: Prisma.FieldRef<"TaskAttachment", 'StorageProvider'>
+  readonly externalId: Prisma.FieldRef<"TaskAttachment", 'String'>
+  readonly thumbnailUrl: Prisma.FieldRef<"TaskAttachment", 'String'>
+  readonly sizeBytes: Prisma.FieldRef<"TaskAttachment", 'BigInt'>
 }
     
 

@@ -6,13 +6,11 @@ import { dispatchWebhook } from '../services/webhookDispatcher';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
+import { decodeUploadName } from '../lib/uploadName';
+import { uploadsDir } from '../lib/uploads';
 
 const router = Router();
 
-const uploadsDir = path.resolve(process.cwd(), 'uploads');
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true });
-}
 
 const storage = multer.diskStorage({
   destination: (_req, _file, cb) => {
@@ -360,7 +358,7 @@ router.post('/upload', authenticate, upload.single('file'), (req: AuthRequest, r
     const fileUrl = `/uploads/${file.filename}`;
     res.json({
       url: fileUrl,
-      filename: file.originalname,
+      filename: decodeUploadName(file.originalname),
       size: file.size,
       mimetype: file.mimetype,
     });
